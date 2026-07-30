@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Validation Rule Failure</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Category__c</field>
+        <value xsi:type="xsd:string">Validation Rule</value>
+    </values>
+    <values>
+        <field>Fixability__c</field>
+        <value xsi:type="xsd:string">ADMIN_FIXABLE</value>
+    </values>
+    <values>
+        <field>Pattern__c</field>
+        <value xsi:type="xsd:string">FIELD_CUSTOM_VALIDATION_EXCEPTION</value>
+    </values>
+    <values>
+        <field>Recommended_Action__c</field>
+        <value xsi:type="xsd:string">Explain the validation rule. Escalate to admin if the rule appears incorrect.</value>
+    </values>
+    <values>
+        <field>Remediation_Action_Key__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Severity__c</field>
+        <value xsi:type="xsd:string">Medium</value>
+    </values>
+    <values>
+        <field>User_Message__c</field>
+        <value xsi:type="xsd:string">A validation rule blocked the action. Review the rule message and update the record accordingly.</value>
+    </values>
+</CustomMetadata>

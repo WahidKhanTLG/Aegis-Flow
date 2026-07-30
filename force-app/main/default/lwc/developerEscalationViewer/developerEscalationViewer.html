@@ -1,0 +1,22 @@
+<template>
+    <section class="viewer-shell">
+        <header class="viewer-header">
+            <div class="brand"><img src={logoUrl} alt="Aegis Flow logo" /><div><p>AEGIS FLOW</p><h2>Developer Escalation Package</h2></div></div>
+            <span class="secure"><lightning-icon icon-name="utility:lock" size="xx-small" alternative-text="Secured"></lightning-icon> Sanitized evidence</span>
+        </header>
+        <lightning-record-view-form record-id={recordId} object-api-name="Developer_Escalation__c">
+            <div class="summary-grid">
+                <article class="summary primary"><span>SUBJECT</span><lightning-output-field field-name="Subject__c" variant="label-hidden"></lightning-output-field></article>
+                <article><span>STATUS</span><lightning-output-field field-name="Status__c" variant="label-hidden"></lightning-output-field></article>
+                <article><span>SEVERITY</span><lightning-output-field field-name="Severity__c" variant="label-hidden"></lightning-output-field></article>
+                <article><span>CHANNEL</span><lightning-output-field field-name="Channel__c" variant="label-hidden"></lightning-output-field></article>
+                <article><span>RECIPIENT</span><lightning-output-field field-name="Recipient__c" variant="label-hidden"></lightning-output-field></article>
+            </div>
+            <section class="evidence-card">
+                <div class="section-title"><div class="icon"><lightning-icon icon-name="utility:bug" size="small" alternative-text="Evidence"></lightning-icon></div><div><p>TECHNICAL EVIDENCE</p><h3>Complete diagnostic package</h3></div></div>
+                <div class="package-body"><lightning-output-field field-name="Diagnostic_Package_JSON__c" variant="label-hidden"></lightning-output-field></div>
+            </section>
+        </lightning-record-view-form>
+        <footer>Captured context is governed by configured masking, sharing, and retention policies.</footer>
+    </section>
+</template>

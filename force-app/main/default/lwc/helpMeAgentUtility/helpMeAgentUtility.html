@@ -1,0 +1,67 @@
+<template>
+    <section class="assistant-shell" aria-label="Aegis Flow diagnostic assistant">
+        <header class="assistant-header">
+            <div class="brand">
+                <img src={logoUrl} alt="Aegis Flow logo" />
+                <div><p class="eyebrow">AEGIS FLOW</p><h2>Diagnostic Assistant</h2></div>
+            </div>
+            <span class="trust-badge"><lightning-icon icon-name="utility:lock" size="xx-small" alternative-text="Governed"></lightning-icon> Governed actions</span>
+        </header>
+
+        <template if:true={isLoading}>
+            <div class="loading"><lightning-spinner alternative-text="Processing diagnostic request" size="small"></lightning-spinner></div>
+        </template>
+
+        <div class="assistant-body">
+            <template if:false={sessionId}>
+                <div class="intro-card">
+                    <div class="spark"><lightning-icon icon-name="utility:sparkles" size="small" alternative-text="AI assistance"></lightning-icon></div>
+                    <div><h3>What were you trying to do?</h3><p>Aegis Flow captures the current Salesforce context, checks recent incidents, and prepares a governed diagnostic package.</p></div>
+                </div>
+                <div class="privacy-line"><lightning-icon icon-name="utility:shield" size="xx-small" alternative-text="Protected"></lightning-icon> Sensitive values are masked before diagnosis or escalation.</div>
+                <lightning-combobox name="issueType" label="Request type" value={issueType} options={issueTypeOptions} onchange={handleIssueType}></lightning-combobox>
+                <lightning-textarea label="Describe the task or issue" value={description} onchange={handleDescription} placeholder="Example: I tried to save the Account after updating the tax code, but the process failed." class="field-space"></lightning-textarea>
+                <button class="primary-action" onclick={startDiagnosis} disabled={isStartDisabled}>
+                    <lightning-icon icon-name="utility:search" size="x-small" alternative-text="Start"></lightning-icon>
+                    Start secure diagnosis
+                </button>
+                <p class="microcopy">No data changes are made without an approved action and confirmation.</p>
+            </template>
+
+            <template if:true={sessionId}>
+                <div class="progress-row" aria-label="Diagnostic progress">
+                    <div class="progress-item complete"><span>1</span><p>Context captured</p></div>
+                    <div class={diagnosisStepClass}><span>2</span><p>Diagnosis</p></div>
+                    <div class={resolutionStepClass}><span>3</span><p>Resolve or escalate</p></div>
+                </div>
+
+                <div class="session-card">
+                    <div><p class="label">Diagnostic reference</p><strong>{correlationId}</strong></div>
+                    <span class="status-pill">Session active</span>
+                </div>
+
+                <template if:true={message}>
+                    <div class="notice"><lightning-icon icon-name="utility:info" size="x-small" alternative-text="Information"></lightning-icon><span>{message}</span></div>
+                </template>
+
+                <template if:true={agentSummary}>
+                    <article class="diagnosis-card">
+                        <div class="diagnosis-heading"><span class="diagnosis-icon"><lightning-icon icon-name="utility:einstein" size="small" alternative-text="Diagnosis"></lightning-icon></span><div><p class="label">DIAGNOSTIC SUMMARY</p><h3>{agentSummary}</h3></div></div>
+                        <div class="recommendation"><p class="label">Recommended next action</p><p>{recommendedAction}</p></div>
+                    </article>
+                </template>
+
+                <div class="action-stack">
+                    <button class="primary-action" onclick={askAgent}><lightning-icon icon-name="utility:sparkles" size="x-small" alternative-text="Diagnose"></lightning-icon>{diagnoseButtonLabel}</button>
+                    <button class="secondary-action" onclick={sendReport}><lightning-icon icon-name="utility:send" size="x-small" alternative-text="Escalate"></lightning-icon>Send governed report</button>
+                    <button class="text-action" onclick={reset}>Start a new session</button>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="error-notice" role="alert"><lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon><span>{error}</span></div>
+            </template>
+        </div>
+        <footer>Smart Diagnostics. Bounded AI. Absolute Governance.</footer>
+    </section>
+</template>

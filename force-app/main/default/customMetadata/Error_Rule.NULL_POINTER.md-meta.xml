@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Null Pointer</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Category__c</field>
+        <value xsi:type="xsd:string">Null Pointer</value>
+    </values>
+    <values>
+        <field>Fixability__c</field>
+        <value xsi:type="xsd:string">DEVELOPER_ONLY</value>
+    </values>
+    <values>
+        <field>Pattern__c</field>
+        <value xsi:type="xsd:string">System.NullPointerException</value>
+    </values>
+    <values>
+        <field>Recommended_Action__c</field>
+        <value xsi:type="xsd:string">Escalate with class, method, line, record context, and stack trace.</value>
+    </values>
+    <values>
+        <field>Remediation_Action_Key__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Severity__c</field>
+        <value xsi:type="xsd:string">High</value>
+    </values>
+    <values>
+        <field>User_Message__c</field>
+        <value xsi:type="xsd:string">Custom code referenced a missing or null value.</value>
+    </values>
+</CustomMetadata>

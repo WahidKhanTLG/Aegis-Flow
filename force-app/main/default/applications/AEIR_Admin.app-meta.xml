@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
+    <label>Aegis Flow Admin</label>
+    <navType>Standard</navType>
+    <tabs>standard-home</tabs>
+    <tabs>Error_Log__c</tabs>
+    <tabs>Diagnostic_Session__c</tabs>
+    <tabs>Developer_Escalation__c</tabs>
+    <tabs>AI_Diagnosis__c</tabs>
+    <tabs>Remediation_Action__c</tabs>
+    <tabs>Delivery_Audit__c</tabs>
+    <tabs>Retry_Attempt__c</tabs>
+    <tabs>User_Notification__c</tabs>
+    <tabs>Incident__c</tabs>
+    <tabs>Delivery_Attempt__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Aegis_Flow_Admin_UtilityBar</utilityBar>
+</CustomApplication>

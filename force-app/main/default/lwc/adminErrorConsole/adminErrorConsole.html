@@ -1,0 +1,69 @@
+<template>
+    <section class="aegis-shell" aria-label="Aegis Flow operations console">
+        <header class="hero">
+            <div class="brand-lockup">
+                <div class="logo-frame"><img src={logoUrl} alt="Aegis Flow logo" /></div>
+                <div>
+                    <p class="eyebrow">SALESFORCE ERROR INTELLIGENCE</p>
+                    <h1>Aegis Flow</h1>
+                    <p class="tagline">Smart Diagnostics. Bounded AI. Absolute Governance.</p>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <span class="system-state"><span class="pulse"></span> Monitoring active</span>
+                <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh console" title="Refresh console" onclick={handleRefresh}></lightning-button-icon>
+            </div>
+        </header>
+
+        <div class="content">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow dark">OPERATIONS OVERVIEW</p>
+                    <h2>Diagnostic command center</h2>
+                </div>
+                <div class="scope-note">Last 50 captured incidents</div>
+            </div>
+
+            <template if:true={metrics}>
+                <div class="metric-grid">
+                    <article class="metric-card cyan">
+                        <div class="metric-icon"><lightning-icon icon-name="utility:activity" size="small" alternative-text="New incidents"></lightning-icon></div>
+                        <div><p>New today</p><strong>{metrics.newErrorsToday}</strong><span>Captured incidents</span></div>
+                    </article>
+                    <article class="metric-card red">
+                        <div class="metric-icon"><lightning-icon icon-name="utility:priority" size="small" alternative-text="Critical"></lightning-icon></div>
+                        <div><p>Critical open</p><strong>{metrics.criticalOpen}</strong><span>Immediate review</span></div>
+                    </article>
+                    <article class="metric-card amber">
+                        <div class="metric-icon"><lightning-icon icon-name="utility:send" size="small" alternative-text="Escalations"></lightning-icon></div>
+                        <div><p>Pending escalations</p><strong>{metrics.escalationsPending}</strong><span>Awaiting delivery</span></div>
+                    </article>
+                    <article class="metric-card green">
+                        <div class="metric-icon"><lightning-icon icon-name="utility:success" size="small" alternative-text="Resolved"></lightning-icon></div>
+                        <div><p>Resolved</p><strong>{metrics.resolvedErrors}</strong><span>Closed incidents</span></div>
+                    </article>
+                </div>
+            </template>
+
+            <section class="table-card">
+                <div class="table-toolbar">
+                    <div>
+                        <h3>Recent diagnostic activity</h3>
+                        <p>Normalized incidents with severity, source, and lifecycle status.</p>
+                    </div>
+                    <div class="legend"><span class="legend-dot critical"></span> Critical <span class="legend-dot healthy"></span> Resolved</div>
+                </div>
+                <template if:true={hasErrors}>
+                    <lightning-datatable key-field="Id" data={errors} columns={columns} hide-checkbox-column show-row-number-column></lightning-datatable>
+                </template>
+                <template if:false={hasErrors}>
+                    <div class="empty-state">
+                        <lightning-icon icon-name="utility:shield" size="medium" alternative-text="No incidents"></lightning-icon>
+                        <h3>No diagnostic incidents found</h3>
+                        <p>Aegis Flow will display normalized errors here when capture is enabled.</p>
+                    </div>
+                </template>
+            </section>
+        </div>
+    </section>
+</template>

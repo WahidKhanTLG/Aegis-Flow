@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Context_Type__c</fullName>
+    <label>Context Type</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Page</fullName>
+                <default>false</default>
+                <label>Page</label>
+            </value>
+            <value>
+                <fullName>Record Snapshot</fullName>
+                <default>false</default>
+                <label>Record Snapshot</label>
+            </value>
+            <value>
+                <fullName>Changed Fields</fullName>
+                <default>false</default>
+                <label>Changed Fields</label>
+            </value>
+            <value>
+                <fullName>Payload</fullName>
+                <default>false</default>
+                <label>Payload</label>
+            </value>
+            <value>
+                <fullName>User Steps</fullName>
+                <default>false</default>
+                <label>User Steps</label>
+            </value>
+            <value>
+                <fullName>Log Snippet</fullName>
+                <default>false</default>
+                <label>Log Snippet</label>
+            </value>
+            <value>
+                <fullName>Related Record</fullName>
+                <default>false</default>
+                <label>Related Record</label>
+            </value>
+            <value>
+                <fullName>Browser</fullName>
+                <default>false</default>
+                <label>Browser</label>
+            </value>
+            <value>
+                <fullName>Agent Payload</fullName>
+                <default>false</default>
+                <label>Agent Payload</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Action_Available__c</fullName>
+    <label>Action Available</label>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>VIEW</fullName>
+                <default>true</default>
+                <label>VIEW</label>
+            </value>
+            <value>
+                <fullName>HELP</fullName>
+                <default>false</default>
+                <label>HELP</label>
+            </value>
+            <value>
+                <fullName>RETRY</fullName>
+                <default>false</default>
+                <label>RETRY</label>
+            </value>
+            <value>
+                <fullName>FIX</fullName>
+                <default>false</default>
+                <label>FIX</label>
+            </value>
+            <value>
+                <fullName>ESCALATE</fullName>
+                <default>false</default>
+                <label>ESCALATE</label>
+            </value>
+            <value>
+                <fullName>NONE</fullName>
+                <default>false</default>
+                <label>NONE</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

@@ -1,0 +1,12 @@
+<template>
+    <section class="remediation-shell" role="dialog" aria-modal="true" aria-label="Confirm governed remediation">
+        <header><div class="shield"><lightning-icon icon-name="utility:shield" size="small" alternative-text="Governed action"></lightning-icon></div><div><p>AEGIS FLOW CONTROL</p><h2>Confirm governed remediation</h2></div></header>
+        <div class="body">
+            <div class="risk-row"><span class="risk-label">WRITE ACTION</span><span class="risk-pill">Confirmation required</span></div>
+            <p class="message">{message}</p>
+            <div class="assurance"><lightning-icon icon-name="utility:lock" size="x-small" alternative-text="Security"></lightning-icon><p>The action is limited to the configured object and field, respects CRUD/FLS and sharing, and creates an audit record.</p></div>
+            <div class="actions"><button class="cancel" onclick={cancel}>Cancel</button><button class="confirm" onclick={confirm}><lightning-icon icon-name="utility:check" size="x-small" alternative-text="Confirm"></lightning-icon>Confirm and execute</button></div>
+        </div>
+        <footer>Bounded AI means no unapproved data changes.</footer>
+    </section>
+</template>

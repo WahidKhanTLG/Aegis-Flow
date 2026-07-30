@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Remediation_Action_Key__c</fullName>
+    <description>Optional. The registered Remediation_Action_Setting key this error can be corrected with. Left blank means no safe correction is known, which is the correct default. Never hardcode an action key in Apex (spec section 23).</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Remediation Action Key</label>
+    <length>80</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

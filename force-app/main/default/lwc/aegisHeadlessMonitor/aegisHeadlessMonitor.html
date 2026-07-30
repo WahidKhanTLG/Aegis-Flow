@@ -1,0 +1,99 @@
+<template>
+    <section class="monitor" aria-label="Aegis Flow headless monitor">
+        <template if:true={hasAlerts}>
+            <div class="alert-strip" role="status">
+                <div class="alert-main">
+                    <span class={severityClass}></span>
+                    <div>
+                        <p class="eyebrow">AEGIS FLOW</p>
+                        <h2>{activeAlert.headline}</h2>
+                        <p>{activeAlert.shortMessage}</p>
+                    </div>
+                </div>
+                <div class="alert-actions">
+                    <lightning-button variant="brand" label="View details" onclick={openDetails}></lightning-button>
+                    <lightning-button variant="neutral" label="Dismiss" onclick={dismissActive}></lightning-button>
+                </div>
+            </div>
+        </template>
+        <template if:false={hasAlerts}>
+            <div class="dormant">
+                <p class="eyebrow">AEGIS FLOW</p>
+                <p>No active alerts. Get Help remains available when a user needs diagnostic assistance.</p>
+                <lightning-button label="Get Help" onclick={startManualHelp}></lightning-button>
+            </div>
+        </template>
+
+        <template if:true={showDetails}>
+            <div class="panel">
+                <header>
+                    <div>
+                        <p class="eyebrow">DIAGNOSTIC DETAILS</p>
+                        <h2>{detailTitle}</h2>
+                    </div>
+                    <button class="icon-button" onclick={closeDetails} title="Close">×</button>
+                </header>
+                <template if:true={isLoading}>
+                    <lightning-spinner size="small" alternative-text="Loading diagnostic details"></lightning-spinner>
+                </template>
+
+                <!--
+                  Every value below comes from a flattened getter rather than a nested path.
+                  LWC templates do not optional-chain: {detail.errorLog.Severity__c} throws
+                  "Cannot read properties of undefined" the moment errorLog is null, which
+                  happens whenever the retention purge removes the Error Log and leaves the
+                  notification behind (the lookup is SetNull on delete).
+                -->
+                <template if:true={hasErrorLog}>
+                    <div class="summary-grid">
+                        <div><span>Severity</span><strong>{errorSeverity}</strong></div>
+                        <div><span>Source</span><strong>{errorSource}</strong></div>
+                        <div><span>Reference</span><strong>{errorReference}</strong></div>
+                    </div>
+                    <article class="detail-card">
+                        <h3>What happened</h3>
+                        <p>{errorMessage}</p>
+                    </article>
+                </template>
+
+                <!-- The evidence is gone but the alert is real. Say so plainly. -->
+                <template if:true={isEvidencePurged}>
+                    <div class="summary-grid">
+                        <div><span>Severity</span><strong>{alertSeverity}</strong></div>
+                        <div><span>Reference</span><strong>{alertReference}</strong></div>
+                    </div>
+                    <article class="detail-card">
+                        <h3>What happened</h3>
+                        <p>{alertMessage}</p>
+                        <p class="muted">
+                            The full diagnostic evidence for this alert is no longer available. It was
+                            removed by the data retention policy. You can still dismiss this notification.
+                        </p>
+                    </article>
+                </template>
+
+                <template if:true={hasDiagnosis}>
+                    <article class="detail-card">
+                        <h3>Likely cause</h3>
+                        <p>{diagnosisRootCause}</p>
+                        <p class="muted">Recommended action: {diagnosisRecommendedAction}</p>
+                    </article>
+                </template>
+
+                <template if:true={detail}>
+                    <div class="button-row">
+                        <template if:true={canEscalate}>
+                            <lightning-button variant="brand" label="Get Help" onclick={startHelp}></lightning-button>
+                            <lightning-button variant="neutral" label="Escalate" onclick={escalate}></lightning-button>
+                        </template>
+                        <lightning-button variant="neutral" label="Dismiss" onclick={dismissActive}></lightning-button>
+                    </div>
+                </template>
+
+                <template if:true={error}>
+                    <div class="error" role="alert">{error}</div>
+                </template>
+            </div>
+        </template>
+    </section>
+</template>

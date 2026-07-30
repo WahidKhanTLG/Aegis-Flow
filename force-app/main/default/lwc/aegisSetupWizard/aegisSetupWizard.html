@@ -1,0 +1,110 @@
+<template>
+    <lightning-card title="Aegis Flow Setup" icon-name="utility:settings">
+        <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-p-bottom_small">{error}</div>
+            </template>
+
+            <!-- Step 1: who you are -->
+            <template if:true={isStep1}>
+                <p class="slds-p-bottom_small">
+                    Tell Aegis Flow who should receive technical findings. You can change this at any time.
+                </p>
+                <lightning-input label="Company name" data-field="companyName"
+                                 value={config.companyName} onchange={handleChange}></lightning-input>
+                <lightning-input label="Development team email" data-field="developerTeamEmail"
+                                 value={config.developerTeamEmail} onchange={handleChange}
+                                 field-level-help="Who receives developer-only findings such as stack traces. Separate multiple addresses with commas."></lightning-input>
+                <lightning-input label="Administrator team email" data-field="adminTeamEmail"
+                                 value={config.adminTeamEmail} onchange={handleChange}
+                                 field-level-help="Who receives permission, field-level security and configuration findings."></lightning-input>
+                <div class="slds-p-top_medium">
+                    <lightning-button variant="brand" label="Next" onclick={next}></lightning-button>
+                </div>
+            </template>
+
+            <!-- Step 2: safety net and data sharing -->
+            <template if:true={isStep2}>
+                <lightning-input type="checkbox" label="If no team is named, send findings to my System Administrators"
+                                 data-field="fallbackToSystemAdmins" checked={config.fallbackToSystemAdmins}
+                                 onchange={handleChange}></lightning-input>
+                <p class="slds-text-body_small slds-p-bottom_medium">
+                    Recommended. This keeps every finding inside your Salesforce org and guarantees it reaches someone.
+                </p>
+
+                <lightning-input type="checkbox" label="Also share a sanitized summary with Aegis Flow support"
+                                 data-field="shareDiagnosticsWithVendor" checked={config.shareDiagnosticsWithVendor}
+                                 onchange={handleChange}></lightning-input>
+                <p class="slds-text-body_small slds-p-bottom_small">
+                    Off by default. Diagnostic packages can contain stack traces, record identifiers and record values.
+                    Only enable this if your organization has agreed to share that data with the vendor.
+                </p>
+                <lightning-input label="Aegis Flow support address" data-field="vendorSupportEmail"
+                                 value={config.vendorSupportEmail} disabled={vendorEmailDisabled}
+                                 onchange={handleChange}></lightning-input>
+
+                <div class="slds-p-top_medium">
+                    <lightning-button label="Back" onclick={back} class="slds-m-right_x-small"></lightning-button>
+                    <lightning-button variant="brand" label="Save setup" onclick={save}
+                                      disabled={isSaving}></lightning-button>
+                </div>
+            </template>
+
+            <!-- Step 3: verify -->
+            <template if:true={isStep3}>
+                <div class="slds-box slds-box_x-small slds-m-bottom_medium">{routingSummary}</div>
+                <lightning-button label="Edit setup" onclick={back} class="slds-m-right_x-small"></lightning-button>
+                <lightning-button variant="brand" label="Run health check" onclick={check}
+                                  disabled={isChecking}></lightning-button>
+                <lightning-button label="Scan automations" onclick={scan}
+                                  disabled={isScanning} class="slds-m-left_x-small"></lightning-button>
+
+                <template if:true={hasCoverage}>
+                    <div class="slds-box slds-box_x-small slds-m-top_medium">
+                        <lightning-badge label={coverage.uncapturedFailures} class={coverageVariant}></lightning-badge>
+                        <strong class="slds-p-left_x-small">Flow failures not captured by Aegis Flow</strong>
+                        <p class="slds-text-body_small slds-p-top_x-small">{coverage.summary}</p>
+                        <template if:true={riskyFlows.length}>
+                            <ul class="slds-has-dividers_bottom slds-p-top_small">
+                                <template for:each={riskyFlows} for:item="f">
+                                    <li key={f.key} class="slds-item slds-p-vertical_xx-small">
+                                        <strong>{f.label}</strong>
+                                        <span class="slds-text-body_small slds-text-color_weak"> — {f.counts}</span>
+                                        <div class="slds-text-body_small">{f.recommendation}</div>
+                                        <template if:true={f.sampleError}>
+                                            <div class="slds-text-body_small slds-text-color_weak">{f.sampleError}</div>
+                                        </template>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+                    </div>
+                </template>
+
+                <template if:true={hasReport}>
+                    <div class="slds-p-top_medium">
+                        <lightning-badge label={report.overallStatus} class={overallVariant}></lightning-badge>
+                        <span class="slds-p-left_small slds-text-body_small">
+                            {report.passCount} passed, {report.warningCount} warnings, {report.failCount} failed
+                        </span>
+                        <ul class="slds-has-dividers_bottom slds-p-top_small">
+                            <template for:each={decoratedChecks} for:item="c">
+                                <li key={c.key} class="slds-item slds-p-vertical_x-small">
+                                    <span class={c.badgeClass}>{c.status}</span>
+                                    <strong class="slds-p-left_x-small">{c.name}</strong>
+                                    <div class="slds-text-body_small">{c.detail}</div>
+                                    <template if:true={c.remediation}>
+                                        <div class="slds-text-body_small slds-text-color_weak">
+                                            Fix: {c.remediation}
+                                        </div>
+                                    </template>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </template>
+            </template>
+        </div>
+    </lightning-card>
+</template>

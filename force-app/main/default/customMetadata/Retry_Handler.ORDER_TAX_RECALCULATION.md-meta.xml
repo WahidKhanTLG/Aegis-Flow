@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Order Tax Recalculation</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Apex_Class__c</field>
+        <value xsi:type="xsd:string">AEIR_SampleTaxRetryHandler</value>
+    </values>
+    <values>
+        <field>Backoff_Minutes__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Handler_Key__c</field>
+        <value xsi:type="xsd:string">ORDER_TAX_RECALCULATION</value>
+    </values>
+    <values>
+        <field>Idempotency_Strategy__c</field>
+        <value xsi:type="xsd:string">Correlation Id plus target record id</value>
+    </values>
+    <values>
+        <field>Max_Attempts__c</field>
+        <value xsi:type="xsd:double">3.0</value>
+    </values>
+</CustomMetadata>

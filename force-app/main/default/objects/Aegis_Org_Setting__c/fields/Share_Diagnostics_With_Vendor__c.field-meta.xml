@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Share_Diagnostics_With_Vendor__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>OFF by default. When explicitly enabled by the customer, a sanitized summary is also sent to the Aegis Flow support mailbox. Requires a data processing agreement.</description>
+    <label>Share Diagnostics With Vendor</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

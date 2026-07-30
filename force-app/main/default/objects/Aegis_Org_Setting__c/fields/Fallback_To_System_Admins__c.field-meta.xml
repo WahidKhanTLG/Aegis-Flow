@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Fallback_To_System_Admins__c</fullName>
+    <defaultValue>true</defaultValue>
+    <description>When no team email is configured, route findings to active System Administrators in this org. Keeps diagnostic data inside the customer org.</description>
+    <label>Fallback To System Admins</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Update Account Tax Code</label>
+    <protected>false</protected>
+    <values>
+        <field>Action_Key__c</field>
+        <value xsi:type="xsd:string">UPDATE_ACCOUNT_TAX_CODE</value>
+    </values>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Apex_Class__c</field>
+        <value xsi:type="xsd:string">AEIR_RemediationOrchestrator</value>
+    </values>
+    <values>
+        <field>Field__c</field>
+        <value xsi:type="xsd:string">Tax_Code__c</value>
+    </values>
+    <values>
+        <field>Flow_API_Name__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Object__c</field>
+        <value xsi:type="xsd:string">Account</value>
+    </values>
+    <values>
+        <field>Requires_Confirmation__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Risk_Level__c</field>
+        <value xsi:type="xsd:string">Medium</value>
+    </values>
+</CustomMetadata>
