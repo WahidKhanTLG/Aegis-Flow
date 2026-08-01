@@ -1,0 +1,10 @@
+.sfdx/
+.sf/
+node_modules/
+coverage/
+.DS_Store
+*.log
+.codex/
+.vscode/
+.mcp.json
+mcp.json

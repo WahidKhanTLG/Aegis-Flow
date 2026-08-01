@@ -182,11 +182,30 @@ public with sharing class AEIR_SetupHealthCheckService {
     }
 
     private static CheckResult checkScheduledJobs() {
-        Integer jobs = [SELECT count() FROM CronTrigger WHERE CronJobDetail.Name LIKE 'Aegis Flow%'];
-        return jobs >= 2
-            ? pass('Scheduled jobs', jobs + ' Aegis job(s) scheduled.')
-            : warn('Scheduled jobs', 'Expected retention and async job monitoring; found ' + jobs + '.',
-                   'Run scripts/schedule_retention.apex so retention purge and async job monitoring run automatically.');
+        Integer flowJobs = [
+            SELECT count() FROM CronTrigger
+            WHERE State = 'WAITING' AND CronJobDetail.Name LIKE 'Aegis Flow Interview Monitor%'
+        ];
+        Integer asyncJobs = [
+            SELECT count() FROM CronTrigger
+            WHERE State = 'WAITING' AND CronJobDetail.Name LIKE 'Aegis Flow Async Job Monitor%'
+        ];
+        Integer retentionJobs = [
+            SELECT count() FROM CronTrigger
+            WHERE State = 'WAITING' AND CronJobDetail.Name = 'AEIR Nightly Retention Purge'
+        ];
+        if (flowJobs == 0 || asyncJobs == 0 || retentionJobs == 0) {
+            return warn('Scheduled jobs', 'Expected flow monitors, an async monitor, and nightly retention; found '
+                + flowJobs + ' flow, ' + asyncJobs + ' async, and ' + retentionJobs + ' retention job(s).',
+                'Run scripts/set_poller_cadence.apex with MODE = NORMAL, then run scripts/schedule_retention.apex.');
+        }
+        if (flowJobs + asyncJobs > 5) {
+            return warn('Scheduled jobs', 'Aegis polling uses ' + (flowJobs + asyncJobs)
+                + ' scheduled slots; NORMAL cadence uses five.',
+                'Run scripts/set_poller_cadence.apex with MODE = NORMAL after the temporary test window.');
+        }
+        return pass('Scheduled jobs', (flowJobs + asyncJobs + retentionJobs)
+            + ' Aegis jobs waiting: ' + flowJobs + ' flow, ' + asyncJobs + ' async, and nightly retention.');
     }
 
     private static CheckResult checkRemediationWhitelist() {

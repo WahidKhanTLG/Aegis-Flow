@@ -53,11 +53,14 @@
         <members>AEIR_QueueableFinalizerExample</members>
         <members>AEIR_ReconciledFeaturesTest</members>
         <members>AEIR_RemediationOrchestrator</members>
+        <members>AEIR_RetentionPurgeBatch</members>
         <members>AEIR_RetentionScheduler</members>
+        <members>AEIR_RetentionSchedulerTest</members>
         <members>AEIR_RetryHandler</members>
         <members>AEIR_RetryOrchestrationService</members>
         <members>AEIR_SampleTaxRetryHandler</members>
         <members>AEIR_SecuritySanitizerService</members>
+        <members>AEIR_SecurityBoundaryTest</members>
         <members>AEIR_SubscriberTelemetry</members>
         <members>AEIR_MonitorAndTelemetryTest</members>
         <members>AEIR_BulkSafetyTest</members>

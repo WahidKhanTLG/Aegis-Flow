@@ -3,7 +3,7 @@ import { CurrentPageReference } from 'lightning/navigation';
 import USER_ID from '@salesforce/user/Id';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { subscribe, unsubscribe, onError } from 'lightning/empApi';
-import { getUtilityBarAPI } from 'lightning/platformUtilityBarApi';
+import { EnclosingUtilityId, getInfo, open, updatePanel, updateUtility } from 'lightning/platformUtilityBarApi';
 import getOpenAlerts from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.getOpenAlerts';
 import getAlertDetails from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.getAlertDetails';
 import dismissAlert from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.dismissAlert';
@@ -16,9 +16,13 @@ const CHANNEL = '/event/Aegis_User_Alert__e';
 // Fires the instant a Flow element fails, with no fault path and no polling delay.
 const FLOW_ERROR_CHANNEL = '/event/FlowExecutionErrorEvent';
 const MAX_CACHE = 50;
+const UTILITY_IDLE_LABEL = 'Aegis Flow Alerts';
+const UTILITY_IDLE_ICON = 'screen';
+const UTILITY_ALERT_ICON = 'warning';
 
 export default class AegisHeadlessMonitor extends LightningElement {
     @wire(CurrentPageReference) currentPageReference;
+    utilityId;
     subscription;
     flowErrorSubscription;
     alerts = [];
@@ -29,6 +33,13 @@ export default class AegisHeadlessMonitor extends LightningElement {
     error;
     seen = [];
     behavior = { autoOpenUtility: false, autoOpenMinimumSeverity: 'High' };
+    hasUnreadAlerts = false;
+
+    @wire(EnclosingUtilityId)
+    wiredUtilityId(utilityId) {
+        this.utilityId = utilityId;
+        if (utilityId) this.syncUtilitySignal();
+    }
 
     connectedCallback() {
         this.loadBehavior();
@@ -48,9 +59,9 @@ export default class AegisHeadlessMonitor extends LightningElement {
     /*
      * Flattened, null-safe accessors for everything the panel renders.
      *
-     * LWC templates do not optional-chain. `{detail.errorLog.Severity__c}` compiles to a
+     * LWC templates do not optional-chain. `{detail.errorLog.severity}` compiles to a
      * plain member access, so the instant `errorLog` is null the component throws
-     * "Cannot read properties of undefined (reading 'Severity__c')" and the whole panel
+     * "Cannot read properties of undefined (reading 'severity')" and the whole panel
      * fails to render.
      *
      * `errorLog` is legitimately null: `User_Notification__c.Error_Log__c` is a lookup with
@@ -63,10 +74,10 @@ export default class AegisHeadlessMonitor extends LightningElement {
     /** A live alert whose evidence has been purged - render the fallback, not a crash. */
     get isEvidencePurged() { return !!(this.detail && !this.detail.errorLog); }
 
-    get errorSeverity() { return this.errorLog ? this.errorLog.Severity__c : ''; }
-    get errorSource() { return this.errorLog ? this.errorLog.Source_Type__c : ''; }
-    get errorReference() { return this.errorLog ? this.errorLog.Correlation_Id__c : ''; }
-    get errorMessage() { return this.errorLog ? this.errorLog.Normalized_Message__c : ''; }
+    get errorSeverity() { return this.errorLog ? this.errorLog.severity : ''; }
+    get errorSource() { return this.errorLog ? this.errorLog.sourceType : ''; }
+    get errorReference() { return this.errorLog ? this.errorLog.correlationId : ''; }
+    get errorMessage() { return this.errorLog ? this.errorLog.normalizedMessage : ''; }
 
     get diagnosisRootCause() { return this.hasDiagnosis ? this.detail.diagnosis.Root_Cause__c : ''; }
     get diagnosisRecommendedAction() { return this.hasDiagnosis ? this.detail.diagnosis.Recommended_Action__c : ''; }
@@ -111,8 +122,12 @@ export default class AegisHeadlessMonitor extends LightningElement {
         const rank = { Low: 1, Medium: 2, High: 3, Critical: 4 };
         const threshold = rank[this.behavior.autoOpenMinimumSeverity] || 3;
         if ((rank[alert.severity] || 2) < threshold) return;
-        getUtilityBarAPI()
-            .then(api => api.openUtilityBar())
+        if (!this.utilityId) return;
+        getInfo(this.utilityId)
+            .then(info => {
+                if (info && info.utilityVisible === true) return true;
+                return open(this.utilityId);
+            })
             .catch(() => { /* not hosted in a utility bar; the toast already fired */ });
     }
 
@@ -163,6 +178,8 @@ export default class AegisHeadlessMonitor extends LightningElement {
                 };
                 this.alerts = [alert, ...this.alerts].slice(0, 20);
                 this.activeAlert = alert;
+                this.hasUnreadAlerts = true;
+                this.syncUtilitySignal();
                 this.dispatchEvent(new ShowToastEvent({
                     title: alert.headline,
                     message: `${payload.FlowApiName || 'A process'} failed at ${payload.ElementApiName || 'an element'}.`,
@@ -178,6 +195,8 @@ export default class AegisHeadlessMonitor extends LightningElement {
         getOpenAlerts().then(result => {
             this.alerts = Array.isArray(result) ? result : [];
             this.activeAlert = this.alerts.length ? this.alerts[0] : null;
+            this.hasUnreadAlerts = this.alerts.length > 0;
+            this.syncUtilitySignal();
         }).catch(error => {
             this.error = this.normalizeError(error);
         });
@@ -204,6 +223,8 @@ export default class AegisHeadlessMonitor extends LightningElement {
             ? this.alerts.map(item => (item.correlationId === alert.correlationId ? alert : item))
             : [alert, ...this.alerts].slice(0, 20);
         this.activeAlert = alert;
+        this.hasUnreadAlerts = true;
+        this.syncUtilitySignal();
         if (isUpgrade && this.showDetails) this.openDetails();
         this.dispatchEvent(new ShowToastEvent({ title: alert.headline, message: alert.shortMessage, variant: this.toastVariant(alert.severity), mode: 'dismissable' }));
         this.autoOpenIfWarranted(alert);
@@ -218,6 +239,8 @@ export default class AegisHeadlessMonitor extends LightningElement {
     openDetails() {
         if (!this.activeAlert) return;
         this.showDetails = true;
+        this.hasUnreadAlerts = false;
+        this.syncUtilitySignal();
         this.isLoading = true;
         this.error = null;
         getAlertDetails({ correlationId: this.activeAlert.correlationId })
@@ -232,6 +255,8 @@ export default class AegisHeadlessMonitor extends LightningElement {
         dismissAlert({ correlationId: cid }).finally(() => {
             this.alerts = this.alerts.filter(item => item.correlationId !== cid);
             this.activeAlert = this.alerts.length ? this.alerts[0] : null;
+            this.hasUnreadAlerts = this.alerts.length > 0;
+            this.syncUtilitySignal();
             if (!this.activeAlert) this.showDetails = false;
         });
     }
@@ -256,4 +281,24 @@ export default class AegisHeadlessMonitor extends LightningElement {
     toast(title, message, variant) { this.dispatchEvent(new ShowToastEvent({ title, message, variant })); }
     toastVariant(severity) { return severity === 'Critical' || severity === 'High' ? 'warning' : 'info'; }
     normalizeError(error) { return error && error.body && error.body.message ? error.body.message : 'Aegis Flow could not complete this operation.'; }
+
+    /**
+     * The platform utility APIs only work when this component is hosted inside a utility
+     * bar. Record/home placements still render, so every runtime signal is best effort.
+     */
+    syncUtilitySignal() {
+        if (!this.utilityId) return;
+        const count = this.alerts.length;
+        const highlighted = this.hasUnreadAlerts && count > 0;
+        const label = count > 0 ? `${UTILITY_IDLE_LABEL} (${Math.min(count, 99)})` : UTILITY_IDLE_LABEL;
+        const icon = highlighted ? UTILITY_ALERT_ICON : UTILITY_IDLE_ICON;
+
+        updateUtility(this.utilityId, {
+            highlighted,
+            icon,
+            iconVariant: highlighted ? 'error' : null,
+            label
+        }).catch(() => {});
+        updatePanel(this.utilityId, { icon, label }).catch(() => {});
+    }
 }

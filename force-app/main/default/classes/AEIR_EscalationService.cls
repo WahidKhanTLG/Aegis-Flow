@@ -44,12 +44,11 @@ public with sharing class AEIR_EscalationService {
         List<EscalationResult> out = new List<EscalationResult>();
         if (errorLogIds == null || errorLogIds.isEmpty()) return out;
 
-        List<Error_Log__c> logs = [
-            SELECT Id, Correlation_Id__c, Error_Category__c, Severity__c, Source_Type__c, Source_Name__c,
-                   Original_Error_Message__c, Normalized_Message__c, Stack_Trace__c, Object_API_Name__c,
-                   Record_Id__c, User__c, Page_URL__c, Action_Name__c, Debug_Log_Link__c
-            FROM Error_Log__c WHERE Id IN :errorLogIds
-        ];
+        String errorLogQuery = 'SELECT Id, Correlation_Id__c, Error_Category__c, Severity__c, Source_Type__c, Source_Name__c, '
+            + 'Original_Error_Message__c, Normalized_Message__c, Stack_Trace__c, Object_API_Name__c, '
+            + 'Record_Id__c, User__c, Page_URL__c, Action_Name__c, Debug_Log_Link__c '
+            + 'FROM Error_Log__c WHERE Id IN :errorLogIds';
+        List<Error_Log__c> logs = Database.query(errorLogQuery, AccessLevel.SYSTEM_MODE);
         if (logs.isEmpty()) return out;
 
         // Snapshots batched by object, so cost scales with distinct objects not records.
@@ -86,11 +85,11 @@ public with sharing class AEIR_EscalationService {
             packages.add(diagnosticPackage);
         }
 
-        insert escalations;
+        Database.insert(escalations, true, AccessLevel.SYSTEM_MODE);
         dispatchAll(escalations, packages, sendNow);
 
         for (Error_Log__c log : logs) log.Status__c = 'Escalated';
-        update logs;
+        Database.update(logs, true, AccessLevel.SYSTEM_MODE);
 
         for (Developer_Escalation__c escalation : escalations) out.add(result(escalation));
         return out;
@@ -153,9 +152,9 @@ public with sharing class AEIR_EscalationService {
             session.Needs_Escalation__c = true;
         }
 
-        insert escalations;
+        Database.insert(escalations, true, AccessLevel.SYSTEM_MODE);
         dispatchAll(escalations, packages, sendNow);
-        update manualOnly;
+        Database.update(manualOnly, true, AccessLevel.SYSTEM_MODE);
 
         for (Developer_Escalation__c escalation : escalations) out.add(result(escalation));
         return out;
@@ -371,7 +370,7 @@ public with sharing class AEIR_EscalationService {
         }
 
         if (!cases.isEmpty()) {
-            List<Database.SaveResult> caseResults = Database.insert(cases, false);
+                List<Database.SaveResult> caseResults = Database.insert(cases, false, AccessLevel.SYSTEM_MODE);
             Set<Id> createdIds = new Set<Id>();
             for (Database.SaveResult sr : caseResults) {
                 if (sr.isSuccess()) createdIds.add(sr.getId());
@@ -400,8 +399,8 @@ public with sharing class AEIR_EscalationService {
         // allOrNone=false keeps one bad row from failing the batch, but it also means a
         // rejected row disappears without a word. Report what was lost: an audit that never
         // landed is worse than no audit at all, because the console shows a clean history.
-        if (!toUpdate.isEmpty()) reportPartialFailures(Database.update(toUpdate, false), 'escalation status update');
-        if (!audits.isEmpty()) reportPartialFailures(Database.insert(audits, false), 'delivery audit insert');
+        if (!toUpdate.isEmpty()) reportPartialFailures(Database.update(toUpdate, false, AccessLevel.SYSTEM_MODE), 'escalation status update');
+        if (!audits.isEmpty()) reportPartialFailures(Database.insert(audits, false, AccessLevel.SYSTEM_MODE), 'delivery audit insert');
     }
 
     // ---------- helpers ----------

@@ -1,4 +1,4 @@
-public with sharing class AEIR_UserNotificationService {
+public without sharing class AEIR_UserNotificationService {
     public class AlertDTO {
         @AuraEnabled public Id notificationId;
         @AuraEnabled public Id errorLogId;
@@ -14,11 +14,29 @@ public with sharing class AEIR_UserNotificationService {
     }
     public class DetailDTO {
         @AuraEnabled public AlertDTO alert;
-        @AuraEnabled public Error_Log__c errorLog;
+        @AuraEnabled public ErrorLogDTO errorLog;
         @AuraEnabled public AI_Diagnosis__c diagnosis;
-        @AuraEnabled public List<Error_Context__c> contexts;
-        @AuraEnabled public String recordSnapshotJson;
         @AuraEnabled public Boolean canEscalate;
+    }
+    /**
+     * Explicit user-safe projection. Never return Error_Log__c directly from an Aura
+     * method: doing so makes newly added technical fields public by accident.
+     */
+    public class ErrorLogDTO {
+        @AuraEnabled public Id recordId;
+        @AuraEnabled public String correlationId;
+        @AuraEnabled public String sourceType;
+        @AuraEnabled public String sourceName;
+        @AuraEnabled public String objectApiName;
+        @AuraEnabled public String affectedRecordId;
+        @AuraEnabled public String actionName;
+        @AuraEnabled public String pageUrl;
+        @AuraEnabled public String category;
+        @AuraEnabled public String severity;
+        @AuraEnabled public String status;
+        @AuraEnabled public String normalizedMessage;
+        @AuraEnabled public Boolean retryEligible;
+        @AuraEnabled public Datetime createdDate;
     }
 
     public static void notifyForErrorLogs(List<Error_Log__c> logs) {
@@ -64,7 +82,7 @@ public with sharing class AEIR_UserNotificationService {
             toInsert.add(item);
         }
         if (toInsert.isEmpty()) return;
-        Database.SaveResult[] insertResults = Database.insert(toInsert, false);
+        Database.SaveResult[] insertResults = Database.insert(toInsert, false, AccessLevel.SYSTEM_MODE);
         List<Aegis_User_Alert__e> events = new List<Aegis_User_Alert__e>();
         List<Delivery_Attempt__c> attempts = new List<Delivery_Attempt__c>();
         for (Integer i = 0; i < insertResults.size(); i++) {
@@ -96,7 +114,7 @@ public with sharing class AEIR_UserNotificationService {
                 attempts.add(deliveryAttempt(evt.Correlation_Id__c, 'Platform Event', sr.isSuccess() ? 'Delivered' : 'Failed', sr.isSuccess() ? 'Aegis user alert event published.' : firstError(sr.getErrors()), evt.Correlation_Id__c + ':alert'));
             }
         }
-        if (!attempts.isEmpty()) Database.insert(attempts, false);
+        if (!attempts.isEmpty()) Database.insert(attempts, false, AccessLevel.SYSTEM_MODE);
     }
 
     /**
@@ -188,7 +206,7 @@ public with sharing class AEIR_UserNotificationService {
             alerted.add(log);
         }
 
-        if (!toUpdate.isEmpty()) Database.update(toUpdate, false);
+        if (!toUpdate.isEmpty()) Database.update(toUpdate, false, AccessLevel.SYSTEM_MODE);
         if (alerts.isEmpty()) return;
 
         List<Database.SaveResult> published = EventBus.publish(alerts);
@@ -200,7 +218,7 @@ public with sharing class AEIR_UserNotificationService {
                 sr.isSuccess() ? 'Aegis diagnosis alert published.' : firstError(sr.getErrors()),
                 alerted[i].Correlation_Id__c + ':diagnosed'));
         }
-        if (!attempts.isEmpty()) Database.insert(attempts, false);
+        if (!attempts.isEmpty()) Database.insert(attempts, false, AccessLevel.SYSTEM_MODE);
     }
 
 
@@ -257,7 +275,6 @@ public with sharing class AEIR_UserNotificationService {
 
         Id errorLogId;
         DetailDTO detail = new DetailDTO();
-        detail.contexts = new List<Error_Context__c>();
         detail.canEscalate = false;
 
         if (!notifications.isEmpty()) {
@@ -265,7 +282,7 @@ public with sharing class AEIR_UserNotificationService {
             if (notice.Status__c == 'New') {
                 notice.Status__c = 'Viewed';
                 notice.Viewed_At__c = Datetime.now();
-                update notice;
+                Database.update(new List<User_Notification__c>{ notice }, true, AccessLevel.SYSTEM_MODE);
             }
             detail.alert = toDto(notice);
             errorLogId = notice.Error_Log__c;
@@ -302,19 +319,16 @@ public with sharing class AEIR_UserNotificationService {
             // QueryException the moment the row is invisible under sharing or was deleted
             // between this query and the one that produced the id - and that exception would
             // reach the user as a raw platform message instead of the panel.
-            List<Error_Log__c> logs = [SELECT Id, Name, Correlation_Id__c, Source_Type__c, Source_Name__c, Object_API_Name__c, Record_Id__c,
-                                              Error_Category__c, Severity__c, Status__c, Normalized_Message__c, Original_Error_Message__c,
+            List<Error_Log__c> logs = [SELECT Id, Correlation_Id__c, Source_Type__c, Source_Name__c, Object_API_Name__c, Record_Id__c,
+                                              Error_Category__c, Severity__c, Status__c, Normalized_Message__c,
                                               Page_URL__c, Action_Name__c, Retry_Eligible__c, CreatedDate
                                        FROM Error_Log__c WHERE Id = :errorLogId LIMIT 1];
             if (!logs.isEmpty()) {
-                detail.errorLog = logs[0];
-                detail.contexts = [SELECT Id, Context_Type__c, Source__c, Payload_JSON__c, Masked__c, Sequence__c
-                                   FROM Error_Context__c WHERE Error_Log__c = :errorLogId ORDER BY Sequence__c ASC LIMIT 20];
+                detail.errorLog = toErrorLogDto(logs[0]);
                 List<AI_Diagnosis__c> diagnoses = [SELECT Id, Summary__c, Root_Cause__c, Fixability__c, Confidence__c, Recommended_Action__c,
                                                           Escalation_Required__c, Needs_User_Input__c, Safe_Remediation_Action_Key__c, Agent_Status__c
                                                    FROM AI_Diagnosis__c WHERE Error_Log__c = :errorLogId ORDER BY CreatedDate DESC LIMIT 1];
                 detail.diagnosis = diagnoses.isEmpty() ? null : diagnoses[0];
-                detail.recordSnapshotJson = AEIR_ContextSnapshotService.getSnapshot(detail.errorLog.Object_API_Name__c, detail.errorLog.Record_Id__c, false);
                 // Only true when there is an Error Log to build a diagnostic package from.
                 detail.canEscalate = true;
             }
@@ -336,7 +350,7 @@ public with sharing class AEIR_UserNotificationService {
         if (rows.isEmpty()) throw new AuraHandledException('Notification not found or not authorized.');
         rows[0].Status__c = status;
         if (status == 'Dismissed') rows[0].Dismissed_At__c = Datetime.now();
-        update rows[0];
+        Database.update(rows, true, AccessLevel.SYSTEM_MODE);
     }
 
     private static AlertDTO toDto(User_Notification__c item) {
@@ -352,6 +366,24 @@ public with sharing class AEIR_UserNotificationService {
         dto.status = item.Status__c;
         dto.expiresAt = item.Expires_At__c;
         dto.createdDate = item.CreatedDate;
+        return dto;
+    }
+    private static ErrorLogDTO toErrorLogDto(Error_Log__c log) {
+        ErrorLogDTO dto = new ErrorLogDTO();
+        dto.recordId = log.Id;
+        dto.correlationId = log.Correlation_Id__c;
+        dto.sourceType = log.Source_Type__c;
+        dto.sourceName = log.Source_Name__c;
+        dto.objectApiName = log.Object_API_Name__c;
+        dto.affectedRecordId = log.Record_Id__c;
+        dto.actionName = log.Action_Name__c;
+        dto.pageUrl = log.Page_URL__c;
+        dto.category = log.Error_Category__c;
+        dto.severity = log.Severity__c;
+        dto.status = log.Status__c;
+        dto.normalizedMessage = log.Normalized_Message__c;
+        dto.retryEligible = log.Retry_Eligible__c;
+        dto.createdDate = log.CreatedDate;
         return dto;
     }
     private static Delivery_Attempt__c deliveryAttempt(String correlationId, String channel, String status, String response, String key) {
