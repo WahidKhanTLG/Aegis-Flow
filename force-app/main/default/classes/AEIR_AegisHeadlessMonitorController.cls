@@ -54,7 +54,10 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
         input.actionName = 'Flow element: ' + blankTo(element, 'Unknown');
         input.recordId = str(p.get('ContextRecordId'));
         input.objectApiName = str(p.get('ContextObject'));
-        input.userId = firstNonBlank(str(p.get('UserId')), str(p.get('InterviewStartedById')));
+        // The browser receives this payload over EMP API, so its user fields are untrusted
+        // input by the time they reach Apex. The component already filters events to the
+        // current user; bind the log to that same user on the server as the final boundary.
+        input.userId = UserInfo.getUserId();
         input.contextJson = JSON.serialize(new Map<String, Object>{
             'flowApiName' => flowName,
             'flowVersion' => p.get('FlowVersionNumber'),
@@ -83,7 +86,6 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
 
     private static String str(Object value) { return value == null ? null : String.valueOf(value); }
     private static String blankTo(String v, String f) { return String.isBlank(v) ? f : v; }
-    private static String firstNonBlank(String a, String b) { return String.isBlank(a) ? b : a; }
 
     @AuraEnabled(cacheable=true)
     public static String getAlertChannel() {
@@ -116,9 +118,9 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
         }
         contextMap.put('correlationId', correlationId);
         if (detail != null && detail.errorLog != null) {
-            contextMap.put('recordId', detail.errorLog.Record_Id__c);
-            contextMap.put('objectApiName', detail.errorLog.Object_API_Name__c);
-            contextMap.put('pageUrl', detail.errorLog.Page_URL__c);
+            contextMap.put('recordId', detail.errorLog.affectedRecordId);
+            contextMap.put('objectApiName', detail.errorLog.objectApiName);
+            contextMap.put('pageUrl', detail.errorLog.pageUrl);
         }
         return AEIR_HelpMeController.createSession(JSON.serialize(contextMap), String.isBlank(userDescription) ? 'User requested help from an Aegis Flow alert.' : userDescription, 'Process Failed');
     }
@@ -126,6 +128,6 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
     public static AEIR_EscalationService.EscalationResult escalateAlert(String correlationId) {
         AEIR_UserNotificationService.DetailDTO detail = AEIR_UserNotificationService.getAlertDetails(correlationId);
         if (detail == null || detail.errorLog == null) throw new AuraHandledException('No error log is available for escalation.');
-        return AEIR_EscalationService.createForError(detail.errorLog.Id, null, true);
+        return AEIR_EscalationService.createForError(detail.errorLog.recordId, null, true);
     }
 }

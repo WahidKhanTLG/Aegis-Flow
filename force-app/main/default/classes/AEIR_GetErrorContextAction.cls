@@ -5,7 +5,7 @@
  * a record snapshot - so it hit the SOQL limit at 25 requests in a single Flow batch. All
  * four are now resolved for the whole batch up front.
  */
-public with sharing class AEIR_GetErrorContextAction {
+public without sharing class AEIR_GetErrorContextAction {
 
     public class Request {
         @InvocableVariable(required=true) public String errorLogId;
@@ -39,14 +39,21 @@ public with sharing class AEIR_GetErrorContextAction {
             }
         }
 
-        Map<Id, Error_Log__c> logsById = new Map<Id, Error_Log__c>([
-            SELECT Id, Name, Correlation_Id__c, Source_Type__c, Source_Name__c,
-                   Error_Category__c, Severity__c, Status__c, Object_API_Name__c,
-                   Record_Id__c, Action_Name__c, Page_URL__c,
-                   Original_Error_Message__c, Normalized_Message__c,
-                   Stack_Trace__c, Retry_Eligible__c
-            FROM Error_Log__c WHERE Id IN :logIds
-        ]);
+        Boolean canViewSensitiveContext =
+            FeatureManagement.checkPermission('AEIR_View_Sensitive_Context');
+        Id currentUserId = UserInfo.getUserId();
+        List<Error_Log__c> visibleLogs = canViewSensitiveContext
+            ? [SELECT Id, Name, Correlation_Id__c, Source_Type__c, Source_Name__c,
+                      Error_Category__c, Severity__c, Status__c, Object_API_Name__c,
+                      Record_Id__c, Action_Name__c, Page_URL__c,
+                      Normalized_Message__c, Retry_Eligible__c
+               FROM Error_Log__c WHERE Id IN :logIds]
+            : [SELECT Id, Name, Correlation_Id__c, Source_Type__c, Source_Name__c,
+                      Error_Category__c, Severity__c, Status__c, Object_API_Name__c,
+                      Record_Id__c, Action_Name__c, Page_URL__c,
+                      Normalized_Message__c, Retry_Eligible__c
+               FROM Error_Log__c WHERE Id IN :logIds AND User__c = :currentUserId];
+        Map<Id, Error_Log__c> logsById = new Map<Id, Error_Log__c>(visibleLogs);
 
         // CreatedDate ASC so the newest row wins on overwrite, matching the per-request
         // ORDER BY CreatedDate DESC LIMIT 1 this replaced.
@@ -60,18 +67,25 @@ public with sharing class AEIR_GetErrorContextAction {
             latestDiagnosisByLog.put(d.Error_Log__c, d);
         }
 
+        Map<Id, Error_Log__c> technicalLogsById = new Map<Id, Error_Log__c>();
         Map<Id, List<Error_Context__c>> contextsByLog = new Map<Id, List<Error_Context__c>>();
-        for (Error_Context__c ctx : [
-            SELECT Error_Log__c, Context_Type__c, Source__c, Sequence__c, Payload_JSON__c, Masked__c
-            FROM Error_Context__c WHERE Error_Log__c IN :logIds
-            ORDER BY Sequence__c ASC
-        ]) {
-            if (!contextsByLog.containsKey(ctx.Error_Log__c)) {
-                contextsByLog.put(ctx.Error_Log__c, new List<Error_Context__c>());
-            }
-            // Same per-log cap as the original query, applied after grouping.
-            if (contextsByLog.get(ctx.Error_Log__c).size() < 20) {
-                contextsByLog.get(ctx.Error_Log__c).add(ctx);
+        if (canViewSensitiveContext) {
+            technicalLogsById = new Map<Id, Error_Log__c>([
+                SELECT Id, Original_Error_Message__c, Stack_Trace__c
+                FROM Error_Log__c WHERE Id IN :logIds
+            ]);
+            for (Error_Context__c ctx : [
+                SELECT Error_Log__c, Context_Type__c, Source__c, Sequence__c, Payload_JSON__c, Masked__c
+                FROM Error_Context__c WHERE Error_Log__c IN :logIds
+                ORDER BY Sequence__c ASC
+            ]) {
+                if (!contextsByLog.containsKey(ctx.Error_Log__c)) {
+                    contextsByLog.put(ctx.Error_Log__c, new List<Error_Context__c>());
+                }
+                // Same per-log cap as the original query, applied after grouping.
+                if (contextsByLog.get(ctx.Error_Log__c).size() < 20) {
+                    contextsByLog.get(ctx.Error_Log__c).add(ctx);
+                }
             }
         }
 
@@ -98,18 +112,43 @@ public with sharing class AEIR_GetErrorContextAction {
                 output.add(response);
                 continue;
             }
-            Map<String, Object> payload = new Map<String, Object>{ 'errorLog' => log };
+            Map<String, Object> payload = new Map<String, Object>{ 'errorLog' => safeErrorLog(log) };
             if (latestDiagnosisByLog.containsKey(log.Id)) {
                 payload.put('latestDiagnosis', latestDiagnosisByLog.get(log.Id));
             }
-            payload.put('contexts', contextsByLog.containsKey(log.Id)
-                ? contextsByLog.get(log.Id) : new List<Error_Context__c>());
             payload.put('recordSnapshot', snapshots.get(log.Record_Id__c));
+            if (canViewSensitiveContext) {
+                Error_Log__c technical = technicalLogsById.get(log.Id);
+                payload.put('technicalError', technical == null ? null : technical.Original_Error_Message__c);
+                payload.put('stackTrace', technical == null ? null : technical.Stack_Trace__c);
+                payload.put('contexts', contextsByLog.containsKey(log.Id)
+                    ? contextsByLog.get(log.Id) : new List<Error_Context__c>());
+            }
             response.correlationId = log.Correlation_Id__c;
             response.contextJson = AEIR_SecuritySanitizerService.mask(JSON.serialize(payload));
-            response.message = 'Sanitized error context returned.';
+            response.message = canViewSensitiveContext
+                ? 'Sanitized error context returned.'
+                : 'Limited diagnostic context returned.';
             output.add(response);
         }
         return output;
+    }
+
+    private static Map<String, Object> safeErrorLog(Error_Log__c log) {
+        return new Map<String, Object>{
+            'id' => log.Id,
+            'correlationId' => log.Correlation_Id__c,
+            'sourceType' => log.Source_Type__c,
+            'sourceName' => log.Source_Name__c,
+            'category' => log.Error_Category__c,
+            'severity' => log.Severity__c,
+            'status' => log.Status__c,
+            'objectApiName' => log.Object_API_Name__c,
+            'recordId' => log.Record_Id__c,
+            'actionName' => log.Action_Name__c,
+            'pageUrl' => log.Page_URL__c,
+            'message' => log.Normalized_Message__c,
+            'retryEligible' => log.Retry_Eligible__c
+        };
     }
 }

@@ -5,7 +5,13 @@ import getOpenAlerts from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.
 import getAlertBehavior from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.getAlertBehavior';
 import captureFlowError from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.captureFlowError';
 import getAlertDetails from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.getAlertDetails';
-import { getUtilityBarAPI, openUtilityBar } from 'lightning/platformUtilityBarApi';
+import {
+    EnclosingUtilityId,
+    getInfo,
+    open,
+    updateUtility,
+    updatePanel
+} from 'lightning/platformUtilityBarApi';
 import USER_ID from '@salesforce/user/Id';
 
 jest.mock(
@@ -69,8 +75,11 @@ describe('c-aegis-headless-monitor', () => {
         getAlertBehavior.mockResolvedValue({ autoOpenUtility: false, autoOpenMinimumSeverity: 'High' });
         captureFlowError.mockResolvedValue('FLOWINT-test-guid');
         getAlertDetails.mockResolvedValue({});
-        getUtilityBarAPI.mockClear();
-        openUtilityBar.mockClear();
+        getInfo.mockResolvedValue({ utilityVisible: false });
+        getInfo.mockClear();
+        open.mockClear();
+        updateUtility.mockClear();
+        updatePanel.mockClear();
     });
 
     afterEach(() => {
@@ -91,9 +100,14 @@ describe('c-aegis-headless-monitor', () => {
         for (let i = 0; i < 4; i++) await Promise.resolve();
     }
 
+    async function flushUtilityUpdates() {
+        for (let i = 0; i < 4; i++) await Promise.resolve();
+    }
+
     function mount() {
         element = createElement('c-aegis-headless-monitor', { is: AegisHeadlessMonitor });
         document.body.appendChild(element);
+        EnclosingUtilityId.emit('utility-aegis-alerts');
         return Promise.resolve();
     }
 
@@ -108,8 +122,18 @@ describe('c-aegis-headless-monitor', () => {
     it('shows an alert addressed to the current user', async () => {
         await mount();
         __emit(alertPayload());
-        await Promise.resolve();
+        await flushUtilityUpdates();
         expect(element.shadowRoot.textContent).toContain('I have identified the issue.');
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', {
+            highlighted: true,
+            icon: 'warning',
+            iconVariant: 'error',
+            label: 'Aegis Flow Alerts (1)'
+        });
+        expect(updatePanel).toHaveBeenLastCalledWith('utility-aegis-alerts', {
+            icon: 'warning',
+            label: 'Aegis Flow Alerts (1)'
+        });
     });
 
     it('ignores an alert addressed to a different user', async () => {
@@ -166,18 +190,19 @@ describe('c-aegis-headless-monitor', () => {
             }
         ]);
         await mount();
-        await Promise.resolve();
-        await Promise.resolve();
+        await flushUtilityUpdates();
         expect(getOpenAlerts).toHaveBeenCalled();
         expect(element.shadowRoot.textContent).toContain('Missed while offline');
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', expect.objectContaining({ highlighted: true }));
     });
 
     it('does not auto-open the panel when policy disables it', async () => {
         await mount();
         await Promise.resolve();
         __emit(alertPayload({ Severity__c: 'Critical' }));
-        await Promise.resolve();
-        expect(getUtilityBarAPI).not.toHaveBeenCalled();
+        await flushUtilityUpdates();
+        expect(open).not.toHaveBeenCalled();
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', expect.objectContaining({ highlighted: true }));
     });
 
     it('auto-opens for a high severity alert when policy allows it', async () => {
@@ -186,8 +211,9 @@ describe('c-aegis-headless-monitor', () => {
         await Promise.resolve();
         await Promise.resolve();
         __emit(alertPayload({ Severity__c: 'Critical', Correlation_Id__c: 'CRIT-1' }));
-        await Promise.resolve();
-        expect(getUtilityBarAPI).toHaveBeenCalled();
+        await flushUtilityUpdates();
+        expect(getInfo).toHaveBeenCalledWith('utility-aegis-alerts');
+        expect(open).toHaveBeenCalledWith('utility-aegis-alerts');
     });
 
     it('does not interrupt for an alert below the severity threshold', async () => {
@@ -196,8 +222,39 @@ describe('c-aegis-headless-monitor', () => {
         await Promise.resolve();
         await Promise.resolve();
         __emit(alertPayload({ Severity__c: 'Medium', Correlation_Id__c: 'MED-1' }));
-        await Promise.resolve();
-        expect(getUtilityBarAPI).not.toHaveBeenCalled();
+        await flushUtilityUpdates();
+        expect(open).not.toHaveBeenCalled();
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', expect.objectContaining({ highlighted: true }));
+    });
+
+    it('clears the utility highlight once the active alert is viewed', async () => {
+        await mount();
+        __emit(alertPayload());
+        await flushUtilityUpdates();
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', expect.objectContaining({ highlighted: true }));
+
+        await clickButton(element, 'View details');
+        await flushUtilityUpdates();
+
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', expect.objectContaining({
+            highlighted: false,
+            label: 'Aegis Flow Alerts (1)'
+        }));
+    });
+
+    it('resets the utility signal when the last alert is dismissed', async () => {
+        await mount();
+        __emit(alertPayload());
+        await flushUtilityUpdates();
+        await clickButton(element, 'Dismiss');
+        await flushUtilityUpdates();
+
+        expect(updateUtility).toHaveBeenLastCalledWith('utility-aegis-alerts', {
+            highlighted: false,
+            icon: 'screen',
+            iconVariant: null,
+            label: 'Aegis Flow Alerts'
+        });
     });
 
     it('captures a real-time Flow failure with no fault path', async () => {
@@ -237,8 +294,8 @@ describe('c-aegis-headless-monitor', () => {
      * Regression: the retention purge deletes an Error_Log__c and, because the lookup is
      * deleteConstraint = SetNull, leaves the User_Notification__c pointing at nothing.
      * getAlertDetails then returns a detail whose errorLog is null. The template used to
-     * render {detail.errorLog.Severity__c} directly, which threw
-     * "Cannot read properties of undefined (reading 'Severity__c')" and killed the panel.
+     * render {detail.errorLog.severity} directly, which threw
+     * "Cannot read properties of undefined (reading 'severity')" and killed the panel.
      */
     it('renders the detail panel when the Error Log has been purged', async () => {
         getAlertDetails.mockResolvedValue({
@@ -270,10 +327,10 @@ describe('c-aegis-headless-monitor', () => {
         getAlertDetails.mockResolvedValue({
             alert: { correlationId: 'CID-1', severity: 'High' },
             errorLog: {
-                Severity__c: 'Critical',
-                Source_Type__c: 'Flow',
-                Correlation_Id__c: 'FLOWINT-abc',
-                Normalized_Message__c: 'A referenced value was empty.'
+                severity: 'Critical',
+                sourceType: 'Flow',
+                correlationId: 'FLOWINT-abc',
+                normalizedMessage: 'A referenced value was empty.'
             },
             diagnosis: { Root_Cause__c: 'Missing AccountId', Recommended_Action__c: 'Map the field' },
             contexts: [],

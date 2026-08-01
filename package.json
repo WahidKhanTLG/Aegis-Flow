@@ -1,0 +1,23 @@
+{
+  "name": "aegis-flow-salesforce",
+  "version": "1.2.0-reconciled",
+  "private": true,
+  "description": "Aegis Flow: governed Salesforce error intelligence, remediation, retry, and escalation.",
+  "scripts": {
+    "audit:local": "python3 scripts/local_audit.py",
+    "deploy": "sf project deploy start --source-dir force-app --target-org aegis-target --test-level RunLocalTests --wait 60",
+    "docs:datamodel": "python3 scripts/generate_data_model_doc.py",
+    "open": "sf org open --target-org aegis-target",
+    "smoke": "sf apex run --file scripts/smoke_test.apex --target-org aegis-target",
+    "test": "sf apex run test --class-names AEIR_CoreTest,AEIR_ReconciledFeaturesTest --target-org aegis-target --code-coverage --result-format human --wait 60",
+    "test:unit": "sfdx-lwc-jest",
+    "test:unit:coverage": "sfdx-lwc-jest -- --coverage",
+    "validate:production": "sf project deploy validate --source-dir force-app --target-org aegis-target --test-level RunLocalTests --wait 60",
+    "validate:sandbox": "sf project deploy start --source-dir force-app --target-org aegis-target --dry-run --test-level RunLocalTests --wait 60"
+  },
+  "devDependencies": {
+    "@salesforce/cli": "latest",
+    "@salesforce/sfdx-lwc-jest": "^7.9.0",
+    "@types/jest": "^29.5.14"
+  }
+}

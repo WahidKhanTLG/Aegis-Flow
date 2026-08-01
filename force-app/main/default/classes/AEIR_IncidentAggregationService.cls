@@ -10,7 +10,7 @@
  * failed element, and a time bucket, so an unrelated failure tomorrow starts a new
  * incident rather than inflating yesterday's.
  */
-public with sharing class AEIR_IncidentAggregationService {
+public without sharing class AEIR_IncidentAggregationService {
 
     /** Occurrences within the same bucket roll into one incident. */
     @TestVisible
@@ -46,12 +46,14 @@ public with sharing class AEIR_IncidentAggregationService {
 
         Set<String> keys = byKey.keySet();
         Map<String, Incident__c> existing = new Map<String, Incident__c>();
-        for (Incident__c incident : [
-            SELECT Id, Incident_Key__c, Occurrence_Count__c, Affected_Record_Count__c, Affected_User_Count__c,
-                   First_Seen_At__c, Last_Seen_At__c, Highest_Severity__c, Status__c
-            FROM Incident__c
-            WHERE Incident_Key__c IN :keys
-        ]) {
+        Map<String, Object> incidentBinds = new Map<String, Object>{ 'incidentKeys' => keys };
+        for (Incident__c incident : (List<Incident__c>) Database.queryWithBinds(
+            'SELECT Id, Incident_Key__c, Occurrence_Count__c, Affected_Record_Count__c, Affected_User_Count__c, '
+            + 'First_Seen_At__c, Last_Seen_At__c, Highest_Severity__c, Status__c '
+            + 'FROM Incident__c WHERE Incident_Key__c IN :incidentKeys',
+            incidentBinds,
+            AccessLevel.SYSTEM_MODE
+        )) {
             existing.put(incident.Incident_Key__c, incident);
         }
 
@@ -59,12 +61,12 @@ public with sharing class AEIR_IncidentAggregationService {
         Map<String, Set<String>> knownRecords = new Map<String, Set<String>>();
         Map<String, Set<String>> knownUsers = new Map<String, Set<String>>();
         if (!existing.isEmpty()) {
-            for (Error_Log__c prior : [
-                SELECT Incident_Key__c, Record_Id__c, User__c
-                FROM Error_Log__c
-                WHERE Incident_Key__c IN :keys
-                LIMIT 10000
-            ]) {
+            for (Error_Log__c prior : (List<Error_Log__c>) Database.queryWithBinds(
+                'SELECT Incident_Key__c, Record_Id__c, User__c '
+                + 'FROM Error_Log__c WHERE Incident_Key__c IN :incidentKeys LIMIT 10000',
+                incidentBinds,
+                AccessLevel.SYSTEM_MODE
+            )) {
                 addTo(knownRecords, prior.Incident_Key__c, prior.Record_Id__c);
                 addTo(knownUsers, prior.Incident_Key__c, String.valueOf(prior.User__c));
             }
@@ -103,7 +105,7 @@ public with sharing class AEIR_IncidentAggregationService {
         }
 
         try {
-            upsert toUpsert Incident_Key__c;
+            Database.upsert(toUpsert, Incident__c.Fields.Incident_Key__c, true, AccessLevel.SYSTEM_MODE);
         } catch (Exception groupingFailure) {
             // Grouping is bookkeeping. Spec 1.2 requires the error record to persist even
             // when downstream services cannot run, so a user without Incident__c create

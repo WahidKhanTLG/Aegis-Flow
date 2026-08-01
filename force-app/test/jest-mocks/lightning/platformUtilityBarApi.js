@@ -1,6 +1,9 @@
+import { createTestWireAdapter } from '@salesforce/wire-service-jest-util';
+
 // Test double for lightning/platformUtilityBarApi.
-export const openUtilityBar = jest.fn(() => Promise.resolve(true));
-export const minimizeUtilityBar = jest.fn(() => Promise.resolve(true));
-export const getUtilityBarAPI = jest.fn(() =>
-    Promise.resolve({ openUtilityBar, minimizeUtilityBar })
-);
+export const EnclosingUtilityId = createTestWireAdapter(jest.fn());
+export const getInfo = jest.fn(() => Promise.resolve({ utilityVisible: false }));
+export const open = jest.fn(() => Promise.resolve(true));
+export const minimize = jest.fn(() => Promise.resolve(true));
+export const updateUtility = jest.fn(() => Promise.resolve(true));
+export const updatePanel = jest.fn(() => Promise.resolve(true));

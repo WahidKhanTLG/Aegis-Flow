@@ -1,4 +1,4 @@
-public with sharing class AEIR_ErrorCaptureService {
+public without sharing class AEIR_ErrorCaptureService {
     public class ErrorInput {
         @AuraEnabled public String correlationId;
         @AuraEnabled public String sourceType;
@@ -40,16 +40,22 @@ public with sharing class AEIR_ErrorCaptureService {
     public static CaptureResult capture(ErrorInput input) {
         if (input == null) input = new ErrorInput();
         String cid = normalizeCorrelationId(input.correlationId);
+        Id affectedUserId = validUserId(input.userId) ? (Id)input.userId : UserInfo.getUserId();
         List<Error_Log__c> existing = [
-            SELECT Id, Correlation_Id__c, Status__c, Error_Category__c, Severity__c,
+            SELECT Id, User__c, Correlation_Id__c, Status__c, Error_Category__c, Severity__c,
                    Normalized_Message__c, Retry_Eligible__c
             FROM Error_Log__c WHERE Correlation_Id__c = :cid LIMIT 1
         ];
-        if (!existing.isEmpty()) return resultFromLog(existing[0], true, 'Existing diagnostic returned for this correlation id.');
+        if (!existing.isEmpty()) {
+            if (existing[0].User__c != affectedUserId) {
+                throw new AuraHandledException('That diagnostic correlation is not available to this user.');
+            }
+            return resultFromLog(existing[0], true, 'Existing diagnostic returned for this correlation id.');
+        }
 
         Error_Log__c log = buildLog(input, cid);
         AEIR_IncidentAggregationService.assign(new List<Error_Log__c>{ log });
-        insert log;
+        Database.insert(new List<Error_Log__c>{ log }, true, AccessLevel.SYSTEM_MODE);
         insertContextRows(log.Id, cid, input);
         AEIR_UserNotificationService.notifyForErrorLogs(new List<Error_Log__c>{ log });
         requestDiagnosis(new List<Error_Log__c>{ log });
@@ -117,7 +123,7 @@ public with sharing class AEIR_ErrorCaptureService {
 
         if (!logsToInsert.isEmpty()) {
             AEIR_IncidentAggregationService.assign(logsToInsert);
-            Database.SaveResult[] saveResults = Database.insert(logsToInsert, false);
+            Database.SaveResult[] saveResults = Database.insert(logsToInsert, false, AccessLevel.SYSTEM_MODE);
             List<Error_Context__c> contextRows = new List<Error_Context__c>();
             for (Integer i = 0; i < saveResults.size(); i++) {
                 Database.SaveResult sr = saveResults[i];
@@ -136,7 +142,7 @@ public with sharing class AEIR_ErrorCaptureService {
                     output.add(failure);
                 }
             }
-            if (!contextRows.isEmpty()) Database.insert(contextRows, false);
+            if (!contextRows.isEmpty()) Database.insert(contextRows, false, AccessLevel.SYSTEM_MODE);
             List<Error_Log__c> insertedLogs = new List<Error_Log__c>();
             for (Error_Log__c log : logsToInsert) if (log.Id != null) insertedLogs.add(log);
             AEIR_UserNotificationService.notifyForErrorLogs(insertedLogs);
@@ -148,6 +154,11 @@ public with sharing class AEIR_ErrorCaptureService {
     @AuraEnabled
     public static CaptureResult captureFromJson(String inputJson) {
         ErrorInput input = (ErrorInput) JSON.deserialize(inputJson, ErrorInput.class);
+        // Browser callers must never be able to attribute a diagnostic to another user.
+        // Server-side monitors and the explicitly permission-gated REST endpoint use the
+        // non-Aura capture method when they need to record a trusted affected user.
+        if (input == null) input = new ErrorInput();
+        input.userId = UserInfo.getUserId();
         return capture(input);
     }
 
@@ -196,7 +207,7 @@ public with sharing class AEIR_ErrorCaptureService {
 
     private static void insertContextRows(Id logId, String cid, ErrorInput input) {
         List<Error_Context__c> rows = buildContextRows(logId, cid, input);
-        if (!rows.isEmpty()) insert rows;
+        if (!rows.isEmpty()) Database.insert(rows, true, AccessLevel.SYSTEM_MODE);
     }
     private static List<Error_Context__c> buildContextRows(Id logId, String cid, ErrorInput input) {
         List<Error_Context__c> rows = new List<Error_Context__c>();

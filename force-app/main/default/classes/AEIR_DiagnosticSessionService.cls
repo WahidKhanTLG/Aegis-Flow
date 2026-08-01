@@ -75,7 +75,7 @@ public with sharing class AEIR_DiagnosticSessionService {
             recents.add(recent);
         }
 
-        insert sessions;
+        Database.insert(sessions, true, AccessLevel.SYSTEM_MODE);
 
         for (Integer i = 0; i < sessions.size(); i++) {
             SessionResult res = new SessionResult();
