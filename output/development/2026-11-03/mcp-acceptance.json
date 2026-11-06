@@ -1,0 +1,41 @@
+{
+  "transport": "actual spawned Node stdio",
+  "target": "SyncBridge-Product",
+  "writesEnabled": false,
+  "tools": [
+    "get_capabilities",
+    "find_recent_errors",
+    "list_incidents",
+    "list_notifications",
+    "get_error_context",
+    "search_knowledge",
+    "get_knowledge"
+  ],
+  "knowledgeResources": [
+    "aegis-knowledge://abc/abc-pick-pack-ship",
+    "aegis-knowledge://global/aegis-flow",
+    "aegis-knowledge://socal/socal-field-service"
+  ],
+  "knowledgeSearch": {
+    "abc": 1,
+    "socal": 1
+  },
+  "productKnowledgeClaims": 9,
+  "capabilities": {
+    "automaticDiagnosisEnabled": true,
+    "governedRemediationEnabled": true,
+    "aiDiagnosisEnabled": false
+  },
+  "fixtureErrors": 3,
+  "contextKeys": [
+    "message",
+    "context",
+    "correlationId"
+  ],
+  "incidentsReturned": 5,
+  "ownNoticesReturned": 1,
+  "endUserNoticeExcluded": true,
+  "foreignMineContext": "DENIED",
+  "disabledWrite": "DENIED",
+  "result": "PASS"
+}

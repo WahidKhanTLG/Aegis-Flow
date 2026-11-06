@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <classAccesses>
+        <apexClass>AEIR_HeadlessRestService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <customMetadataTypeAccesses>
+        <enabled>true</enabled>
+        <name>Feature_Flag__mdt</name>
+    </customMetadataTypeAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>AEIR_Headless_Access</name>
+    </customPermissions>
+    <description>Scoped API access. Also assign an Aegis role for diagnostic object and field access. Grants no customer business-data permissions.</description>
+    <label>Aegis Headless User</label>
+</PermissionSet>

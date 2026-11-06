@@ -1,12 +1,9 @@
 /**
  * Setup readiness and health check (spec section 14 and 14.1).
  *
- * Reports PASS / WARNING / FAIL per prerequisite with a concrete remediation instruction
- * for every non-pass, plus a test correlation id linking to the records it generated.
- *
- * Section 14.1 requires that the health check performs **no production data mutation**.
- * The live end-to-end probe is therefore opt-in via runLiveProbe, writes only Aegis
- * diagnostic records, and cleans them up afterwards.
+ * The default check is read-only. The separately requested capture probe creates
+ * temporary Aegis diagnostics with follow-up notices/diagnosis suppressed, then reports its
+ * cleanup outcome. It does not verify browser delivery or external destinations.
  */
 public with sharing class AEIR_SetupHealthCheckService {
 
@@ -72,15 +69,7 @@ public with sharing class AEIR_SetupHealthCheckService {
             return fail('Onboarding', 'The Aegis Flow setup wizard has not been completed.',
                         'Open the Aegis Flow Setup tab and name your development and administrator teams.');
         }
-        AEIR_OrgSetupService.RecipientResolution dev = AEIR_OrgSetupService.resolveRecipients('Developer', null);
-        if (dev.recipients.isEmpty()) {
-            return fail('Onboarding', 'No developer recipient can be resolved.',
-                        'Set a developer team email, or enable the system administrator fallback.');
-        }
-        return dev.usingFallback == true
-            ? warn('Onboarding', 'Findings route to system administrators because no developer team is configured.',
-                   'Name your development team in Aegis Flow Setup so findings reach the right people.')
-            : pass('Onboarding', 'Findings route to: ' + String.join(dev.recipients, ', ') + ' (' + dev.source + ').');
+        return pass('Onboarding', 'Setup answers have been saved. Effective destinations are checked under Escalation routing; non-email channels do not require a team mailbox.');
     }
 
     private static CheckResult checkPermissionSets() {
@@ -95,21 +84,54 @@ public with sharing class AEIR_SetupHealthCheckService {
     }
 
     private static CheckResult checkEscalationRoutes() {
-        List<Escalation_Route__mdt> routes = [
-            SELECT Route_Key__c, Recipient__c, Channel__c FROM Escalation_Route__mdt WHERE Active__c = true LIMIT 50
-        ];
+        return evaluateRoutes([
+            SELECT Route_Key__c, Recipient__c, Channel__c, Active__c, Named_Credential__c,
+                Endpoint_Path__c, Target__c FROM Escalation_Route__mdt WHERE Active__c = true LIMIT 50
+        ]);
+    }
+
+    @TestVisible private static CheckResult evaluateRoutes(List<Escalation_Route__mdt> routes) {
         if (routes.isEmpty()) {
             return fail('Escalation routing', 'No active escalation route is configured.',
-                        'Create at least one Escalation_Route__mdt record with a real recipient.');
+                        'Create an active Escalation_Route__mdt record for the intended delivery channel.');
+        }
+        Set<String> channels = new Set<String>();
+        Boolean hasEmailRoute = false;
+        for (Escalation_Route__mdt route : routes) {
+            if (String.isBlank(route.Channel__c) || route.Channel__c == 'Email') hasEmailRoute = true;
+        }
+        Map<String, AEIR_OrgSetupService.RecipientResolution> defaultRecipients = new Map<String, AEIR_OrgSetupService.RecipientResolution>();
+        if (hasEmailRoute) {
+            // Administrator fallback can query User. Resolve once per role, not once
+            // per route; a large route library must not exhaust the query budget.
+            defaultRecipients.put('Developer', AEIR_OrgSetupService.resolveRecipients('Developer', null));
+            defaultRecipients.put('Admin', AEIR_OrgSetupService.resolveRecipients('Admin', null));
         }
         for (Escalation_Route__mdt route : routes) {
-            if (String.isBlank(route.Recipient__c) || route.Recipient__c.endsWith('example.com')) {
-                return warn('Escalation routing',
-                            'Route ' + route.Route_Key__c + ' still uses a placeholder recipient (' + route.Recipient__c + ').',
-                            'Replace the placeholder in Setup > Custom Metadata Types > Escalation Route with a monitored mailbox.');
+            String channel = String.isBlank(route.Channel__c) ? 'Email' : route.Channel__c;
+            channels.add(channel);
+            if (channel == 'Email') {
+                // Error escalations use Developer; manual-only sessions use Admin.
+                // Both use the same effective-recipient resolver as real dispatch.
+                for (String role : new List<String>{ 'Developer', 'Admin' }) {
+                    AEIR_OrgSetupService.RecipientResolution effective =
+                        String.isBlank(route.Recipient__c) || AEIR_OrgSetupService.isPlaceholder(route.Recipient__c)
+                        ? defaultRecipients.get(role)
+                        : AEIR_OrgSetupService.resolveRecipients(role, route.Recipient__c);
+                    if (effective.recipients.isEmpty()) {
+                        return fail('Escalation routing', 'Route ' + route.Route_Key__c + ' cannot resolve a ' + role + ' recipient.',
+                            'Configure the corresponding team email, a real route recipient, or administrator fallback.');
+                    }
+                }
+            } else if (channel != 'Case' && channel != 'None') {
+                String problem = AEIR_ConnectorDeliveryJob.routeConfigurationError(route);
+                if (problem != null) return warn('Escalation routing', 'Route ' + route.Route_Key__c + ': ' + problem,
+                    'Configure the channel-specific Named Credential, relative endpoint and non-secret Target metadata.');
             }
         }
-        return pass('Escalation routing', routes.size() + ' active route(s) with real recipients.');
+        return pass('Escalation routing', routes.size() + ' active route(s); configured channels: '
+            + String.join(new List<String>(channels), ', ') + '. Email uses effective team/route/fallback recipients. '
+            + 'Configuration only: delivery, Named Credential authentication and Case access require a live channel test.');
     }
 
     private static CheckResult checkErrorRules() {
@@ -139,20 +161,26 @@ public with sharing class AEIR_SetupHealthCheckService {
     }
 
     private static CheckResult checkFeatureFlags() {
+        return evaluateFlags([SELECT Feature_Key__c, Active__c, Enabled__c FROM Feature_Flag__mdt LIMIT 200]);
+    }
+
+    @TestVisible private static CheckResult evaluateFlags(List<Feature_Flag__mdt> flags) {
         List<String> enabled = new List<String>();
         List<String> disabled = new List<String>();
-        for (Feature_Flag__mdt flag : [SELECT Feature_Key__c, Active__c, Enabled__c FROM Feature_Flag__mdt LIMIT 200]) {
+        Boolean notificationsEnabled = false;
+        for (Feature_Flag__mdt flag : flags) {
             if (flag.Active__c == true && flag.Enabled__c == true) enabled.add(flag.Feature_Key__c);
             else disabled.add(flag.Feature_Key__c);
+            if (flag.Feature_Key__c != null && flag.Feature_Key__c.equalsIgnoreCase('USER_NOTIFICATIONS')) {
+                notificationsEnabled = flag.Active__c == true && flag.Enabled__c == true;
+            }
         }
-        if (enabled.isEmpty()) {
-            return fail('Feature flags', 'Every Aegis feature flag is disabled.',
-                        'Enable at least USER_NOTIFICATIONS in Setup > Custom Metadata Types > Feature Flag.');
+        if (!notificationsEnabled) {
+            return fail('Feature flags', 'Required USER_NOTIFICATIONS is missing, inactive or disabled.',
+                        'Enable and activate USER_NOTIFICATIONS to deliver user notices. Optional features can remain disabled.');
         }
-        return disabled.isEmpty()
-            ? pass('Feature flags', 'Enabled: ' + String.join(enabled, ', '))
-            : warn('Feature flags', 'Enabled: ' + String.join(enabled, ', ') + '. Disabled: ' + String.join(disabled, ', ') + '.',
-                   'Disabled features are intentional defaults for staged rollout. Enable them when the matching release is ready.');
+        return pass('Feature flags', 'Enabled: ' + String.join(enabled, ', ') + '. Optional features disabled: '
+            + (disabled.isEmpty() ? 'none' : String.join(disabled, ', ')) + '. Enable optional capabilities only after configuring them.');
     }
 
     private static CheckResult checkUtilitySurface() {
@@ -182,18 +210,27 @@ public with sharing class AEIR_SetupHealthCheckService {
     }
 
     private static CheckResult checkScheduledJobs() {
-        Integer flowJobs = [
-            SELECT count() FROM CronTrigger
-            WHERE State = 'WAITING' AND CronJobDetail.Name LIKE 'Aegis Flow Interview Monitor%'
-        ];
-        Integer asyncJobs = [
-            SELECT count() FROM CronTrigger
-            WHERE State = 'WAITING' AND CronJobDetail.Name LIKE 'Aegis Flow Async Job Monitor%'
-        ];
-        Integer retentionJobs = [
-            SELECT count() FROM CronTrigger
-            WHERE State = 'WAITING' AND CronJobDetail.Name = 'AEIR Nightly Retention Purge'
-        ];
+        // A scheduled monitor briefly leaves WAITING when Salesforce acquires or
+        // executes it. That normal transition must not recommend duplicate jobs.
+        return evaluateScheduledJobs([
+            SELECT State, CronJobDetail.Name FROM CronTrigger
+            WHERE (CronJobDetail.Name LIKE 'Aegis Flow Interview Monitor%'
+                OR CronJobDetail.Name LIKE 'Aegis Flow Async Job Monitor%'
+                OR CronJobDetail.Name = 'AEIR Nightly Retention Purge')
+                AND State IN ('WAITING', 'ACQUIRED', 'EXECUTING') LIMIT 100
+        ]);
+    }
+
+    @TestVisible private static CheckResult evaluateScheduledJobs(List<CronTrigger> jobs) {
+        Integer flowJobs = 0, asyncJobs = 0, retentionJobs = 0;
+        Set<String> activeStates = new Set<String>{ 'WAITING', 'ACQUIRED', 'EXECUTING' };
+        for (CronTrigger job : jobs) {
+            if (job == null || !activeStates.contains(job.State) || job.CronJobDetail == null) continue;
+            String name = job.CronJobDetail.Name;
+            if (name != null && name.startsWith('Aegis Flow Interview Monitor')) flowJobs++;
+            else if (name != null && name.startsWith('Aegis Flow Async Job Monitor')) asyncJobs++;
+            else if (name == 'AEIR Nightly Retention Purge') retentionJobs++;
+        }
         if (flowJobs == 0 || asyncJobs == 0 || retentionJobs == 0) {
             return warn('Scheduled jobs', 'Expected flow monitors, an async monitor, and nightly retention; found '
                 + flowJobs + ' flow, ' + asyncJobs + ' async, and ' + retentionJobs + ' retention job(s).',
@@ -205,7 +242,8 @@ public with sharing class AEIR_SetupHealthCheckService {
                 'Run scripts/set_poller_cadence.apex with MODE = NORMAL after the temporary test window.');
         }
         return pass('Scheduled jobs', (flowJobs + asyncJobs + retentionJobs)
-            + ' Aegis jobs waiting: ' + flowJobs + ' flow, ' + asyncJobs + ' async, and nightly retention.');
+            + ' Aegis schedules active (waiting, acquired or executing): ' + flowJobs
+            + ' flow, ' + asyncJobs + ' async, and nightly retention.');
     }
 
     private static CheckResult checkRemediationWhitelist() {
@@ -220,61 +258,53 @@ public with sharing class AEIR_SetupHealthCheckService {
     }
 
     /**
-     * End-to-end probe: capture, classify, notify, retrieve. Writes only Aegis diagnostic
-     * records and removes them afterwards so no production data is mutated (section 14.1).
+     * Opt-in capture probe only; no follow-up notices or diagnosis requests are sent.
      */
     private static CheckResult runEndToEndProbe() {
-        String correlationId = 'HEALTHCHECK-' + String.valueOf(Datetime.now().getTime());
+        String correlationId = 'HEALTHCHECK-' + AEIR_CorrelationIdService.nextId();
+        Savepoint probeBoundary;
+        CheckResult result;
         try {
+            probeBoundary = Database.setSavepoint();
             AEIR_ErrorCaptureService.ErrorInput input = new AEIR_ErrorCaptureService.ErrorInput();
             input.correlationId = correlationId;
             input.sourceType = 'Manual';
             input.sourceName = 'Aegis Flow Health Check';
             input.originalMessage = 'FIELD_CUSTOM_VALIDATION_EXCEPTION: health check probe';
             input.severity = 'Low';
-            AEIR_ErrorCaptureService.CaptureResult captured = AEIR_ErrorCaptureService.capture(input);
-
+            AEIR_ErrorCaptureService.CaptureOptions options = new AEIR_ErrorCaptureService.CaptureOptions();
+            options.notifyUser = false;
+            options.requestDiagnosis = false;
+            AEIR_ErrorCaptureService.CaptureResult captured = AEIR_ErrorCaptureService.capture(input, options);
             if (captured.success != true || captured.errorLogId == null) {
-                return fail('End-to-end probe', correlationId, 'Capture failed: ' + captured.message);
+                result = fail('Capture probe', correlationId, 'Capture failed: ' + captured.message);
+            } else {
+                Error_Log__c stored = [SELECT Id, Error_Category__c, Incident__c FROM Error_Log__c WHERE Id = :captured.errorLogId LIMIT 1];
+                if (String.isBlank(stored.Error_Category__c)) {
+                    result = warn('Capture probe', correlationId, 'Capture worked but no classification was assigned. Check Error_Rule__mdt.');
+                } else if (stored.Incident__c == null) {
+                    result = warn('Capture probe', correlationId, 'Capture and classification worked but no incident was assigned.');
+                } else {
+                    result = pass('Capture probe', correlationId);
+                    result.remediation = 'Capture, classification and incident grouping verified. Browser notices, asynchronous diagnosis and external delivery were not verified.';
+                }
             }
-            Error_Log__c stored = [
-                SELECT Id, Error_Category__c, Incident__c FROM Error_Log__c WHERE Id = :captured.errorLogId LIMIT 1
-            ];
-            Boolean classified = String.isNotBlank(stored.Error_Category__c);
-            Boolean grouped = stored.Incident__c != null;
-            cleanUpProbe(correlationId, stored.Id, stored.Incident__c);
-
-            if (!classified) {
-                return warn('End-to-end probe', correlationId,
-                            'Capture worked but the error was not classified. Check Error_Rule__mdt.');
-            }
-            if (!grouped) {
-                return warn('End-to-end probe', correlationId,
-                            'Capture and classification worked but no incident was assigned.');
-            }
-            return pass('End-to-end probe', correlationId);
         } catch (Exception ex) {
-            return fail('End-to-end probe', correlationId, 'Probe failed: ' + ex.getMessage());
-        }
-    }
-
-    /** Leaves the org exactly as the probe found it. */
-    private static void cleanUpProbe(String correlationId, Id errorLogId, Id incidentId) {
-        try {
-            delete [SELECT Id FROM User_Notification__c WHERE Correlation_Id__c = :correlationId];
-            delete [SELECT Id FROM Delivery_Attempt__c WHERE Correlation_Id__c = :correlationId];
-            delete [SELECT Id FROM Error_Context__c WHERE Correlation_Id__c = :correlationId];
-            delete [SELECT Id FROM Error_Log__c WHERE Id = :errorLogId];
-            if (incidentId != null) {
-                List<Incident__c> orphan = [
-                    SELECT Id FROM Incident__c
-                    WHERE Id = :incidentId AND Id NOT IN (SELECT Incident__c FROM Error_Log__c WHERE Incident__c != null)
-                ];
-                if (!orphan.isEmpty()) delete orphan;
+            result = fail('Capture probe', correlationId, 'Probe failed: ' + AEIR_SecuritySanitizerService.mask(ex.getMessage()));
+        } finally {
+            if (probeBoundary != null) {
+                try {
+                    // Restore every probe write, including counters on an existing incident.
+                    Database.rollback(probeBoundary);
+                    Database.releaseSavepoint(probeBoundary);
+                } catch (Exception cleanupFailure) {
+                    result = fail('Capture probe', correlationId,
+                        'Probe cleanup failed. Temporary diagnostics may remain for this reference; review them before rerunning the probe.');
+                    System.debug(LoggingLevel.WARN, 'Aegis Flow: capture-probe rollback/cleanup failed.');
+                }
             }
-        } catch (Exception ignored) {
-            // Cleanup is best effort; a probe record left behind must not fail the health check.
         }
+        return result;
     }
 
     // ---------- helpers ----------

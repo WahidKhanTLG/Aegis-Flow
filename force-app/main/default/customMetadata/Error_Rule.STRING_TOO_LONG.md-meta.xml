@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://soap.sforce.com/2006/04/metadata">
+  <label>Value exceeds field length</label>
+  <protected>false</protected>
+  <values>
+    <field>Active__c</field>
+    <value xsi:type="xsd:boolean">true</value>
+  </values>
+  <values>
+    <field>Category__c</field>
+    <value xsi:type="xsd:string">Validation Rule</value>
+  </values>
+  <values>
+    <field>Fixability__c</field>
+    <value xsi:type="xsd:string">USER_FIXABLE</value>
+  </values>
+  <values>
+    <field>Pattern__c</field>
+    <value xsi:type="xsd:string">STRING_TOO_LONG</value>
+  </values>
+  <values>
+    <field>Recommended_Action__c</field>
+    <value xsi:type="xsd:string">Review the field limit and shorten the value with user confirmation. Do not silently truncate business data.</value>
+  </values>
+  <values>
+    <field>Severity__c</field>
+    <value xsi:type="xsd:string">Medium</value>
+  </values>
+  <values>
+    <field>User_Message__c</field>
+    <value xsi:type="xsd:string">A value exceeds the allowed field length.</value>
+  </values>
+</CustomMetadata>

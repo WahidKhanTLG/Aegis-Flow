@@ -8,6 +8,7 @@
 public with sharing class AEIR_DiagnosticSessionRequestHandler {
 
     public static void handle(List<Diagnostic_Session_Requested__e> events) {
+        if (events == null || events.isEmpty()) return;
         AEIR_SubscriberTelemetry telemetry = new AEIR_SubscriberTelemetry('DiagnosticSessionRequested');
 
         List<AEIR_DiagnosticSessionService.SessionInput> inputs =
@@ -15,6 +16,10 @@ public with sharing class AEIR_DiagnosticSessionRequestHandler {
         List<String> correlationIds = new List<String>();
 
         for (Diagnostic_Session_Requested__e evt : events) {
+            if (evt == null) {
+                telemetry.record(null, new SessionCaptureException('Diagnostic session event input is required.'));
+                continue;
+            }
             try {
                 // An event that already carries a session id was raised by a session that
                 // exists; creating another would duplicate the user's report.
@@ -41,7 +46,14 @@ public with sharing class AEIR_DiagnosticSessionRequestHandler {
 
         if (!inputs.isEmpty()) {
             try {
-                AEIR_DiagnosticSessionService.createSessions(inputs);
+                List<AEIR_DiagnosticSessionService.SessionResult> results =
+                    AEIR_DiagnosticSessionService.createSessions(inputs);
+                for (Integer i = 0; i < inputs.size(); i++) {
+                    if (i >= results.size() || results[i].sessionId == null) {
+                        telemetry.record(correlationIds[i], new SessionCaptureException(
+                            'Diagnostic session input was rejected or could not be persisted.'));
+                    }
+                }
             } catch (Exception batchFailure) {
                 // Every event in the batch lost its session, so report each one rather than
                 // logging a single entry that hides how many users were affected.
@@ -61,4 +73,5 @@ public with sharing class AEIR_DiagnosticSessionRequestHandler {
     }
 
     private static String stringValue(Object value) { return value == null ? null : String.valueOf(value); }
+    private class SessionCaptureException extends Exception {}
 }

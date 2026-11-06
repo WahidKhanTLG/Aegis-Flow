@@ -8,6 +8,7 @@ module.exports = {
         '^lightning/platformUtilityBarApi$':
             '<rootDir>/force-app/test/jest-mocks/lightning/platformUtilityBarApi',
         '^lightning/empApi$': '<rootDir>/force-app/test/jest-mocks/lightning/empApi',
-        '^lightning/navigation$': '<rootDir>/force-app/test/jest-mocks/lightning/navigation'
+        '^lightning/navigation$': '<rootDir>/force-app/test/jest-mocks/lightning/navigation',
+        '^lightning/actions$': '<rootDir>/force-app/test/jest-mocks/lightning/actions'
     }
 };

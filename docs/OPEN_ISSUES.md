@@ -6,7 +6,42 @@
 **Last updated:** July 28, 2026
 **Spec of record:** `Aegis_Flow_Market_Ready_Product_Implementation_Specification (1).docx`
 
-## Current verified state
+
+## November 3 deployed development checkpoint
+
+The authorized development release deployed 551 components with 283 passing Apex tests;
+its follow-up telemetry masking patch passed all 284. The final setup-health patch passed
+all 286; local checks passed 105 LWC and 30 MCP tests. See
+[the current verification record](../output/development/2026-11-03/verification.json) for
+final local checks, parity, configuration, live UI/MCP/event acceptance and limits.
+Managed packaging remains excluded. The user chose workspace Case saves while preserving
+the native Solutions list. Source-cited ABC and SoCal process knowledge is available through
+the scoped MCP server; no customer org was accessed and no business repair was invented.
+Optional external providers remain disabled pending approved credentials and destinations.
+
+The following November 2 and July statements are retained as historical checkpoints.
+
+## November 2 application development checkpoint
+
+The user explicitly excludes managed packaging from the current task. The earlier engineering
+closure statements below are historical. Current local changes address the nine fresh review
+findings and add cross-business input boundaries, functional UI surfaces, scoped REST/MCP,
+and optional Agentforce/connector development. Final check-only validation passed all 249 Apex
+tests and 529 components, with no coverage warnings and 92.46% aggregate Aegis line coverage.
+Local checks passed 73 LWC tests and 12 MCP tests. These changes have not been deployed or
+activated in the org. Use `output/development/2026-11-02/verification.json` for executed
+results, not the older counts in this file.
+
+AF-23 now has a local optional Agent API implementation with lifecycle/response mocks; live
+agent validation remains pending. The historical deterministic-only statements below are
+retained as the July record and do not describe the current source.
+
+Remaining environment work: authorize deployment, select subscriber running identities,
+configure approved external credentials/agent/destinations and customer-specific rules, then
+perform Salesforce-rendered UI and real-connection acceptance. No blanket claim is made that
+all customer automations or all business requirements are covered without this acceptance.
+
+## Historical verified state
 
 | Check | Result |
 |---|---|
@@ -21,13 +56,13 @@
 | Non-admin end-user journey | PASS (capture → alert → help → escalate → dismiss) |
 | Live capture → notify → retrieve smoke test | PASS |
 
-The org matches source with no drift. Everything below is **missing or incomplete implementation**, not a deployment failure.
+At that July checkpoint the org matched source with no drift. Everything below was **missing or incomplete implementation**, not a deployment failure.
 
 Severity key: **P0** blocks pilot release · **P1** blocks a spec commitment · **P2** correctness/maintenance · **P3** packaging & GTM.
 
 ---
 
-## Issue tracker
+## Historical issue tracker — July 2026
 
 Update **Status** and **Owner** as work progresses. Status values: `Open` · `In progress` · `Blocked` · `Needs decision` · `Fixed`.
 

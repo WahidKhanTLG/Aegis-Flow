@@ -5,7 +5,9 @@
  * a record snapshot - so it hit the SOQL limit at 25 requests in a single Flow batch. All
  * four are now resolved for the whole batch up front.
  */
-public without sharing class AEIR_GetErrorContextAction {
+public with sharing class AEIR_GetErrorContextAction {
+    private static final Integer MAX_REQUESTS = 200;
+    private static final Integer MAX_SNAPSHOT_OBJECTS = 20;
 
     public class Request {
         @InvocableVariable(required=true) public String errorLogId;
@@ -30,12 +32,22 @@ public without sharing class AEIR_GetErrorContextAction {
         Map<Integer, String> parseErrorByIndex = new Map<Integer, String>();
         for (Integer i = 0; i < requests.size(); i++) {
             try {
+                if (i >= MAX_REQUESTS || requests[i] == null || String.isBlank(requests[i].errorLogId)
+                    || (requests[i].errorLogId.length() != 15 && requests[i].errorLogId.length() != 18)) {
+                    parseErrorByIndex.put(i, i >= MAX_REQUESTS ? 'This context batch supports at most 200 requests.'
+                        : 'Not a valid record id: an Error Log id is required.');
+                    continue;
+                }
                 Id logId = (Id) requests[i].errorLogId;
+                if (logId.getSObjectType() != Error_Log__c.SObjectType) {
+                    parseErrorByIndex.put(i, 'Not a valid record id: an Error Log id is required.');
+                    continue;
+                }
                 requestedIdByIndex.put(i, logId);
                 logIds.add(logId);
             } catch (Exception badId) {
                 // A malformed id must not cost the rest of the batch its context.
-                parseErrorByIndex.put(i, 'Not a valid record id: ' + requests[i].errorLogId);
+                parseErrorByIndex.put(i, 'Not a valid record id: an Error Log id is required.');
             }
         }
 
@@ -55,37 +67,26 @@ public without sharing class AEIR_GetErrorContextAction {
                FROM Error_Log__c WHERE Id IN :logIds AND User__c = :currentUserId];
         Map<Id, Error_Log__c> logsById = new Map<Id, Error_Log__c>(visibleLogs);
 
-        // CreatedDate ASC so the newest row wins on overwrite, matching the per-request
-        // ORDER BY CreatedDate DESC LIMIT 1 this replaced.
+        Set<Id> visibleLogIds = new Set<Id>(logsById.keySet());
+        // Limit children per authorized parent in SOQL; a global scan of every historic
+        // diagnosis/context can exceed row and heap limits before in-memory caps apply.
         Map<Id, AI_Diagnosis__c> latestDiagnosisByLog = new Map<Id, AI_Diagnosis__c>();
-        for (AI_Diagnosis__c d : [
-            SELECT Id, Error_Log__c, Summary__c, Root_Cause__c, Fixability__c, Confidence__c,
-                   Recommended_Action__c, Needs_User_Input__c, Escalation_Required__c
-            FROM AI_Diagnosis__c WHERE Error_Log__c IN :logIds
-            ORDER BY CreatedDate ASC
-        ]) {
-            latestDiagnosisByLog.put(d.Error_Log__c, d);
+        List<Error_Log__c> diagnosisParents = [
+            SELECT Id, (SELECT Id, Error_Log__c, Summary__c, Root_Cause__c, Fixability__c, Confidence__c,
+                Recommended_Action__c, Needs_User_Input__c, Escalation_Required__c
+                FROM AI_Diagnoses__r ORDER BY CreatedDate DESC, Id DESC LIMIT 1)
+            FROM Error_Log__c WHERE Id IN :visibleLogIds
+        ];
+        for (Error_Log__c parent : diagnosisParents) {
+            if (!parent.AI_Diagnoses__r.isEmpty()) latestDiagnosisByLog.put(parent.Id, parent.AI_Diagnoses__r[0]);
         }
 
         Map<Id, Error_Log__c> technicalLogsById = new Map<Id, Error_Log__c>();
         Map<Id, List<Error_Context__c>> contextsByLog = new Map<Id, List<Error_Context__c>>();
         if (canViewSensitiveContext) {
-            technicalLogsById = new Map<Id, Error_Log__c>([
-                SELECT Id, Original_Error_Message__c, Stack_Trace__c
-                FROM Error_Log__c WHERE Id IN :logIds
-            ]);
-            for (Error_Context__c ctx : [
-                SELECT Error_Log__c, Context_Type__c, Source__c, Sequence__c, Payload_JSON__c, Masked__c
-                FROM Error_Context__c WHERE Error_Log__c IN :logIds
-                ORDER BY Sequence__c ASC
-            ]) {
-                if (!contextsByLog.containsKey(ctx.Error_Log__c)) {
-                    contextsByLog.put(ctx.Error_Log__c, new List<Error_Context__c>());
-                }
-                // Same per-log cap as the original query, applied after grouping.
-                if (contextsByLog.get(ctx.Error_Log__c).size() < 20) {
-                    contextsByLog.get(ctx.Error_Log__c).add(ctx);
-                }
+            for (Error_Log__c parent : technicalParents(visibleLogIds)) {
+                technicalLogsById.put(parent.Id, parent);
+                contextsByLog.put(parent.Id, parent.Contexts__r);
             }
         }
 
@@ -93,6 +94,7 @@ public without sharing class AEIR_GetErrorContextAction {
         for (Error_Log__c log : logsById.values()) {
             if (String.isBlank(log.Object_API_Name__c) || String.isBlank(log.Record_Id__c)) continue;
             if (!idsByObject.containsKey(log.Object_API_Name__c)) {
+                if (idsByObject.size() >= MAX_SNAPSHOT_OBJECTS) continue;
                 idsByObject.put(log.Object_API_Name__c, new Set<String>());
             }
             idsByObject.get(log.Object_API_Name__c).add(log.Record_Id__c);
@@ -117,6 +119,9 @@ public without sharing class AEIR_GetErrorContextAction {
                 payload.put('latestDiagnosis', latestDiagnosisByLog.get(log.Id));
             }
             payload.put('recordSnapshot', snapshots.get(log.Record_Id__c));
+            if (!String.isBlank(log.Object_API_Name__c) && !idsByObject.containsKey(log.Object_API_Name__c)) {
+                payload.put('snapshotStatus', 'Snapshot omitted because this batch spans too many object types.');
+            }
             if (canViewSensitiveContext) {
                 Error_Log__c technical = technicalLogsById.get(log.Id);
                 payload.put('technicalError', technical == null ? null : technical.Original_Error_Message__c);
@@ -132,6 +137,19 @@ public without sharing class AEIR_GetErrorContextAction {
             output.add(response);
         }
         return output;
+    }
+
+    private static List<Error_Log__c> technicalParents(Set<Id> authorizedLogIds) {
+        if (authorizedLogIds.isEmpty()) return new List<Error_Log__c>();
+        // Explicit bindings avoid compiler-generated cursor variable scope, while
+        // USER_MODE retains both record sharing and technical-field permissions.
+        List<Error_Log__c> parents = Database.queryWithBinds(
+            'SELECT Id, Original_Error_Message__c, Stack_Trace__c, '
+            + '(SELECT Error_Log__c, Context_Type__c, Source__c, Sequence__c, Payload_JSON__c, Masked__c '
+            + 'FROM Contexts__r ORDER BY Sequence__c ASC, Id ASC LIMIT 20) '
+            + 'FROM Error_Log__c WHERE Id IN :visibleIds',
+            new Map<String, Object>{ 'visibleIds' => new Set<Id>(authorizedLogIds) }, AccessLevel.USER_MODE);
+        return parents;
     }
 
     private static Map<String, Object> safeErrorLog(Error_Log__c log) {

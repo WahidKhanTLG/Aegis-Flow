@@ -14,13 +14,10 @@
  */
 public with sharing class AEIR_ExecuteRemediationAction {
 
-    /**
-     * execute() costs roughly three operations per record (a describe-guarded query, the
-     * update, and the audit insert). 40 leaves comfortable headroom under the 150 DML limit
-     * for whatever else the calling Flow is doing.
-     */
+    /** Successful work uses four statements; audit-failure rollback can use six.
+     * Twenty inputs leave headroom for the caller, and the service rechecks capacity. */
     @TestVisible
-    private static final Integer MAX_BATCH = 40;
+    private static final Integer MAX_BATCH = 20;
 
     public class Request {
         @InvocableVariable public String correlationId;

@@ -17,6 +17,8 @@ export default class HelpMeAgentUtility extends LightningElement {
     isLoading = false;
     description = '';
     issueType = 'Unknown';
+    requestVersion = 0;
+    reportSubmitted = false;
 
     get issueTypeOptions() {
         return [
@@ -32,18 +34,21 @@ export default class HelpMeAgentUtility extends LightningElement {
     get diagnosisStepClass() { return this.agentSummary ? 'progress-item complete' : 'progress-item active'; }
     get resolutionStepClass() { return this.agentSummary ? 'progress-item active' : 'progress-item'; }
     get diagnoseButtonLabel() { return this.agentSummary ? 'Refresh diagnosis' : 'Analyze captured context'; }
+    get isReportDisabled() { return this.isLoading || this.reportSubmitted; }
+    disconnectedCallback() { this.requestVersion++; }
 
     handleIssueType(event) { this.issueType = event.detail.value; }
     handleDescription(event) { this.description = event.detail.value; }
 
     buildContext() {
         const state = this.currentPageReference && this.currentPageReference.state ? this.currentPageReference.state : {};
+        const attributes = this.currentPageReference && this.currentPageReference.attributes ? this.currentPageReference.attributes : {};
         return {
             correlationId: this.correlationId,
             pageUrl: window.location.href,
             pageReference: this.currentPageReference,
-            objectApiName: state.objectApiName || state.objectApiName__c || null,
-            recordId: state.recordId || state.recordId__c || (this.currentPageReference && this.currentPageReference.attributes ? this.currentPageReference.attributes.recordId : null),
+            objectApiName: attributes.objectApiName || state.objectApiName || state.objectApiName__c || state.c__objectApiName || null,
+            recordId: attributes.recordId || state.recordId || state.recordId__c || state.c__recordId || null,
             userAgent: navigator.userAgent,
             language: navigator.language,
             screen: { width: window.screen.width, height: window.screen.height, viewportWidth: window.innerWidth, viewportHeight: window.innerHeight },
@@ -52,29 +57,38 @@ export default class HelpMeAgentUtility extends LightningElement {
     }
 
     startDiagnosis() {
+        if (this.isStartDisabled) return;
         this.runAsync(
             createSession({ contextJson: JSON.stringify(this.buildContext()), userDescription: this.description, detectedIssueType: this.issueType }),
             res => { this.sessionId = res.sessionId; this.correlationId = res.correlationId; this.message = res.message; }
         );
     }
     askAgent() {
+        if (this.isLoading || !this.sessionId) return;
         this.runAsync(
             diagnoseSession({ sessionId: this.sessionId }),
-            res => { this.agentSummary = res.summary; this.recommendedAction = res.recommendedAction; this.message = 'Analysis completed using the configured diagnostic gateway.'; }
+            res => { this.agentSummary = res.summary; this.recommendedAction = res.recommendedAction; this.message = 'The initial diagnosis is ready.'; }
         );
     }
     sendReport() {
+        if (this.isReportDisabled || !this.sessionId) return;
         this.runAsync(
             escalateSession({ sessionId: this.sessionId, userDescription: this.description }),
-            res => { this.message = `Governed report created: ${res.subject}`; }
+            res => { this.reportSubmitted = Boolean(res.escalationId); this.message = `Governed report created: ${res.subject}. Delivery status: ${res.status || 'New'}.`; }
         );
     }
     runAsync(promise, successHandler) {
         this.error = null;
         this.isLoading = true;
-        promise.then(successHandler).catch(e => { this.error = this.normalizeError(e); }).finally(() => { this.isLoading = false; });
+        const version = ++this.requestVersion;
+        promise.then(value => { if (version === this.requestVersion) successHandler(value); })
+            .catch(e => { if (version === this.requestVersion) this.error = this.normalizeError(e); })
+            .finally(() => { if (version === this.requestVersion) this.isLoading = false; });
     }
     reset() {
+        if (this.isLoading) return;
+        this.requestVersion++;
+        this.reportSubmitted = false;
         this.sessionId = null; this.correlationId = null; this.message = null; this.agentSummary = null;
         this.recommendedAction = null; this.error = null; this.description = ''; this.issueType = 'Unknown';
     }

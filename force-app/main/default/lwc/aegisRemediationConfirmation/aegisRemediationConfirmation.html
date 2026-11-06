@@ -1,1 +1,17 @@
-<template><article class="card"><h2>Remediation Confirmation</h2><p>Shows the exact registered action, target, before value, after value, and risk before any write executes.</p></article></template>
+<template>
+    <article class="card" aria-label="Approve a remediation proposal" aria-busy={busy} onkeydown={handleKeydown}>
+        <h2>Remediation Confirmation</h2>
+        <template if:false={hasProposal}><p>No remediation proposal is available. The hosting workflow must supply a registered action, target field, record, and proposed value.</p></template>
+        <template if:true={hasProposal}>
+            <dl><dt>Registered action</dt><dd>{actionKey}</dd><dt>Record</dt><dd>{targetRecordId}</dd><dt>Field</dt><dd>{targetField}</dd><dt>Before (provided in proposal)</dt><dd>{beforeValue}</dd><dt>Proposed value</dt><dd>{afterValue}</dd><dt>Risk</dt><dd>{risk}</dd></dl>
+            <p class="slds-var-m-top_medium">Confirming requests server validation and execution of this registered correction. An actual server result is required before a change is reported as complete.</p>
+            <lightning-button data-review label="Review change" variant="brand" onclick={review} disabled={reviewDisabled} class="slds-var-m-top_medium"></lightning-button>
+            <template if:true={showReview}><c-remediation-confirmation-modal message={confirmationMessage} onconfirm={confirm} oncancel={cancel} class="slds-var-m-top_medium"></c-remediation-confirmation-modal></template>
+        </template>
+        <template if:true={busy}><lightning-spinner size="small" alternative-text="Waiting for server execution result"></lightning-spinner></template>
+        <template if:true={awaitingResult}><p data-result-status tabindex="-1" role="status" class="slds-var-m-top_medium">Correction confirmed. Awaiting its execution result.</p></template>
+        <template if:true={error}><p data-result-status tabindex="-1" role="alert" class="slds-text-color_error slds-var-m-top_medium">{error}</p></template>
+        <template if:true={result}><p data-result-status tabindex="-1" role="status" class="slds-var-m-top_medium">{resultMessage}</p></template>
+        <template if:true={resultFailed}><p role="alert" class="slds-text-color_error slds-var-m-top_small">The requested change was not completed. Review the server result before trying again.</p></template>
+    </article>
+</template>

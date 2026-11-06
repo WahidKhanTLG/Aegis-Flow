@@ -1,0 +1,67 @@
+<template>
+    <lightning-card title="Aegis Diagnostic Workspace" icon-name="utility:connected_apps">
+        <div class="slds-var-p-around_medium">
+            <p>Review an authorized diagnostic, request help, or prepare an explicitly approved correction. Each operation uses your Salesforce access.</p>
+            <div class="slds-grid slds-wrap slds-gutters slds-var-m-top_small">
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2"><lightning-input label="Salesforce record Id" value={recordInput} onchange={handleRecord} disabled={isExecuting}></lightning-input></div>
+                <div class="slds-col slds-size_1-of-1 slds-large-size_1-of-2"><lightning-input label="Object API name" value={objectInput} onchange={handleObject} placeholder="Account, Contact, Case or a custom object API name" disabled={isExecuting}></lightning-input></div>
+            </div>
+            <lightning-button label="Load record context" onclick={loadContext} disabled={isExecuting} class="slds-var-m-top_small"></lightning-button>
+            <lightning-button label="Clear record context" onclick={clearContext} disabled={isExecuting} class="slds-var-m-left_small"></lightning-button>
+            <p role="status" class="slds-var-m-top_small">{contextLabel}</p>
+            <p class="slds-text-body_small">Loading or clearing context, or applying a diagnostic reference, starts fresh panels. Finish any pending save or confirmation first.</p>
+            <template if:true={contextError}><p role="alert" class="slds-text-color_error">{contextError}</p></template>
+            <lightning-input label="Diagnostic reference (optional)" value={referenceInput} onchange={handleReference} maxlength="80" disabled={isExecuting}></lightning-input>
+            <lightning-button label="Use diagnostic reference" onclick={applyReference} disabled={isExecuting} class="slds-var-m-top_small"></lightning-button>
+            <template for:each={workspaceContexts} for:item="context">
+            <lightning-tabset key={context.key} class="slds-var-m-top_medium">
+                <lightning-tab label="Get help">
+                    <c-aegis-get-help-panel record-id={activeRecordId} object-api-name={activeObjectApiName} correlation-id={correlationId}></c-aegis-get-help-panel>
+                </lightning-tab>
+                <lightning-tab label="Notifications and evidence">
+                    <c-aegis-notification-card record-id={activeRecordId} correlation-id={correlationId}></c-aegis-notification-card>
+                    <c-aegis-diagnostic-panel record-id={activeRecordId} correlation-id={correlationId}></c-aegis-diagnostic-panel>
+                </lightning-tab>
+                <lightning-tab label="Capture a save issue">
+                    <p class="slds-var-m-bottom_small">Select a record context above to open its Salesforce edit form. Saves apply to that record; failed saves preserve evidence. Existing native Salesforce forms are not intercepted.</p>
+                    <template if:true={hasContext}><c-aegis-ui-save-capture record-id={activeRecordId} object-api-name={activeObjectApiName}></c-aegis-ui-save-capture></template>
+                    <template if:false={hasContext}><p>Select a record Id and object API name first.</p></template>
+                </lightning-tab>
+                <lightning-tab label="Prepare a correction">
+                    <p>Choose an active registered field correction and supply the proposed value. Preparing reads the current value and makes no change. The confirmation step rechecks authorization, feature settings and the whitelist.</p>
+                    <template if:true={hasActions}>
+                        <lightning-combobox label="Registered correction" value={selectedAction} options={actionOptions} onchange={handleAction} disabled={correctionInputsDisabled}></lightning-combobox>
+                        <lightning-input label="Correction target record Id" value={correctionRecordId} onchange={handleCorrectionRecord} disabled={correctionInputsDisabled}></lightning-input>
+                        <lightning-textarea label="Proposed value" value={proposedValue} onchange={handleProposedValue} disabled={proposedValueDisabled} maxlength="32768"></lightning-textarea>
+                        <lightning-input type="checkbox" label="Clear this field instead of supplying a value" checked={clearValue} onchange={handleClearValue} disabled={isExecuting}></lightning-input>
+                        <lightning-button label="Prepare correction for review" onclick={prepare} disabled={prepareDisabled} class="slds-var-m-top_small"></lightning-button>
+                    </template>
+                    <template if:false={hasActions}><p class="slds-var-m-top_small">No active registered correction is available for your permissions.</p></template>
+                    <template if:true={isPreparing}><lightning-spinner size="small" alternative-text="Reading the correction target"></lightning-spinner></template>
+                    <template if:true={actionError}><p role="alert" class="slds-text-color_error slds-var-m-top_small">{actionError}</p></template>
+                    <template if:true={proposal}><c-aegis-remediation-confirmation proposal={proposal} record-id={activeRecordId} correlation-id={correlationId} onexecutionstatechange={handleExecutionState}></c-aegis-remediation-confirmation></template>
+                </lightning-tab>
+                <lightning-tab label="Escalate and review">
+                    <c-aegis-escalation-confirmation record-id={activeRecordId} correlation-id={correlationId}></c-aegis-escalation-confirmation>
+                    <lightning-record-picker label="Existing developer escalation package" object-api-name="Developer_Escalation__c" onchange={selectEscalation}></lightning-record-picker>
+                    <template if:true={escalationRecordId}><c-developer-escalation-viewer record-id={escalationRecordId}></c-developer-escalation-viewer></template>
+                </lightning-tab>
+                <lightning-tab label="Authorized debug log">
+                    <p>Choose a captured error to locate its linked debug log. Body retrieval requires sensitive-context access and an administrator-configured same-org connection. A linked reference alone does not mean the log body was retrieved.</p>
+                    <lightning-record-picker label="Captured error for debug-log evidence" object-api-name="Error_Log__c" onchange={selectError}></lightning-record-picker>
+                    <lightning-button label="Retrieve authorized log evidence" onclick={collectLog} disabled={collectDisabled} class="slds-var-m-top_small"></lightning-button>
+                    <lightning-button label="Clear debug-log evidence" onclick={clearLogBody} class="slds-var-m-left_small"></lightning-button>
+                    <template if:true={isCollecting}><lightning-spinner size="small" alternative-text="Retrieving authorized debug-log evidence"></lightning-spinner></template>
+                    <template if:true={collectorError}><p role="alert" class="slds-text-color_error slds-var-m-top_small">{collectorError}</p></template>
+                    <template if:true={collectorResult}>
+                        <p role="status" class="slds-var-m-top_small">{collectorResult.message}</p>
+                        <template if:true={collectorResult.debugLogLink}><a href={collectorResult.debugLogLink} target="_blank" rel="noopener noreferrer">Open debug-log reference in Salesforce Setup</a></template>
+                    </template>
+                    <template if:true={logTruncated}><p role="status">The sanitized body was shortened to the supported display limit.</p></template>
+                    <template if:true={hasLogBody}><pre class="log-body">{debugLogBody}</pre></template>
+                </lightning-tab>
+            </lightning-tabset>
+            </template>
+        </div>
+    </lightning-card>
+</template>

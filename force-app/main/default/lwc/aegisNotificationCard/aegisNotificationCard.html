@@ -1,1 +1,20 @@
-<template><article class="card"><h2>Aegis Flow Notification</h2><p>Displays a user-safe alert summary and supports progressive disclosure from the headless monitor.</p></article></template>
+<template>
+    <article class="card" aria-label="Aegis notification" aria-busy={isLoading}>
+        <h2>Aegis Flow Notification</h2>
+        <lightning-input label="Diagnostic reference" value={correlationId} onchange={handleReference}></lightning-input>
+        <lightning-button label="Refresh notification" onclick={refresh} disabled={isLoading} class="slds-var-m-top_small"></lightning-button>
+        <template if:true={isLoading}><lightning-spinner size="small" alternative-text="Loading notification"></lightning-spinner></template>
+        <template if:true={error}><p class="slds-text-color_error slds-var-m-top_small" role="alert">{error}</p></template>
+        <template if:true={message}><p role="status" class="slds-var-m-top_small">{message}</p></template>
+        <template if:true={isEmpty}><p class="slds-var-m-top_small">No active notification is available for this reference and user. Enter a reference or refresh to check again.</p></template>
+        <template if:true={alert}>
+            <h3 class="slds-text-heading_small slds-var-m-top_medium">{headline}</h3>
+            <p>Severity: {severity}</p><p class="slds-var-m-top_small">{summary}</p>
+            <div class="slds-var-m-top_medium">
+                <lightning-button label="View details" onclick={openDetails} disabled={isLoading}></lightning-button>
+                <lightning-button label="Dismiss" onclick={dismiss} disabled={isLoading} class="slds-var-m-left_x-small"></lightning-button>
+            </div>
+            <template if:true={showDetails}><c-aegis-diagnostic-panel record-id={recordId} correlation-id={correlationId} class="slds-var-m-top_medium"></c-aegis-diagnostic-panel></template>
+        </template>
+    </article>
+</template>

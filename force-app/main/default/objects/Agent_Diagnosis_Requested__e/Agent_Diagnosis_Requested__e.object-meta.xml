@@ -4,5 +4,5 @@
     <eventType>HighVolume</eventType>
     <label>Agent Diagnosis Requested</label>
     <pluralLabel>Agent Diagnosis Requested</pluralLabel>
-    <publishBehavior>PublishImmediately</publishBehavior>
+    <publishBehavior>PublishAfterCommit</publishBehavior>
 </CustomObject>

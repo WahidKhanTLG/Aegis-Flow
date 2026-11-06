@@ -2,3 +2,8 @@
 **/.eslintrc.json
 **/__tests__/**
 force-app/test/**
+
+# Optional failure-injection fixtures belong only in the existing development QA org.
+# They must never be included by a source-directory release deployment.
+force-app/main/default/flows/Aegis_Test_Order_On_Closed_Won.flow-meta.xml
+force-app/main/default/flows/Aegis_Test_Order_On_Closed_Won_With_Fault.flow-meta.xml

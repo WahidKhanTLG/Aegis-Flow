@@ -1,5 +1,10 @@
 @IsTest
 private class AEIR_ReconciledFeaturesTest {
+    @TestSetup
+    static void authorizeRetryFixture() {
+        AEIR_CaptureRetryBulkTest.createAuthorizedRetryUser('Reconciled');
+    }
+
     @IsTest
     static void actionsRestAndAuditCoverage() {
         // Governed remediation ships disabled (spec sections 2 and 18); this test exercises it deliberately.
@@ -34,6 +39,7 @@ private class AEIR_ReconciledFeaturesTest {
         remediationRequest.newValue = 'Updated by reconciled feature test';
         remediationRequest.confirmed = true;
 
+        AEIR_CaptureRetryBulkTest.useUpdatingHandler('ORDER_TAX_RECALCULATION');
         AEIR_RetryOrchestrationService.RetryRequest retryRequest = new AEIR_RetryOrchestrationService.RetryRequest();
         retryRequest.correlationId = captureResult.correlationId;
         retryRequest.handlerKey = 'ORDER_TAX_RECALCULATION';
@@ -46,7 +52,12 @@ private class AEIR_ReconciledFeaturesTest {
         List<AEIR_FindRecentErrorsAction.Response> recentResponses = AEIR_FindRecentErrorsAction.run(new List<AEIR_FindRecentErrorsAction.Request>{ recentRequest });
         List<AEIR_GetRecordSnapshotAction.Response> snapshotResponses = AEIR_GetRecordSnapshotAction.run(new List<AEIR_GetRecordSnapshotAction.Request>{ snapshotRequest });
         List<AEIR_UpdateMissingFieldAction.Response> remediationResponses = AEIR_UpdateMissingFieldAction.run(new List<AEIR_UpdateMissingFieldAction.Request>{ remediationRequest });
-        List<AEIR_RetryOrchestrationService.RetryResult> retryResponses = AEIR_ExecuteRetryHandlerAction.run(new List<AEIR_RetryOrchestrationService.RetryRequest>{ retryRequest });
+        List<AEIR_RetryOrchestrationService.RetryResult> retryResponses;
+        User retryActor = [SELECT Id FROM User WHERE LastName = 'AegisRetryAuthorizedReconciled' LIMIT 1];
+        System.runAs(retryActor) {
+            System.assert(FeatureManagement.checkPermission('AEIR_Execute_Retry'), 'The dedicated retry fixture must have its native custom permission.');
+            retryResponses = AEIR_ExecuteRetryHandlerAction.run(new List<AEIR_RetryOrchestrationService.RetryRequest>{ retryRequest });
+        }
 
         RestRequest request = new RestRequest();
         request.requestUri = '/services/apexrest/aegis-flow/v1/diagnostics';
@@ -61,7 +72,8 @@ private class AEIR_ReconciledFeaturesTest {
         System.assert(recentResponses[0].resultsJson.contains(captureResult.correlationId));
         System.assert(snapshotResponses[0].snapshotJson.contains('Account.Id'));
         System.assertEquals(true, remediationResponses[0].success);
-        System.assertEquals(true, retryResponses[0].success);
+        System.assertEquals(true, retryResponses[0].success, retryResponses[0].message);
+        System.assertEquals('Retried ' + captureResult.correlationId, [SELECT Description FROM Account WHERE Id = :accountRecord.Id].Description);
         System.assertEquals(1, [SELECT count() FROM Retry_Attempt__c WHERE Idempotency_Key__c = :retryResponses[0].idempotencyKey]);
         System.assertEquals(201, RestContext.response.statusCode);
     }

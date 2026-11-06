@@ -1,0 +1,45 @@
+{
+  "checkedAtUtc": "2026-11-02T23:10:15.797097+00:00",
+  "clientDate": "2026-11-03",
+  "targetAlias": "SyncBridge-Product",
+  "orgId": "00DgL00000YDvsvUAD",
+  "popupBlock": "cleared",
+  "loginAccessPolicy": {
+    "enableAdminLoginAsAnyUser": false,
+    "nativeUiChecked": false,
+    "metadataChecked": false
+  },
+  "operator": {
+    "active": true,
+    "modifyAllData": true,
+    "manageUsers": true
+  },
+  "temporaryQaUser": {
+    "active": false,
+    "temporaryRoleAssignment": "removed during prior cleanup"
+  },
+  "changesPerformed": true,
+  "stagedScriptsExecuted": true,
+  "nextStep": "No further action required for this UI acceptance item. Optional native Flow streaming was unavailable in QA; core Aegis live alerts and saved refresh passed.",
+  "securityPolicyReference": "https://help.salesforce.com/s/articleView?id=admin_loginrestrict.htm&language=en_US&type=5",
+  "explicitTemporaryChangeApproved": true,
+  "approvedScope": "Aegis development org only; temporary QA user only; restore original OFF policy immediately",
+  "qaUserReactivatedForTest": true,
+  "additionalQaRole": "AEIR_End_User",
+  "passwordChanged": false,
+  "fixturePublishAndOwnershipVerified": true,
+  "testWindowStatus": "Complete: required end-user UI acceptance and final monitor retest passed; policy restored; fixtures removed; QA inactive",
+  "updatedAtUtc": "2026-11-02T23:33:43.421916+00:00",
+  "policyOriginalValue": false,
+  "temporaryPolicyEnabledForApprovedTest": true,
+  "restorationVerified": true,
+  "fixtureRun": "AEIR-ENDUSER-2026-11-02_23:24:51.236",
+  "restoredPolicyValue": false,
+  "coreEndUserChecks": "PASS",
+  "restoredAtUtc": "2026-11-02T23:31:08.989Z",
+  "metadataRestorationVerified": true,
+  "temporaryPolicyCurrentlyEnabled": false,
+  "securitySettingsMatchOriginal": true,
+  "qaUserActiveAfterCleanup": false,
+  "finalRestoredAtUtc": "2026-11-02T23:40:35.358Z"
+}

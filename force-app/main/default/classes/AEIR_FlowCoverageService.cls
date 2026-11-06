@@ -25,6 +25,19 @@ public with sharing class AEIR_FlowCoverageService {
         'AutoLaunchedFlow', 'Workflow', 'CustomEvent', 'InvocableProcess', 'Orchestrator'
     };
 
+    /** Platform metadata/interviews cannot be created with test DML. */
+    public virtual class EvidenceSource {
+        public virtual List<FlowInterview> failedInterviews() {
+            return [SELECT Guid, InterviewLabel, CurrentElement, Error, CreatedDate FROM FlowInterview
+                WHERE InterviewStatus = 'Error' ORDER BY CreatedDate DESC LIMIT 2000];
+        }
+        public virtual List<FlowDefinitionView> activeFlows() {
+            return [SELECT ApiName, Label, ProcessType, TriggerType
+                FROM FlowDefinitionView WHERE IsActive = true LIMIT 500];
+        }
+    }
+    @TestVisible private static EvidenceSource evidenceSource = new EvidenceSource();
+
     public class FlowCoverage {
         @AuraEnabled public String apiName;
         @AuraEnabled public String label;
@@ -60,13 +73,9 @@ public with sharing class AEIR_FlowCoverageService {
         // 1. Ground truth: what has actually failed.
         Map<String, FlowCoverage> byFlow = new Map<String, FlowCoverage>();
         try {
-            for (FlowInterview interview : [
-                SELECT InterviewLabel, CurrentElement, Error, CreatedDate
-                FROM FlowInterview
-                WHERE InterviewStatus = 'Error'
-                ORDER BY CreatedDate DESC
-                LIMIT 2000
-            ]) {
+            Set<String> seenInterviews = new Set<String>();
+            for (FlowInterview interview : evidenceSource.failedInterviews()) {
+                if (!String.isBlank(interview.Guid) && !seenInterviews.add(interview.Guid)) continue;
                 String flowName = flowNameFrom(interview.InterviewLabel);
                 FlowCoverage row = byFlow.get(flowName);
                 if (row == null) {
@@ -78,7 +87,8 @@ public with sharing class AEIR_FlowCoverageService {
                     // The list is ordered newest first, so the first hit is the latest.
                     row.lastFailureAt = interview.CreatedDate;
                     row.failingElement = interview.CurrentElement;
-                    row.sampleError = AEIR_SecuritySanitizerService.safeTruncate(interview.Error, 500);
+                    row.sampleError = AEIR_SecuritySanitizerService.safeTruncate(
+                        AEIR_SecuritySanitizerService.mask(interview.Error), 500);
                     byFlow.put(flowName, row);
                 }
                 row.failuresObserved++;
@@ -113,17 +123,14 @@ public with sharing class AEIR_FlowCoverageService {
         // 3. Overlay the active Flow inventory for type and risk context.
         Map<String, FlowDefinitionView> activeByLabel = new Map<String, FlowDefinitionView>();
         Integer activeCount = 0, silentRisk = 0;
-        for (FlowDefinitionView view : [
-            SELECT ApiName, Label, ProcessType, TriggerType
-            FROM FlowDefinitionView WHERE IsActive = true LIMIT 500
-        ]) {
+        for (FlowDefinitionView view : evidenceSource.activeFlows()) {
             if (view.ApiName == 'Aegis_Error_Capture_Fault_Subflow') continue;
             activeCount++;
             if (SILENT_TYPES.contains(view.ProcessType) || String.isNotBlank(view.TriggerType)) silentRisk++;
             if (String.isNotBlank(view.Label)) activeByLabel.put(view.Label, view);
         }
 
-        Integer observed = 0, captured = 0, gapFlows = 0;
+        Integer observed = 0, captured = 0, gapFlows = 0, uncaptured = 0;
         for (FlowCoverage row : byFlow.values()) {
             FlowDefinitionView view = activeByLabel.get(row.label);
             if (view != null) {
@@ -135,6 +142,7 @@ public with sharing class AEIR_FlowCoverageService {
                 row.riskTier = 'Unknown';
             }
             row.captureGap = Math.max(0, row.failuresObserved - row.failuresCaptured);
+            uncaptured += row.captureGap;
             observed += row.failuresObserved;
             captured += row.failuresCaptured;
 
@@ -162,7 +170,8 @@ public with sharing class AEIR_FlowCoverageService {
         report.flowsWithFailures = flows.size();
         report.totalFailuresObserved = observed;
         report.totalFailuresCaptured = captured;
-        report.uncapturedFailures = Math.max(0, observed - captured);
+        // Captured history from another Flow must not cancel this Flow's real gap.
+        report.uncapturedFailures = uncaptured;
 
         if (!report.interviewDataReadable) {
             report.summary = 'FlowInterview could not be read, so failures cannot be verified. '

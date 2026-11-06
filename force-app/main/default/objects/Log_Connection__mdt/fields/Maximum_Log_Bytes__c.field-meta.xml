@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Maximum_Log_Bytes__c</fullName>
+    <defaultValue>65536</defaultValue>
+    <description>Maximum log size in bytes, bounded in Apex to 1024-131072. Oversized source logs are not downloaded.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Maximum Log Bytes</label>
+    <precision>6</precision>
+    <scale>0</scale>
+    <type>Number</type>
+</CustomField>

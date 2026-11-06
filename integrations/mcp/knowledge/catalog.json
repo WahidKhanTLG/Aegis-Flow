@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "files": [
+    "aegis-flow.json",
+    "abc-pick-pack-ship.json",
+    "socal-field-service.json"
+  ]
+}

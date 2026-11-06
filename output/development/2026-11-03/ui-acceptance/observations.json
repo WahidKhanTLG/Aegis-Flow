@@ -1,0 +1,253 @@
+{
+  "status": "completed_with_optional_flow_stream_limitation",
+  "orgAlias": "SyncBridge-Product",
+  "orgHost": "qbagentsync-dev-ed.develop.lightning.force.com",
+  "screenshotCapturedInline": true,
+  "localScreenshotFile": false,
+  "evidenceMethod": "Rendered Salesforce pages observed through CUA accessibility/DOM snapshots and inline screenshots. No screenshot export path was provided by the tool.",
+  "passed": [
+    {
+      "check": "Operations page",
+      "observed": "Aegis command center and functional diagnostic workspace render in Salesforce; console says Diagnostic records rather than asserting monitoring health."
+    },
+    {
+      "check": "Aegis Admin utility",
+      "observed": "Launched Aegis Flow Admin through App Launcher. Alerts and Get Help utilities render; automatic monitoring policy reports enabled."
+    },
+    {
+      "check": "Canonical operator evidence",
+      "correlationId": "AEIR-FINAL-EVENT-2026-11-02_20:07:16.964-operator",
+      "observed": "Notification and diagnostic panels resolve the same reference. Diagnostic status is Diagnosed; cause is Missing Data / REQUIRED_FIELD_MISSING; recommendation requires whitelisting and confirmation."
+    },
+    {
+      "check": "Contact quick-action validation capture",
+      "recordId": "003gL00001DmnfxQAB",
+      "correlationId": "ERR-20261102-200200-49F07F749138",
+      "observed": "Save with Aegis Diagnostics action received actual Contact context. Clearing Lead Source triggered the existing validation. Original field error remained visible, an unsaved Title draft remained intact, and Aegis displayed the captured reference. No Contact change was saved."
+    },
+    {
+      "check": "Contact inner Cancel regression",
+      "recordId": "003gL00001DmnfxQAB",
+      "observed": "After the follow-up bundle deployment, a fresh action discarded a new unsaved Title draft and closed the action modal. Contact header Title remained blank."
+    },
+    {
+      "check": "Case workspace save",
+      "recordId": "500gL00001dmONdQAM",
+      "observed": "Dynamic workspace rendered the isolated Case and its native fields. Saving a test-only Description produced Saved / The record was saved successfully.",
+      "fixtureChange": {
+        "field": "Description",
+        "value": "AEIR-LIVE-1793649304960 UI acceptance only"
+      }
+    },
+    {
+      "check": "Approved subscriber configuration refresh",
+      "observed": "After specific user approval, only the five listed Aegis listeners were suspended and resumed. Each was verified Running, batch size 200, configured current operator. Resume confirmation specified earliest unprocessed event within retention; Resume from Tip was never used.",
+      "listeners": [
+        "AEIR_ErrorCapturedEventTrigger",
+        "AEIR_AgentDiagnosisRequestedEventTrigger",
+        "AEIR_DiagnosticSessionRequestTrigger",
+        "AEIR_EscalationRequestedEventTrigger",
+        "AEIR_BatchApexErrorEventTrigger"
+      ],
+      "unrelatedSubscriberUntouched": "AccountSyncBridgeCDC"
+    },
+    {
+      "check": "Custom-object manual help",
+      "recordId": "a07gL00001Xl8s0QAB",
+      "objectApiName": "Error_Feedback__c",
+      "correlationId": "ERR-20261102-201634-309F67D039A2",
+      "observed": "Workspace used the custom-object context, created a real diagnostic session and completed Analyze with honest no-recent-error guidance. The unconfirmed send button remained disabled. No report or correction was requested."
+    },
+    {
+      "check": "Settled Setup presentation",
+      "observed": "Saved onboarding resolved to verification step after the initial wire load. The read-only health action ran without a probe. Effective routes and optional disabled flags were shown correctly."
+    },
+    {
+      "check": "Corrected live health result",
+      "observed": "After root patch, actual read-only Setup check returned 10 passed, 0 warnings, 0 failed; scheduled-job row correctly counted 6 active schedules including waiting/acquired/executing states. No settings saved and no capture probe run."
+    },
+    {
+      "check": "Custom-object native save and restore",
+      "recordId": "a07gL00001Xl8s0QAB",
+      "observed": "After root preserved-layout Comments addition, the native form exposed existing Comments. Saved a test-only value and observed Salesforce success plus read-only persisted value, then saved the exact original marker back.",
+      "finalComments": "AEIR-LIVE-1793649304960 Custom"
+    },
+    {
+      "check": "Proposal review keyboard/focus",
+      "recordId": "001gL00001b2nbWQAQ",
+      "actionKey": "UPDATE_ACCOUNT_DESCRIPTION",
+      "observed": "Read-only preparation returned actual test Account field evidence. Review initially focused Cancel; Shift+Tab moved to Confirm, Tab returned to Cancel. Escape and Cancel both closed review and restored focus to Review change. Confirm and execute was never activated.",
+      "preExistingRecordDoNotDelete": true,
+      "recordChanged": false
+    },
+    {
+      "check": "Standard End User Sales utilities and canonical own diagnosis",
+      "userId": "005gL00000PFmPJQA1",
+      "recordId": "003gL00001Do7fpQAB",
+      "correlationId": "AEIR-ENDUSER-2026-11-02_23:24:51.236-OWN",
+      "errorLogId": "a08gL000016K8ofQAC",
+      "noticeId": "a0CgL00001vGmaQUAS",
+      "observed": "Native Login As banner identified only the temporary QA user. Normal Sales app rendered Aegis Flow Alerts and Get Help utilities without Operations/Admin access. Own notice View details displayed the required-field diagnosis, Missing Data / REQUIRED_FIELD_MISSING cause and confirmed/whitelisted-only recommendation. Foreign operator notice was absent. Opening details marked the own notice Viewed; its later absence from the unread startup list was not expiry."
+    },
+    {
+      "check": "Standard End User actual Help and Analyze",
+      "userId": "005gL00000PFmPJQA1",
+      "recordId": "003gL00001Do7fpQAB",
+      "correlationId": "ERR-20261102-232906-BD04C827B855",
+      "observed": "On the QA-owned Contact, separate Get Help utility accepted a synthetic description. Start secure diagnosis created a real session linked to the recent error. Analyze captured context completed and displayed The initial diagnosis is ready, actual required-field summary and governed recommendation. No Send governed report or escalation action was activated."
+    },
+    {
+      "check": "Standard End User dismissal persists after reload",
+      "userId": "005gL00000PFmPJQA1",
+      "correlationId": "AEIR-ENDUSER-2026-11-02_23:24:51.236-DISMISS",
+      "noticeId": "a0CgL00001vGl3GUAS",
+      "observed": "Clicked Dismiss directly on the fresh own notice without first opening details. Waited for No active alerts, hard-reloaded the own Contact and reopened Aegis Flow Alerts. No active alerts remained; own notice did not reappear and foreign notice remained absent."
+    },
+    {
+      "check": "Standard End User direct foreign diagnostic UI denial",
+      "userId": "005gL00000PFmPJQA1",
+      "foreignErrorLogId": "a08gL000016K8ogQAC",
+      "observed": "Direct foreign Error_Log record URL rendered native Salesforce Looks like there is a problem / We could not find the record you are trying to access. No diagnostic content was displayed. No help session was created from foreign context. Root independently confirmed the foreign record exists."
+    },
+    {
+      "check": "Approved temporary Login As policy restoration",
+      "observed": "Exited QA via its exact Log out as link. Salesforce signed out the operator session as well. Root restored authenticated original operator through sf org open; native checkbox was immediately unchecked and Save completed. Reload verified OFF under original operator in the correct Aegis org. Policy was enabled for approximately 290 seconds; original OFF state restored before reporting or additional investigation."
+    },
+    {
+      "check": "Deployed monitor warning separation, saved refresh and live own-notice retest",
+      "userId": "005gL00000PFmPJQA1",
+      "recordId": "003gL00001Do7fpQAB",
+      "correlationId": "AEIR-ENDUSER-2026-11-02_23:24:51.236-RECHECK",
+      "deploymentConfirmedByRoot": "0AfgL00000cTYurSAG",
+      "observed": "After fresh QA Login As in normal Sales on the same own Contact, monitor showed Live alert subscription established and a separate Live Flow error capture is unavailable warning. No generic red operation-failed banner and zero role=alert elements. Clicked Refresh alerts exactly once; Loading saved alerts changed to Saved alerts refreshed with no action error. After root published the isolated RECHECK event, its notice arrived automatically without another refresh. View details verified the exact RECHECK correlation and still zero action errors. Optional Flow warning remained visible. No Help, send, escalation, remediation or additional dismissal action was performed.",
+      "screenshotCapturedInline": true,
+      "underlyingOptionalFlowFailureCause": "Not established; no permission or platform root-cause claim."
+    }
+  ],
+  "resolvedIssue": "Original Contact form Cancel reset the form but left the action modal open. Root deployed the oncancel close-event correction; rendered regression passed.",
+  "pending": [],
+  "cleanupOwner": "root",
+  "fixtureMarker": "AEIR-LIVE-1793649304960",
+  "outboundActionsPerformed": false,
+  "customerRecordsEdited": false,
+  "findingsPendingRootPatch": [],
+  "resolvedFindings": [
+    "Contact Cancel originally left modal open; root bundle correction verified live.",
+    "Setup temporarily exposed blank onboarding while saved configuration loaded; root added loading/error gate. Settled live state verified; the new spinner transient frame was not captured.",
+    "Health WAITING-only filter produced a misleading scheduler warning; root correction verified live with 10 PASS.",
+    "Error Feedback layout lacked an editable Comments field; root preserved-layout correction verified with actual save/restore.",
+    "Generic EMP failures previously appeared as action failures. Root deployed the focused monitor bundle; QA retest verified separate optional Flow status, zero action errors, successful saved refresh and automatic own live-notice arrival."
+  ],
+  "limitations": [
+    "No real email, escalation, external connector, remote AI, or remediation execution was performed.",
+    "Screenshots are inline CUA evidence; no local screenshot export path exists.",
+    "The initial Setup spinner transient frame was not captured after deployment; settled verification step and read-only health were observed.",
+    "QA live Flow error stream remained unavailable and was explicitly shown as an optional connection warning. Core live notices and saved-alert refresh passed; the underlying optional stream failure cause was not established."
+  ],
+  "screenshotInventory": [
+    "Blank Lightning Platform Events frame (diagnostic navigation evidence)",
+    "Native Error Captured management Running/user/batch",
+    "Native BatchApexErrorEvent management Running/user/batch after approved refresh",
+    "Case workspace successful save with explicit record context",
+    "Contact original Lead Source validation plus preserved unsaved Title draft",
+    "Contact action closed after deployed inner Cancel correction",
+    "Canonical operator notification plus Diagnosed status/cause/recommendation",
+    "Setup readiness warning before state-filter correction (historical)",
+    "Custom-object help session with actual analysis and unconfirmed send disabled",
+    "Registered correction review with focused Cancel; no execution",
+    "Custom-object Comments save success and subsequent exact marker restoration (DOM evidence)",
+    "QA User Detail action row with Login As unavailable",
+    "QA Sales own canonical notice with required-field diagnosis (utility-only crop)",
+    "QA separate Get Help completed real diagnosis and reference ERR-20261102-232906-BD04C827B855",
+    "QA native foreign diagnostic record denial without diagnostic content",
+    "QA own notice dismissed and no active alerts after hard reload (also captures generic monitor warning)",
+    "Native Login Access Policies OFF after Save and reload under original operator",
+    "Deployed QA monitor: core subscription established, explicit optional Flow limitation, successful saved refresh, no red action error",
+    "Fresh own RECHECK notice arrived automatically without another refresh; exact reference verified in DOM",
+    "Final native policy OFF after retest save and hard reload at 23:40:35 UTC"
+  ],
+  "cleanupStatus": "Complete: fresh QA fixture/diagnostic rows removed, no late residue, QA user inactive, temporary role removed; original OFF policy and all security settings match original snapshot",
+  "cleanupEvidence": "../cleanup.json",
+  "accessEnvironmentReview": {
+    "popupClear": true,
+    "orgHost": "qbagentsync-dev-ed.develop.my.salesforce.com",
+    "operatorUserId": "005gL00000LTwAzQAL",
+    "operatorActive": true,
+    "operatorLicense": "Salesforce",
+    "operatorProfile": "System Administrator",
+    "administratorsCanLogInAsAnyUser": false,
+    "nativePolicyCheckboxDisabled": false,
+    "policyChanged": true,
+    "qaReactivated": true,
+    "loginAsPerformed": true,
+    "screenshotCapturedInline": true,
+    "approvalState": "Specific user approval: Approve temporary change, QA test and restoration. Applied only to this development org and temporary QA user.",
+    "enabledAtUtc": "2026-11-02T23:38:41.305Z",
+    "restoredAtUtc": "2026-11-02T23:40:35.358Z",
+    "enabledForSeconds": 114,
+    "restorationSaved": true,
+    "restorationReloadVerified": true,
+    "finalOperatorVerified": true,
+    "passwordChanged": false,
+    "profileChanged": false,
+    "otherSecuritySettingsChanged": false,
+    "temporaryPolicyWindows": [
+      {
+        "purpose": "Original End User acceptance",
+        "enabledAtUtc": "2026-11-02T23:26:19.056Z",
+        "restoredAtUtc": "2026-11-02T23:31:08.989Z",
+        "enabledForSeconds": 290,
+        "restorationReloadVerified": true
+      },
+      {
+        "purpose": "Deployed monitor status/refresh/live-notice retest only",
+        "enabledAtUtc": "2026-11-02T23:38:41.305Z",
+        "restoredAtUtc": "2026-11-02T23:40:35.358Z",
+        "enabledForSeconds": 114,
+        "restorationReloadVerified": true,
+        "saveVerification": "Initial click-save attempt did not persist; reload detected the checkbox still ON. Immediately unchecked and activated native Save with Enter, then hard reload independently confirmed OFF."
+      }
+    ]
+  },
+  "historicalResolvedAccessBlocker": {
+    "check": "Rendered temporary End User own-notice/help/dismiss and foreign-reference denial",
+    "userId": "005gL00000PFmPJQA1",
+    "reason": "Login As unavailable in native User Detail UI",
+    "loginButtonCount": 0,
+    "loginLinkCount": 0,
+    "screenshotCapturedInline": true,
+    "screenshotPrivacy": "Captured only the native action row and synthetic QA name, excluding personal fields.",
+    "resolved": true,
+    "resolution": "Specific user approval allowed a temporary policy enable, QA-only Login As test and immediate restoration. Rendered checks completed on the fresh isolated fixtures below."
+  },
+  "followupFixtureMarker": "AEIR-ENDUSER-2026-11-02_23:24:51.236",
+  "followupCleanupReferences": {
+    "userId": "005gL00000PFmPJQA1",
+    "contactId": "003gL00001Do7fpQAB",
+    "helpCorrelationId": "ERR-20261102-232906-BD04C827B855",
+    "ownErrorLogId": "a08gL000016K8ofQAC",
+    "ownNoticeId": "a0CgL00001vGmaQUAS",
+    "foreignErrorLogId": "a08gL000016K8ogQAC",
+    "foreignNoticeId": "a0CgL00001vGmaRUAS",
+    "dismissNoticeId": "a0CgL00001vGl3GUAS",
+    "recheckCorrelationId": "AEIR-ENDUSER-2026-11-02_23:24:51.236-RECHECK"
+  },
+  "monitorRetest": {
+    "result": "passed_with_optional_flow_stream_limitation",
+    "coreLiveNoticeObserved": true,
+    "savedRefreshClickCount": 1,
+    "savedRefreshCompleted": true,
+    "genericActionFailureAbsent": true,
+    "actionErrorElementCount": 0,
+    "optionalFlowWarningVisible": true,
+    "optionalFlowWarningText": "Live Flow error capture is unavailable. Refresh alerts checks saved notices; reload this app to try the Flow connection again.",
+    "optionalFlowWarningCauseUnconfirmed": true,
+    "correlationId": "AEIR-ENDUSER-2026-11-02_23:24:51.236-RECHECK",
+    "noNewHelpSession": true,
+    "localLwcTestsPassed": 105,
+    "monitorTestsPassed": 53,
+    "testSuitesPassed": 12,
+    "nativeScreenshotsCapturedInline": true,
+    "policyFinalOffVerified": true
+  }
+}

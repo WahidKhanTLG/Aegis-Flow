@@ -1,4 +1,5 @@
 public with sharing class AEIR_RemediationOrchestrator {
+    @TestVisible private static Map<String, Remediation_Action_Setting__mdt> actionOverrides;
     public class RemediationRequest {
         @AuraEnabled public String correlationId;
         @AuraEnabled public String actionKey;
@@ -35,7 +36,17 @@ public with sharing class AEIR_RemediationOrchestrator {
         if (!FeatureManagement.checkPermission('AEIR_Execute_Remediation')) {
             return denied(res, 'You do not have the Aegis Execute Remediation permission.');
         }
-        Remediation_Action__c audit = new Remediation_Action__c(Correlation_Id__c = res.correlationId, Error_Log__c = req.errorLogId, Diagnostic_Session__c = req.diagnosticSessionId, Action_Key__c = req.actionKey, Target_Record_Id__c = req.recordId, Object_API_Name__c = req.objectApiName, Field_API_Name__c = req.fieldApiName, After_Value__c = AEIR_SecuritySanitizerService.mask(req.newValue), Requested_By__c = UserInfo.getUserId(), Status__c = 'Proposed', Requires_Confirmation__c = true);
+        // Reserve the worst case: savepoint, update, rejected success audit, rollback,
+        // savepoint release, and failure audit. Release also consumes a DML statement.
+        // Deny before any write when a caller has used the budget.
+        // Customer automation on the target record needs additional, org-specific headroom.
+        if (Limits.getLimitDmlStatements() - Limits.getDmlStatements() < 6
+            || Limits.getLimitQueries() - Limits.getQueries() < 2) {
+            return denied(res, 'Insufficient transaction capacity to execute and audit this remediation safely.');
+        }
+        Remediation_Action__c audit = new Remediation_Action__c(Correlation_Id__c = res.correlationId, Error_Log__c = req.errorLogId, Diagnostic_Session__c = req.diagnosticSessionId, Action_Key__c = req.actionKey, Target_Record_Id__c = req.recordId, Object_API_Name__c = req.objectApiName, Field_API_Name__c = req.fieldApiName, After_Value__c = auditValue(req.objectApiName, req.fieldApiName, req.newValue), Requested_By__c = UserInfo.getUserId(), Status__c = 'Proposed', Requires_Confirmation__c = true);
+        Savepoint changeBoundary;
+        Boolean successAuditAttempted = false;
         try {
             Remediation_Action_Setting__mdt cfg = findAction(req.actionKey);
             if (cfg == null || cfg.Active__c != true) throw new AEIR_RemediationException('No active remediation action configured for key: ' + req.actionKey);
@@ -56,29 +67,105 @@ public with sharing class AEIR_RemediationOrchestrator {
             Id rid = targetId;
             SObject existing = Database.query('SELECT Id,' + req.fieldApiName + ' FROM ' + req.objectApiName + ' WHERE Id = :rid LIMIT 1');
             Object beforeVal = existing.get(req.fieldApiName);
-            audit.Before_Value__c = AEIR_SecuritySanitizerService.mask(String.valueOf(beforeVal));
+            audit.Before_Value__c = auditValue(req.objectApiName, req.fieldApiName, beforeVal);
             SObject updateRow = gd.get(req.objectApiName).newSObject(targetId);
             updateRow.put(req.fieldApiName, convertValue(req.newValue, fd));
+            changeBoundary = Database.setSavepoint();
             update updateRow;
-            audit.Status__c = 'Executed'; audit.Approved_By__c = UserInfo.getUserId(); audit.Executed_By__c = UserInfo.getUserId(); audit.Result_Message__c = 'Field updated successfully.'; insert audit;
+            audit.Status__c = 'Executed'; audit.Approved_By__c = UserInfo.getUserId(); audit.Executed_By__c = UserInfo.getUserId(); audit.Result_Message__c = 'Field updated successfully.';
+            successAuditAttempted = true;
+            insert audit;
+            Database.releaseSavepoint(changeBoundary);
+            changeBoundary = null;
             res.success = true; res.status = 'Executed'; res.userMessage = 'The approved remediation was executed successfully.'; res.technicalMessage = audit.Result_Message__c; res.remediationActionId = audit.Id; return res;
         } catch (Exception ex) {
-            audit.Status__c = 'Failed'; audit.Result_Message__c = ex.getMessage();
-            try { insert audit; } catch (Exception auditFailure) {
-                // Losing the audit row must not hide the original remediation failure.
-                System.debug(LoggingLevel.WARN, 'Aegis Flow: could not record remediation audit: ' + auditFailure.getMessage());
+            if (changeBoundary != null) {
+                // An update is never successful without its audit. A caught insert
+                // exception alone does not undo the preceding customer-record update.
+                Database.rollback(changeBoundary);
+                Database.releaseSavepoint(changeBoundary);
             }
-            res.status = 'Failed'; res.userMessage = 'The requested remediation could not be completed safely.'; res.technicalMessage = ex.getMessage(); res.escalationRecommended = true; res.remediationActionId = audit.Id; return res;
+            String failureMessage = AEIR_SecuritySanitizerService.mask(ex.getMessage());
+            audit.Id = null;
+            audit.Status__c = 'Failed';
+            audit.Approved_By__c = null;
+            audit.Executed_By__c = null;
+            audit.Result_Message__c = AEIR_SecuritySanitizerService.safeTruncate(failureMessage, 32768);
+            // An audit rejection can be caused by invalid caller-supplied diagnostic
+            // links. Preserve correlation/target evidence without retrying those links.
+            if (successAuditAttempted) {
+                audit.Error_Log__c = null;
+                audit.Diagnostic_Session__c = null;
+            }
+            boundAudit(audit);
+            try {
+                insert audit;
+            } catch (Exception auditFailure) {
+                if (!successAuditAttempted) {
+                    audit.Error_Log__c = null;
+                    audit.Diagnostic_Session__c = null;
+                    try { insert audit; } catch (Exception detachedAuditFailure) {
+                        System.debug(LoggingLevel.WARN, 'Aegis Flow: remediation failed; failure audit could not be persisted.');
+                    }
+                } else {
+                    System.debug(LoggingLevel.WARN, 'Aegis Flow: remediation rolled back; failure audit could not be persisted.');
+                }
+            }
+            res.status = 'Failed'; res.userMessage = 'The requested remediation could not be completed safely. No correction was applied.'; res.technicalMessage = failureMessage; res.escalationRecommended = true; res.remediationActionId = audit.Id; return res;
         }
     }
+    private static void boundAudit(Remediation_Action__c audit) {
+        audit.Correlation_Id__c = AEIR_SecuritySanitizerService.safeTruncate(audit.Correlation_Id__c, 80);
+        audit.Action_Key__c = AEIR_SecuritySanitizerService.safeTruncate(audit.Action_Key__c, 120);
+        audit.Target_Record_Id__c = AEIR_SecuritySanitizerService.safeTruncate(audit.Target_Record_Id__c, 18);
+        audit.Object_API_Name__c = AEIR_SecuritySanitizerService.safeTruncate(audit.Object_API_Name__c, 100);
+        audit.Field_API_Name__c = AEIR_SecuritySanitizerService.safeTruncate(audit.Field_API_Name__c, 100);
+        audit.Before_Value__c = AEIR_SecuritySanitizerService.safeTruncate(audit.Before_Value__c, 32768);
+        audit.After_Value__c = AEIR_SecuritySanitizerService.safeTruncate(audit.After_Value__c, 32768);
+    }
     private static Remediation_Action_Setting__mdt findAction(String actionKey) {
+        if (Test.isRunningTest() && actionOverrides != null && actionOverrides.containsKey(actionKey)) {
+            return actionOverrides.get(actionKey);
+        }
         List<Remediation_Action_Setting__mdt> rows = [SELECT Action_Key__c, Object__c, Field__c, Requires_Confirmation__c, Active__c FROM Remediation_Action_Setting__mdt WHERE Action_Key__c = :actionKey LIMIT 1];
         return rows.isEmpty() ? null : rows[0];
     }
+
+    private static String auditValue(String objectName, String fieldName, Object value) {
+        try {
+            Map<String, Schema.SObjectType> objects = Schema.getGlobalDescribe();
+            if (objects.containsKey(objectName)) {
+                Map<String, Schema.SObjectField> fields = objects.get(objectName).getDescribe().fields.getMap();
+                if (fields.containsKey(fieldName)
+                    && fields.get(fieldName).getDescribe().getType() == Schema.DisplayType.EncryptedString) {
+                    return '[MASKED]';
+                }
+            }
+            if (value == null) return null;
+            // A naked value loses the metadata field-name match. Preserve the qualified
+            // field as a JSON key while masking, then store only its sanitized value.
+            String key = (String.isBlank(objectName) ? 'record' : objectName) + '.'
+                + (String.isBlank(fieldName) ? 'value' : fieldName);
+            String sanitized = AEIR_SecuritySanitizerService.mask(JSON.serialize(
+                new Map<String, Object>{ key => String.valueOf(value) }));
+            Map<String, Object> envelope = (Map<String, Object>) JSON.deserializeUntyped(sanitized);
+            Object masked = envelope == null ? null : envelope.get(key);
+            return masked instanceof String ? (String) masked : '[MASKED]';
+        } catch (Exception maskingFailure) {
+            System.debug(LoggingLevel.WARN, 'Aegis Flow: remediation audit value was redacted because masking could not be completed.');
+            return '[MASKED]';
+        }
+    }
+
     private static Object convertValue(String val, Schema.DescribeFieldResult fd) {
-        if (val == null) return null;
         Schema.DisplayType t = fd.getType();
-        if (t == Schema.DisplayType.Boolean) return val.toLowerCase() == 'true';
+        if (t == Schema.DisplayType.Boolean) {
+            String normalized = val == null ? null : val.trim().toLowerCase();
+            if (normalized == 'true') return true;
+            if (normalized == 'false') return false;
+            throw new AEIR_RemediationException('A Boolean value must be true or false.');
+        }
+        if (val == null) return null;
         if (t == Schema.DisplayType.Date) return Date.valueOf(val);
         if (t == Schema.DisplayType.DateTime) return Datetime.valueOf(val);
         if (t == Schema.DisplayType.Integer) return Integer.valueOf(val);

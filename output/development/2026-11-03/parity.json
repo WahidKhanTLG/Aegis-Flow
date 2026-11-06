@@ -1,0 +1,1778 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-11-02T23:40:35.319371+00:00",
+  "result": "PASS",
+  "scope": "Explicit release manifest and children of selected CustomObjects/LWC bundles; supplied retrieved snapshot only.",
+  "manifest": {
+    "path": "manifest/package.xml",
+    "sha256": "0cf8d4a92f8bd0eca67f2125056e54af07f7b29ba6fbe4785abb6ca6afdff281",
+    "membersByType": {
+      "ApexClass": 91,
+      "ApexTrigger": 5,
+      "CustomApplication": 4,
+      "CustomField": 305,
+      "CustomMetadata": 45,
+      "CustomObject": 33,
+      "CustomPermission": 6,
+      "CustomTab": 12,
+      "FlexiPage": 5,
+      "Flow": 1,
+      "Layout": 2,
+      "LightningComponentBundle": 14,
+      "ListView": 13,
+      "PermissionSet": 7,
+      "PlatformEventSubscriberConfig": 5,
+      "QuickAction": 2,
+      "StaticResource": 2
+    }
+  },
+  "localSource": "force-app/main/default",
+  "snapshotSource": "/private/tmp/aegis-remaining-20261103/postdeploy-source/force-app/main/default",
+  "summary": {
+    "scopedLogicalFiles": 689,
+    "commonFilesCompared": 689,
+    "exactMatches": 541,
+    "normalizedMatches": 141,
+    "expectedConfigurationFiles": 7,
+    "unexpectedDifferences": 0,
+    "missingFiles": 0,
+    "comparisonFailures": 0,
+    "byCategory": {
+      "code": {
+        "exact": 44,
+        "normalized": 91
+      },
+      "metadata": {
+        "expected-configuration": 7,
+        "exact": 495,
+        "normalized": 50
+      },
+      "binary": {
+        "exact": 2
+      }
+    }
+  },
+  "expectedOrgConfiguration": [
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_AgentDiagnosisRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_AgentDiagnosisRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_AgentDiagnosisRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_BatchApexErrorEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_BatchApexErrorEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_BatchApexErrorEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_DiagnosticSessionRequestTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_DiagnosticSessionRequestTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_DiagnosticSessionRequestTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_ErrorCapturedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_ErrorCapturedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_ErrorCapturedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_EscalationRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_EscalationRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_EscalationRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "customMetadata/Feature_Flag.AUTO_DIAGNOSIS.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Feature_Flag.AUTO_DIAGNOSIS.md-meta.xml",
+      "snapshotPath": "customMetadata/Feature_Flag.AUTO_DIAGNOSIS.md-meta.xml",
+      "overrides": [
+        {
+          "field": "Enabled__c",
+          "local": false,
+          "snapshot": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration"
+    },
+    {
+      "path": "customMetadata/Feature_Flag.GOVERNED_REMEDIATION.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Feature_Flag.GOVERNED_REMEDIATION.md-meta.xml",
+      "snapshotPath": "customMetadata/Feature_Flag.GOVERNED_REMEDIATION.md-meta.xml",
+      "overrides": [
+        {
+          "field": "Enabled__c",
+          "local": false,
+          "snapshot": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration"
+    }
+  ],
+  "normalizations": [
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_AgentDiagnosisRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_AgentDiagnosisRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_AgentDiagnosisRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_BatchApexErrorEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_BatchApexErrorEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_BatchApexErrorEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_DiagnosticSessionRequestTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_DiagnosticSessionRequestTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_DiagnosticSessionRequestTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_ErrorCapturedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_ErrorCapturedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_ErrorCapturedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "PlatformEventSubscriberConfigs/AEIR_EscalationRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "type": "PlatformEventSubscriberConfig",
+      "localPath": "PlatformEventSubscriberConfigs/AEIR_EscalationRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "snapshotPath": "PlatformEventSubscriberConfigs/AEIR_EscalationRequestedEventTrigger.platformEventSubscriberConfig-meta.xml",
+      "overrides": [
+        {
+          "field": "user",
+          "local": "portable-unconfigured",
+          "snapshot": "configured-running-principal",
+          "valueRedacted": true
+        }
+      ],
+      "category": "metadata",
+      "status": "expected-configuration",
+      "normalizations": [
+        "subscriber-default-isProtected-false",
+        "subscriber-single-stream-serializer-defaults"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AegisHeadlessMonitorController.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AegisHeadlessMonitorController.cls",
+      "snapshotPath": "classes/AEIR_AegisHeadlessMonitorController.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AgentDiagnosisRequestedEventHandler.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AgentDiagnosisRequestedEventHandler.cls",
+      "snapshotPath": "classes/AEIR_AgentDiagnosisRequestedEventHandler.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AgentforceClient.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AgentforceClient.cls",
+      "snapshotPath": "classes/AEIR_AgentforceClient.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AgentforceClientTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AgentforceClientTest.cls",
+      "snapshotPath": "classes/AEIR_AgentforceClientTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AgentforceDiagnosisJob.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AgentforceDiagnosisJob.cls",
+      "snapshotPath": "classes/AEIR_AgentforceDiagnosisJob.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AgentforceGatewayService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AgentforceGatewayService.cls",
+      "snapshotPath": "classes/AEIR_AgentforceGatewayService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ApprovedFlowRetryHandler.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ApprovedFlowRetryHandler.cls",
+      "snapshotPath": "classes/AEIR_ApprovedFlowRetryHandler.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ApprovedFlowRetryTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ApprovedFlowRetryTest.cls",
+      "snapshotPath": "classes/AEIR_ApprovedFlowRetryTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_AsyncLifecycleTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_AsyncLifecycleTest.cls",
+      "snapshotPath": "classes/AEIR_AsyncLifecycleTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_CaptureFlowFaultAction.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_CaptureFlowFaultAction.cls",
+      "snapshotPath": "classes/AEIR_CaptureFlowFaultAction.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_CaptureOptionsTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_CaptureOptionsTest.cls",
+      "snapshotPath": "classes/AEIR_CaptureOptionsTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_CaptureRetryBulkTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_CaptureRetryBulkTest.cls",
+      "snapshotPath": "classes/AEIR_CaptureRetryBulkTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ConnectorDeliveryJob.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ConnectorDeliveryJob.cls",
+      "snapshotPath": "classes/AEIR_ConnectorDeliveryJob.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ConnectorDeliveryTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ConnectorDeliveryTest.cls",
+      "snapshotPath": "classes/AEIR_ConnectorDeliveryTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ContextSnapshotService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ContextSnapshotService.cls",
+      "snapshotPath": "classes/AEIR_ContextSnapshotService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_CoreTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_CoreTest.cls",
+      "snapshotPath": "classes/AEIR_CoreTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_CrossBusinessScenarioTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_CrossBusinessScenarioTest.cls",
+      "snapshotPath": "classes/AEIR_CrossBusinessScenarioTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_DiagnosisPayloadTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_DiagnosisPayloadTest.cls",
+      "snapshotPath": "classes/AEIR_DiagnosisPayloadTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_DiagnosticSessionRequestHandler.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_DiagnosticSessionRequestHandler.cls",
+      "snapshotPath": "classes/AEIR_DiagnosticSessionRequestHandler.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_DiagnosticSessionService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_DiagnosticSessionService.cls",
+      "snapshotPath": "classes/AEIR_DiagnosticSessionService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ErrorCaptureService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ErrorCaptureService.cls",
+      "snapshotPath": "classes/AEIR_ErrorCaptureService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ErrorNormalizationService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ErrorNormalizationService.cls",
+      "snapshotPath": "classes/AEIR_ErrorNormalizationService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_EscalationRequestedEventHandler.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_EscalationRequestedEventHandler.cls",
+      "snapshotPath": "classes/AEIR_EscalationRequestedEventHandler.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_EscalationService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_EscalationService.cls",
+      "snapshotPath": "classes/AEIR_EscalationService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_EventBoundaryCoverageTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_EventBoundaryCoverageTest.cls",
+      "snapshotPath": "classes/AEIR_EventBoundaryCoverageTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ExecuteRetryHandlerAction.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ExecuteRetryHandlerAction.cls",
+      "snapshotPath": "classes/AEIR_ExecuteRetryHandlerAction.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_FeatureFlagService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_FeatureFlagService.cls",
+      "snapshotPath": "classes/AEIR_FeatureFlagService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_FlowCoverageService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_FlowCoverageService.cls",
+      "snapshotPath": "classes/AEIR_FlowCoverageService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_GetErrorContextAction.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_GetErrorContextAction.cls",
+      "snapshotPath": "classes/AEIR_GetErrorContextAction.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_GetRecordSnapshotAction.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_GetRecordSnapshotAction.cls",
+      "snapshotPath": "classes/AEIR_GetRecordSnapshotAction.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_HeadlessApiTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_HeadlessApiTest.cls",
+      "snapshotPath": "classes/AEIR_HeadlessApiTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_HeadlessRestService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_HeadlessRestService.cls",
+      "snapshotPath": "classes/AEIR_HeadlessRestService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_HelpMeController.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_HelpMeController.cls",
+      "snapshotPath": "classes/AEIR_HelpMeController.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_IncidentAggregationService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_IncidentAggregationService.cls",
+      "snapshotPath": "classes/AEIR_IncidentAggregationService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_InputBoundaryTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_InputBoundaryTest.cls",
+      "snapshotPath": "classes/AEIR_InputBoundaryTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_LogCollectorService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_LogCollectorService.cls",
+      "snapshotPath": "classes/AEIR_LogCollectorService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_LogCollectorTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_LogCollectorTest.cls",
+      "snapshotPath": "classes/AEIR_LogCollectorTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_NotificationBoundaryTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_NotificationBoundaryTest.cls",
+      "snapshotPath": "classes/AEIR_NotificationBoundaryTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_NotificationPolicyService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_NotificationPolicyService.cls",
+      "snapshotPath": "classes/AEIR_NotificationPolicyService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_NotificationPolicyTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_NotificationPolicyTest.cls",
+      "snapshotPath": "classes/AEIR_NotificationPolicyTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ObservabilityCoverageTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ObservabilityCoverageTest.cls",
+      "snapshotPath": "classes/AEIR_ObservabilityCoverageTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_PolicyConfigService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_PolicyConfigService.cls",
+      "snapshotPath": "classes/AEIR_PolicyConfigService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_QueueableFinalizerExample.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_QueueableFinalizerExample.cls",
+      "snapshotPath": "classes/AEIR_QueueableFinalizerExample.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_ReleaseSecurityTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_ReleaseSecurityTest.cls",
+      "snapshotPath": "classes/AEIR_ReleaseSecurityTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RemediationController.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RemediationController.cls",
+      "snapshotPath": "classes/AEIR_RemediationController.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RemediationControllerTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RemediationControllerTest.cls",
+      "snapshotPath": "classes/AEIR_RemediationControllerTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RemediationOrchestrator.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RemediationOrchestrator.cls",
+      "snapshotPath": "classes/AEIR_RemediationOrchestrator.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RetentionPurgeBatch.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RetentionPurgeBatch.cls",
+      "snapshotPath": "classes/AEIR_RetentionPurgeBatch.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RetentionScheduler.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RetentionScheduler.cls",
+      "snapshotPath": "classes/AEIR_RetentionScheduler.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RetentionSchedulerTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RetentionSchedulerTest.cls",
+      "snapshotPath": "classes/AEIR_RetentionSchedulerTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_RetryOrchestrationService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_RetryOrchestrationService.cls",
+      "snapshotPath": "classes/AEIR_RetryOrchestrationService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_SampleTaxRetryHandler.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_SampleTaxRetryHandler.cls",
+      "snapshotPath": "classes/AEIR_SampleTaxRetryHandler.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_SecurityBoundaryTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_SecurityBoundaryTest.cls",
+      "snapshotPath": "classes/AEIR_SecurityBoundaryTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_SecuritySanitizerService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_SecuritySanitizerService.cls",
+      "snapshotPath": "classes/AEIR_SecuritySanitizerService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_SetupHealthCheckService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_SetupHealthCheckService.cls",
+      "snapshotPath": "classes/AEIR_SetupHealthCheckService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_SetupHealthCheckTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_SetupHealthCheckTest.cls",
+      "snapshotPath": "classes/AEIR_SetupHealthCheckTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_SubscriberTelemetry.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_SubscriberTelemetry.cls",
+      "snapshotPath": "classes/AEIR_SubscriberTelemetry.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_UiSaveErrorController.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_UiSaveErrorController.cls",
+      "snapshotPath": "classes/AEIR_UiSaveErrorController.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_UiSaveErrorControllerTest.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_UiSaveErrorControllerTest.cls",
+      "snapshotPath": "classes/AEIR_UiSaveErrorControllerTest.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "classes/AEIR_UserNotificationService.cls",
+      "type": "ApexClass",
+      "localPath": "classes/AEIR_UserNotificationService.cls",
+      "snapshotPath": "classes/AEIR_UserNotificationService.cls",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "customMetadata/Agent_Connection.DEFAULT.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Agent_Connection.DEFAULT.md-meta.xml",
+      "snapshotPath": "customMetadata/Agent_Connection.DEFAULT.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-double-numeric-equivalence",
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.CALLOUT_EXCEPTION.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.CALLOUT_EXCEPTION.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.CALLOUT_EXCEPTION.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.CANNOT_EXECUTE_FLOW_TRIGGER.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.CANNOT_EXECUTE_FLOW_TRIGGER.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.CANNOT_EXECUTE_FLOW_TRIGGER.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.DUPLICATES_DETECTED.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.DUPLICATES_DETECTED.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.DUPLICATES_DETECTED.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.DUPLICATE_VALUE.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.DUPLICATE_VALUE.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.DUPLICATE_VALUE.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.HEAP_SIZE_TOO_LARGE.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.HEAP_SIZE_TOO_LARGE.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.HEAP_SIZE_TOO_LARGE.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.HTTP_429.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.HTTP_429.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.HTTP_429.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.HTTP_503.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.HTTP_503.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.HTTP_503.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.INVALID_CROSS_REFERENCE_KEY.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.INVALID_CROSS_REFERENCE_KEY.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.INVALID_CROSS_REFERENCE_KEY.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.INVALID_PICKLIST_VALUE.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.INVALID_PICKLIST_VALUE.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.INVALID_PICKLIST_VALUE.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.INVALID_SESSION_ID.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.INVALID_SESSION_ID.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.INVALID_SESSION_ID.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.READ_TIMED_OUT.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.READ_TIMED_OUT.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.READ_TIMED_OUT.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.REQUEST_LIMIT_EXCEEDED.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.REQUEST_LIMIT_EXCEEDED.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.REQUEST_LIMIT_EXCEEDED.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.STORAGE_LIMIT_EXCEEDED.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.STORAGE_LIMIT_EXCEEDED.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.STORAGE_LIMIT_EXCEEDED.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.STRING_TOO_LONG.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.STRING_TOO_LONG.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.STRING_TOO_LONG.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.TOO_MANY_DML_STATEMENTS.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.TOO_MANY_DML_STATEMENTS.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.TOO_MANY_DML_STATEMENTS.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Error_Rule.TOO_MANY_SOQL_QUERIES.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Error_Rule.TOO_MANY_SOQL_QUERIES.md-meta.xml",
+      "snapshotPath": "customMetadata/Error_Rule.TOO_MANY_SOQL_QUERIES.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Escalation_Route.DEFAULT_ADMIN_EMAIL.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Escalation_Route.DEFAULT_ADMIN_EMAIL.md-meta.xml",
+      "snapshotPath": "customMetadata/Escalation_Route.DEFAULT_ADMIN_EMAIL.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Escalation_Route.DEFAULT_DEV_EMAIL.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Escalation_Route.DEFAULT_DEV_EMAIL.md-meta.xml",
+      "snapshotPath": "customMetadata/Escalation_Route.DEFAULT_DEV_EMAIL.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "customMetadata/Log_Connection.DEFAULT.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Log_Connection.DEFAULT.md-meta.xml",
+      "snapshotPath": "customMetadata/Log_Connection.DEFAULT.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-double-numeric-equivalence",
+        "custom-metadata-empty-nil-omitted-equivalence",
+        "custom-metadata-value-order"
+      ]
+    },
+    {
+      "path": "customMetadata/Retry_Handler.ORDER_TAX_RECALCULATION.md-meta.xml",
+      "type": "CustomMetadata",
+      "localPath": "customMetadata/Retry_Handler.ORDER_TAX_RECALCULATION.md-meta.xml",
+      "snapshotPath": "customMetadata/Retry_Handler.ORDER_TAX_RECALCULATION.md-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-metadata-double-numeric-equivalence",
+        "custom-metadata-empty-nil-omitted-equivalence"
+      ]
+    },
+    {
+      "path": "lwc/adminErrorConsole/adminErrorConsole.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/adminErrorConsole/adminErrorConsole.html",
+      "snapshotPath": "lwc/adminErrorConsole/adminErrorConsole.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/adminErrorConsole/adminErrorConsole.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/adminErrorConsole/adminErrorConsole.js",
+      "snapshotPath": "lwc/adminErrorConsole/adminErrorConsole.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.css",
+      "snapshotPath": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.html",
+      "snapshotPath": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.js",
+      "snapshotPath": "lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.css",
+      "snapshotPath": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.html",
+      "snapshotPath": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.js",
+      "snapshotPath": "lwc/aegisEscalationConfirmation/aegisEscalationConfirmation.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.css",
+      "snapshotPath": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.html",
+      "snapshotPath": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.js",
+      "snapshotPath": "lwc/aegisGetHelpPanel/aegisGetHelpPanel.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.css",
+      "snapshotPath": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.html",
+      "snapshotPath": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.js",
+      "snapshotPath": "lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisNotificationCard/aegisNotificationCard.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisNotificationCard/aegisNotificationCard.css",
+      "snapshotPath": "lwc/aegisNotificationCard/aegisNotificationCard.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisNotificationCard/aegisNotificationCard.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisNotificationCard/aegisNotificationCard.html",
+      "snapshotPath": "lwc/aegisNotificationCard/aegisNotificationCard.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisNotificationCard/aegisNotificationCard.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisNotificationCard/aegisNotificationCard.js",
+      "snapshotPath": "lwc/aegisNotificationCard/aegisNotificationCard.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.css",
+      "snapshotPath": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.html",
+      "snapshotPath": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.js",
+      "snapshotPath": "lwc/aegisRemediationConfirmation/aegisRemediationConfirmation.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisSetupWizard/aegisSetupWizard.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisSetupWizard/aegisSetupWizard.html",
+      "snapshotPath": "lwc/aegisSetupWizard/aegisSetupWizard.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisSetupWizard/aegisSetupWizard.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisSetupWizard/aegisSetupWizard.js",
+      "snapshotPath": "lwc/aegisSetupWizard/aegisSetupWizard.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisUiSaveCapture/aegisUiSaveCapture.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisUiSaveCapture/aegisUiSaveCapture.html",
+      "snapshotPath": "lwc/aegisUiSaveCapture/aegisUiSaveCapture.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisUiSaveCapture/aegisUiSaveCapture.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisUiSaveCapture/aegisUiSaveCapture.js",
+      "snapshotPath": "lwc/aegisUiSaveCapture/aegisUiSaveCapture.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisWorkspace/aegisWorkspace.css",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisWorkspace/aegisWorkspace.css",
+      "snapshotPath": "lwc/aegisWorkspace/aegisWorkspace.css",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisWorkspace/aegisWorkspace.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisWorkspace/aegisWorkspace.html",
+      "snapshotPath": "lwc/aegisWorkspace/aegisWorkspace.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/aegisWorkspace/aegisWorkspace.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/aegisWorkspace/aegisWorkspace.js",
+      "snapshotPath": "lwc/aegisWorkspace/aegisWorkspace.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/helpMeAgentUtility/helpMeAgentUtility.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/helpMeAgentUtility/helpMeAgentUtility.html",
+      "snapshotPath": "lwc/helpMeAgentUtility/helpMeAgentUtility.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/helpMeAgentUtility/helpMeAgentUtility.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/helpMeAgentUtility/helpMeAgentUtility.js",
+      "snapshotPath": "lwc/helpMeAgentUtility/helpMeAgentUtility.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/remediationConfirmationModal/remediationConfirmationModal.html",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/remediationConfirmationModal/remediationConfirmationModal.html",
+      "snapshotPath": "lwc/remediationConfirmationModal/remediationConfirmationModal.html",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "lwc/remediationConfirmationModal/remediationConfirmationModal.js",
+      "type": "LightningComponentBundle",
+      "localPath": "lwc/remediationConfirmationModal/remediationConfirmationModal.js",
+      "snapshotPath": "lwc/remediationConfirmationModal/remediationConfirmationModal.js",
+      "category": "code",
+      "status": "normalized",
+      "normalizations": [
+        "optional-single-final-newline"
+      ]
+    },
+    {
+      "path": "objects/Agent_Connection__mdt/fields/Agent_Id__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Agent_Connection__mdt/fields/Agent_Id__c.field-meta.xml",
+      "snapshotPath": "objects/Agent_Connection__mdt/fields/Agent_Id__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Agent_Connection__mdt/fields/Named_Credential__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Agent_Connection__mdt/fields/Named_Credential__c.field-meta.xml",
+      "snapshotPath": "objects/Agent_Connection__mdt/fields/Named_Credential__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Agent_Connection__mdt/fields/Timeout_Milliseconds__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Agent_Connection__mdt/fields/Timeout_Milliseconds__c.field-meta.xml",
+      "snapshotPath": "objects/Agent_Connection__mdt/fields/Timeout_Milliseconds__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Escalation_Route__mdt/fields/Endpoint_Path__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Escalation_Route__mdt/fields/Endpoint_Path__c.field-meta.xml",
+      "snapshotPath": "objects/Escalation_Route__mdt/fields/Endpoint_Path__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Escalation_Route__mdt/fields/Named_Credential__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Escalation_Route__mdt/fields/Named_Credential__c.field-meta.xml",
+      "snapshotPath": "objects/Escalation_Route__mdt/fields/Named_Credential__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Escalation_Route__mdt/fields/Target__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Escalation_Route__mdt/fields/Target__c.field-meta.xml",
+      "snapshotPath": "objects/Escalation_Route__mdt/fields/Target__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Log_Connection__mdt/fields/Maximum_Log_Bytes__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Log_Connection__mdt/fields/Maximum_Log_Bytes__c.field-meta.xml",
+      "snapshotPath": "objects/Log_Connection__mdt/fields/Maximum_Log_Bytes__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Log_Connection__mdt/fields/Named_Credential__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Log_Connection__mdt/fields/Named_Credential__c.field-meta.xml",
+      "snapshotPath": "objects/Log_Connection__mdt/fields/Named_Credential__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Log_Connection__mdt/fields/Timeout_Milliseconds__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Log_Connection__mdt/fields/Timeout_Milliseconds__c.field-meta.xml",
+      "snapshotPath": "objects/Log_Connection__mdt/fields/Timeout_Milliseconds__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Retry_Handler__mdt/fields/Flow_API_Name__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Retry_Handler__mdt/fields/Flow_API_Name__c.field-meta.xml",
+      "snapshotPath": "objects/Retry_Handler__mdt/fields/Flow_API_Name__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Retry_Handler__mdt/fields/Required_Permission__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Retry_Handler__mdt/fields/Required_Permission__c.field-meta.xml",
+      "snapshotPath": "objects/Retry_Handler__mdt/fields/Required_Permission__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "objects/Retry_Handler__mdt/fields/Target_Object__c.field-meta.xml",
+      "type": "CustomField",
+      "localPath": "objects/Retry_Handler__mdt/fields/Target_Object__c.field-meta.xml",
+      "snapshotPath": "objects/Retry_Handler__mdt/fields/Target_Object__c.field-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "custom-field-default-externalId-false",
+        "custom-field-default-required-false",
+        "custom-field-default-unique-false"
+      ]
+    },
+    {
+      "path": "permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml",
+      "type": "PermissionSet",
+      "localPath": "permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml",
+      "snapshotPath": "permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "permission-set-default-activation-false",
+        "permission-set-root-set-order"
+      ]
+    },
+    {
+      "path": "permissionsets/AEIR_End_User.permissionset-meta.xml",
+      "type": "PermissionSet",
+      "localPath": "permissionsets/AEIR_End_User.permissionset-meta.xml",
+      "snapshotPath": "permissionsets/AEIR_End_User.permissionset-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "permission-set-default-activation-false",
+        "permission-set-root-set-order"
+      ]
+    },
+    {
+      "path": "permissionsets/AEIR_Headless_User.permissionset-meta.xml",
+      "type": "PermissionSet",
+      "localPath": "permissionsets/AEIR_Headless_User.permissionset-meta.xml",
+      "snapshotPath": "permissionsets/AEIR_Headless_User.permissionset-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "permission-set-default-activation-false"
+      ]
+    },
+    {
+      "path": "permissionsets/AEIR_Product_Admin.permissionset-meta.xml",
+      "type": "PermissionSet",
+      "localPath": "permissionsets/AEIR_Product_Admin.permissionset-meta.xml",
+      "snapshotPath": "permissionsets/AEIR_Product_Admin.permissionset-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "permission-set-default-activation-false",
+        "permission-set-root-set-order"
+      ]
+    },
+    {
+      "path": "permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml",
+      "type": "PermissionSet",
+      "localPath": "permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml",
+      "snapshotPath": "permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "permission-set-default-activation-false",
+        "permission-set-root-set-order"
+      ]
+    },
+    {
+      "path": "permissionsets/AEIR_Support_Analyst.permissionset-meta.xml",
+      "type": "PermissionSet",
+      "localPath": "permissionsets/AEIR_Support_Analyst.permissionset-meta.xml",
+      "snapshotPath": "permissionsets/AEIR_Support_Analyst.permissionset-meta.xml",
+      "category": "metadata",
+      "status": "normalized",
+      "normalizations": [
+        "permission-set-default-activation-false",
+        "permission-set-root-set-order"
+      ]
+    }
+  ],
+  "unexpected": [],
+  "missing": [],
+  "comparisonFailures": [],
+  "excluded": {
+    "local": {
+      "excludedToolingAndTests": 19,
+      "outOfManifest": [
+        "flows/Aegis_Test_Order_On_Closed_Won.flow-meta.xml",
+        "flows/Aegis_Test_Order_On_Closed_Won_With_Fault.flow-meta.xml"
+      ]
+    },
+    "snapshot": {
+      "excludedToolingAndTests": 0,
+      "outOfManifest": [
+        "layouts/Case-Case Layout.layout-meta.xml",
+        "objects/Account/Account.object-meta.xml"
+      ]
+    }
+  },
+  "privacy": "No raw metadata/code diffs or running-user values are emitted. Principals are represented only by configured/unconfigured state.",
+  "limitations": [
+    "No org commands or network requests were run by this comparator.",
+    "A matching snapshot does not establish current org state, runtime correctness or unrelated org metadata parity.",
+    "XML sibling order is preserved except PermissionSet root set rows and CustomMetadata value rows; layouts and Flows retain order.",
+    "Only the two named feature booleans and five named subscriber running principals are expected configuration differences."
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Karachi",
+  "preparedAtUtc": "2026-11-06T20:10:49.201116+00:00",
+  "scope": "Verified Aegis Flow product source, tests, deployment safeguards, MCP bridge, documentation and development acceptance fixtures. No unrelated org component source included.",
+  "sourceParity": {
+    "targetAlias": "SyncBridge-Product",
+    "orgId": "00DgL00000YDvsvUAD",
+    "freshRetrievalVerifiedAt": "2026-11-06T19:11:23.729609+00:00",
+    "result": "PASS",
+    "releaseMetadataMembers": 552,
+    "summary": {
+      "scopedLogicalFiles": 689,
+      "commonFilesCompared": 689,
+      "exactMatches": 541,
+      "normalizedMatches": 141,
+      "expectedConfigurationFiles": 7,
+      "unexpectedDifferences": 0,
+      "missingFiles": 0,
+      "comparisonFailures": 0,
+      "byCategory": {
+        "code": {
+          "exact": 44,
+          "normalized": 91
+        },
+        "metadata": {
+          "expected-configuration": 7,
+          "exact": 495,
+          "normalized": 50
+        },
+        "binary": {
+          "exact": 2
+        }
+      }
+    },
+    "expectedConfiguration": [
+      "AUTO_DIAGNOSIS enabled in org, disabled in portable source",
+      "GOVERNED_REMEDIATION enabled in org, disabled in portable source",
+      "Five org-specific subscriber processing identities omitted from portable source"
+    ],
+    "sourceFilesPreserved": 734,
+    "unexpectedAegisOrgOnlyClassesTriggersOrLwc": 0
+  },
+  "localValidation": {
+    "structuralAudit": "PASS",
+    "xmlFilesChecked": 561,
+    "lwcSuitesPassed": 12,
+    "lwcTestsPassed": 105,
+    "mcpTestsPassed": 30,
+    "npmCiDryRun": "PASS in isolated clean project; lifecycle scripts disabled",
+    "dependencyLock": "Added only the already-declared @types/jest@29.5.14 entry and root declaration. All existing dependency entries preserved.",
+    "gitDiffCheck": "PASS",
+    "credentialScan": "No real secrets detected; credential-shaped values reviewed as synthetic masking test fixtures."
+  },
+  "previousOrgValidation": {
+    "date": "2026-11-03",
+    "apexTestsPassed": 286,
+    "rerunForGitPublication": false,
+    "record": "../2026-11-03/verification.json"
+  },
+  "gitPublicationPlan": {
+    "repository": "WahidKhanTLG/Aegis-Flow",
+    "targetBranch": "main",
+    "baseRemoteMain": "83e3ae59958a1d9c25c8011140d53f41cc99c53a",
+    "previousAegisHead": "b655f62c704d5946f8ff895b4ac1a8c5dd50dcc4",
+    "historyStrategy": "Fast-forward only; preserve the four existing Aegis commits and append the verified release commit; no force push.",
+    "generatedCachesExcluded": true,
+    "excludedLocalArtifacts": [
+      "output/development/2026-11-03/case-action-proposal/"
+    ]
+  },
+  "deploymentBoundary": {
+    "salesforceChangesMade": false,
+    "managedPackagingIncluded": false,
+    "releaseManifest": "manifest/package.xml",
+    "qaFixtures": "Versioned separately for development; excluded from the product deployment manifest. Existing QA Flow activation states were not changed.",
+    "orgOnlyConfiguration": "Extra org SLA configuration and Contact validation fixture were not copied into deployable source.",
+    "caseSolutions": "Preserved; unused Case layout proposal excluded from this commit."
+  }
+}

@@ -1,1 +1,25 @@
-<template><article class="card"><h2>Aegis Diagnostic Panel</h2><p>Displays authorized diagnosis, impact, reference ID, and next-step information for a selected correlation.</p></article></template>
+<template>
+    <article class="card" aria-label="Aegis diagnostic details" aria-busy={isLoading}>
+        <h2>Aegis Diagnostic Panel</h2>
+        <lightning-input label="Diagnostic reference" value={correlationId} onchange={handleReference}></lightning-input>
+        <lightning-button label="Refresh diagnostic" onclick={refresh} disabled={isLoading} class="slds-var-m-top_small"></lightning-button>
+        <template if:false={hasReference}><p class="slds-var-m-top_small">Enter a diagnostic reference to view evidence available to your user.</p></template>
+        <template if:true={isLoading}><lightning-spinner size="small" alternative-text="Loading authorized diagnostic"></lightning-spinner></template>
+        <template if:true={error}><p class="slds-text-color_error slds-var-m-top_small" role="alert">{error}</p></template>
+        <template if:true={detail}>
+            <dl class="slds-var-m-top_medium">
+                <dt>Reference</dt><dd>{correlationId}</dd>
+                <dt>Severity</dt><dd>{severity}</dd>
+                <dt>Status</dt><dd>{status}</dd>
+                <dt>Source</dt><dd>{source}</dd>
+            </dl>
+            <h3 class="slds-text-heading_small slds-var-m-top_medium">What happened</h3><p>{summary}</p>
+            <template if:false={hasEvidence}><p class="slds-var-m-top_small">The full diagnostic evidence is no longer available. The notification summary remains available.</p></template>
+            <template if:true={diagnosis}>
+                <h3 class="slds-text-heading_small slds-var-m-top_medium">Likely cause</h3><p>{rootCause}</p>
+                <h3 class="slds-text-heading_small slds-var-m-top_small">Recommended action</h3><p>{recommendedAction}</p>
+            </template>
+            <template if:false={diagnosis}><p class="slds-var-m-top_small">No diagnosis is available yet. Refresh after analysis completes.</p></template>
+        </template>
+    </article>
+</template>

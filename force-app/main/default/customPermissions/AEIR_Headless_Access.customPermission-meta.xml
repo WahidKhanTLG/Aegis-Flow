@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Access scoped Aegis diagnostic APIs. Requires separate object and field permissions.</description>
+    <isLicensed>false</isLicensed>
+    <label>Aegis Headless Access</label>
+</CustomPermission>

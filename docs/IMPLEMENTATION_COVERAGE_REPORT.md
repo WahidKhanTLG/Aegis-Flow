@@ -1,78 +1,55 @@
 # Aegis Flow Implementation Coverage Report
 
-This file maps the technical solution blueprint scenarios to the deployable Salesforce DX package contents.
+## Product purpose and current scope
 
-## Package Status
+Aegis Flow captures Salesforce failures, stores sanitized evidence, gives deterministic or
+optional Agentforce guidance, executes explicitly approved recovery actions and routes
+unresolved issues to the responsible team. Its reusable platform supports Sales, Service,
+custom-object and integration processes. Customer rules and business writes require explicit
+configuration and acceptance. Managed packaging is excluded from this development scope.
 
-| Area | Status | Package assets |
-|---|---|---|
-| Core data model | Implemented | `Error_Log__c`, `Error_Context__c`, `AI_Diagnosis__c`, `Diagnostic_Session__c`, `Remediation_Action__c`, `Developer_Escalation__c`, `Error_Attachment__c`, `Error_Feedback__c`, `Retry_Attempt__c`, `Delivery_Audit__c` |
-| Platform events | Implemented | `Error_Captured__e`, `Diagnostic_Session_Requested__e`, `Agent_Diagnosis_Requested__e`, `Aegis_User_Alert__e`, `Escalation_Requested__e` |
-| Rule/config layer | Implemented | `Error_Rule__mdt`, `Escalation_Route__mdt`, `Remediation_Action_Setting__mdt`, `Retry_Handler__mdt`, `Sensitive_Field__mdt`, `Context_Field_Setting__mdt`, `Surface_Config__mdt`, `Retention_Policy__mdt` |
-| Automatic error capture | Implemented scaffold | `AEIR_ErrorCaptureService`, `AEIR_CaptureFlowFaultAction`, `AEIR_ClientErrorController`, event triggers |
-| Flow fault handling | Implemented extension point | Invocable action `AEIR Capture Flow Fault`; customer Flow fault paths must call it |
-| Apex exception handling | Implemented utility | `AEIR_ErrorCaptureService.capture()` and `captureFromJson()` |
-| Batch Apex failures | Implemented | `AEIR_BatchApexErrorEventTrigger`, `AEIR_BatchApexErrorEventHandler` |
-| Queueable failures | Implemented pattern | `AEIR_QueueableFinalizer` provides reusable finalizer capture; `AEIR_QueueableFinalizerExample` demonstrates `System.attachFinalizer()` |
-| LWC client errors | Implemented | `errorBoundaryWrapper` plus `AEIR_ClientErrorController` |
-| Inbound/API diagnostic capture | Implemented | Authenticated REST endpoint `AEIR_InboundDiagnosticRestService` at `/services/apexrest/aegis-flow/v1/diagnostics/*` |
-| Failed async-job monitoring | Implemented | `AEIR_AsyncJobMonitorScheduler` plus `Error_Log__c.Async_Job_Id__c` duplicate suppression |
-| Manual Help Me | Implemented | `helpMeAgentUtility`, `AEIR_HelpMeController`, `AEIR_DiagnosticSessionService` |
-| Agentforce integration | Implemented as action contract | Approved invocable Apex actions for context retrieval, recent-error search, record snapshots, diagnosis, governed remediation, retry, and escalation. Actual agent/topics are org-specific. |
-| Deterministic diagnosis | Implemented | `AEIR_ErrorNormalizationService`, default `Error_Rule__mdt` records |
-| Agent diagnosis storage | Implemented | `AEIR_AgentforceGatewayService`, `AI_Diagnosis__c` |
-| Safe remediation | Implemented | `AEIR_RemediationOrchestrator`, metadata whitelist, CRUD/FLS checks, audit object |
-| Sample tax-code remediation | Implemented | `Account.Tax_Code__c`, `Remediation_Action_Setting.UPDATE_ACCOUNT_TAX_CODE` |
-| Retry orchestration | Implemented pattern | `AEIR_RetryOrchestrationService`, `AEIR_RetryHandler`, `AEIR_SampleTaxRetryHandler`, `Retry_Attempt__c`, `Retry_Handler.ORDER_TAX_RECALCULATION` |
-| Developer escalation | Implemented | `AEIR_EscalationService`, `Developer_Escalation__c`, `Delivery_Audit__c`, `Escalation_Requested__e`, default email route |
-| Admin console | Implemented | `adminErrorConsole`, `AEIR_AdminConsoleController`, custom tabs/app |
-| Developer escalation viewer | Implemented | `developerEscalationViewer` |
-| Sensitive data masking | Implemented | `AEIR_SecuritySanitizerService`, `Sensitive_Field__mdt` |
-| Retention | Implemented | `AEIR_RetentionScheduler`, `Retention_Policy__mdt` |
-| Permissions | Implemented | End-user, support, developer viewer, product admin, integration-user permission sets |
+## Implemented application capabilities
 
-## Scenario Coverage
+| Area | Local implementation | Operational dependency |
+| --- | --- | --- |
+| Capture | Apex guard, Flow fault action/subflow, custom-form errors, Batch error events, Queueable finalizers, async/Flow monitors and authenticated inbound REST | Instrument supported execution surfaces; native platform saves are not universally intercepted |
+| Evidence protection | Private objects, structured secret masking, bounded snapshots, authorized context reads and payload limits | Maintain field allowlists and retention policy |
+| Diagnosis | Deterministic rules, bounded valid JSON, owned-record authorization, separately privileged integration processing and stored results | Configure customer rules; no AI license needed for fallback |
+| Optional Agentforce | Named Credential Agent API lifecycle, strict response/action validation, asynchronous enrichment and fallback preservation | Dedicated read-only agent/principal, licensing, approved OAuth and explicit enablement |
+| User experience | Functional diagnostic, help, notification, remediation and escalation surfaces; canonical alerts; pending/error/empty states and keyboard handling | Host components in authorized apps and perform rendered Salesforce acceptance |
+| Remediation | Exact metadata whitelist, confirmation, target CRUD/FLS/sharing, strict values and atomic target/audit rollback | Register approved object/field actions; enable governed remediation intentionally |
+| Retry | Authorized registered synchronous handlers, bounded batches, backoff, idempotency audit and mutation rollback | Customer-specific idempotent business implementation; shipped sample fails closed |
+| Escalation | Email/Case and optional Slack, Teams, Jira, GitHub and webhook adapters; durable outbox/audit and uncertain-delivery handling | Approved destinations, credentials, identities and explicit connector enablement |
+| Headless | Bounded scoped REST errors/incidents/context/notifications plus explicit help/dismiss/escalate operations | Headless permission plus diagnostic role and operation-specific access |
+| MCP | Node stdio resources, scoped source-cited product/process knowledge, five Salesforce read tools and three optional confirmed writes | Explicit customer corpus selection; reviewed curation; authorized org identity for live reads |
+| Volume and monitoring | Bulk collection operations, subscriber batches capped at 200, telemetry and Flow-level gap estimates | Approved subscriber principal and customer-automation capacity testing |
 
-| Scenario | Coverage in package | Notes |
-|---|---|---|
-| Required Account tax field causes Order tax process failure | Covered | Default tax code field/remediation action included. Replace handler with org-specific tax retry logic. |
-| Validation rule blocks user save | Covered | Error rule classifies `FIELD_CUSTOM_VALIDATION_EXCEPTION`; user/admin guidance generated. |
-| Flow Update Records element fails | Covered | Flow fault path calls `AEIR Capture Flow Fault`. |
-| Apex DML exception | Covered | Apex callers use `AEIR_ErrorCaptureService.capture()`. |
-| Apex NullPointerException | Covered | Rule classifies null pointer as developer-only and escalates. |
-| Batch Apex unhandled exception | Covered | `BatchApexErrorEvent` trigger creates AEIR error logs. Batch classes must implement `Database.RaisesPlatformEvents`. |
-| Queueable unhandled exception | Covered | Finalizer pattern logs failure context. Production queueables should attach the finalizer. |
-| LWC component error | Covered | Wrap custom components in `errorBoundaryWrapper`. |
-| Standard Lightning page user confusion | Covered | Help Me Utility captures page context and creates diagnostic session. |
-| Agentforce auto-trigger failure | Covered | Manual Help Me path can start diagnostic/escalation manually. |
-| Generic error where logs are unavailable | Covered | Diagnostic session + user description + context snapshot + escalation package. |
-| Sensitive values in payload | Covered | Regex masking and custom metadata-driven sensitive field masking. |
-| Safe fix cannot be executed | Covered | Remediation audit row records failure and recommends escalation. |
-| Retry required | Covered | Retry handler interface and sample handler. Only idempotent customer-specific retry logic should be enabled. |
-| Development team notification | Covered | Developer escalation package object and optional email sending. |
+## Validation evidence
 
-## Deployment Validation Performed in This Build
+The November 3 product deployment succeeded (`0AfgL00000cRx7mSAC`): 551 components and 283
+Apex tests. The telemetry masking follow-up (`0AfgL00000cRxisSAC`) passed all 284 Apex tests.
+The setup-health follow-up passed all 286 Apex tests; final local checks passed 105 LWC
+and 30 MCP tests. The health check passed all 10 configuration checks. Real rollback-cleaned diagnostics passed
+Sales, Service, custom-object and integration samples. A separate QA Flow proved actual write,
+service deduplication, Flow idempotency and refusal of an unapproved marker, then was disabled.
 
-- SFDX project generated with source-format metadata.
-- Metadata XML well-formedness checked locally.
-- File inventory checked.
-- README, configuration guide, extension guide, Agentforce prompt/action contract, scenario coverage, and smoke Apex script included.
+The [November 3 verification record](../output/development/2026-11-03/verification.json)
+contains final local test counts, source/config comparison, rendered UI and committed-event/MCP
+acceptance results. The November 2 check-only report is historical; it did not deploy the org.
+No managed package, commit or push is part of this work.
 
-## Validation Not Performed Here
+## Customer acceptance boundary
 
-A live Salesforce deployment and Apex test execution were not run in this environment because no authenticated Salesforce org and no Salesforce CLI runtime are available in the execution container. After unzipping, validate in your org with:
+ABC and SoCal source-grounded knowledge and proposed acceptance scenarios are curated in
+[the MCP corpus](../integrations/mcp/knowledge/README.md). Their customer orgs were not accessed
+or modified. Production recovery registrations still need reviewed exact targets/writes,
+permissions, real business idempotency and customer-approved success criteria. External agent,
+Tooling-body and delivery connections remain disabled until approved credentials/destinations
+are supplied; the user selected knowledge/MCP work instead of activating those providers.
 
-```bash
-sf org login web --set-default --alias aeir-target
-sf project deploy validate --source-dir force-app --target-org aeir-target --test-level RunLocalTests --wait 30
-sf project deploy start --source-dir force-app --target-org aeir-target --test-level RunLocalTests --wait 30
-```
+Use the dated result to distinguish actual deployment and synthetic development acceptance
+from customer production certification. The two original order QA Flows remain unchanged and
+excluded from the release. The newer temporary Flow fixture was separately disabled afterward.
 
-## Org-Specific Setup Required After Deployment
-
-1. Replace `devteam@example.com` in `Escalation_Route.DEFAULT_DEV_EMAIL`.
-2. Add `helpMeAgentUtility` to selected Lightning App Utility Bars.
-3. Connect important Flow fault paths to `AEIR Capture Flow Fault`.
-4. Register the package's invocable Apex actions as Agentforce custom actions.
-5. Replace sample retry/remediation mappings with customer-specific idempotent logic where needed.
-6. Configure debug-log collection through a Named Credential if the org wants Tooling API log-body retrieval.
+Detailed contracts and acceptance criteria: [Scenario Coverage](SCENARIO_COVERAGE.md) and
+[Developer Extension Guide](DEVELOPER_EXTENSION_GUIDE.md).

@@ -1,9 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <applicationVisibilities>
         <application>AEIR_Admin</application>
         <visible>true</visible>
     </applicationVisibilities>
+    <classAccesses>
+        <apexClass>AEIR_RemediationController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
     <classAccesses>
         <apexClass>AEIR_AdminConsoleController</apexClass>
         <enabled>true</enabled>
@@ -34,6 +38,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>AEIR_ClientErrorController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>AEIR_UiSaveErrorController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -178,6 +186,10 @@
     </classAccesses>
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
+        <name>Agent_Connection__mdt</name>
+    </customMetadataTypeAccesses>
+    <customMetadataTypeAccesses>
+        <enabled>true</enabled>
         <name>Context_Field_Setting__mdt</name>
     </customMetadataTypeAccesses>
     <customMetadataTypeAccesses>
@@ -191,6 +203,10 @@
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>Feature_Flag__mdt</name>
+    </customMetadataTypeAccesses>
+    <customMetadataTypeAccesses>
+        <enabled>true</enabled>
+        <name>Log_Connection__mdt</name>
     </customMetadataTypeAccesses>
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
@@ -224,6 +240,10 @@
         <enabled>true</enabled>
         <name>Surface_Config__mdt</name>
     </customMetadataTypeAccesses>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>AEIR_Execute_Retry</name>
+    </customPermissions>
     <customPermissions>
         <enabled>true</enabled>
         <name>AEIR_Execute_Remediation</name>
@@ -1281,6 +1301,14 @@
     </tabSettings>
     <tabSettings>
         <tab>Remediation_Action__c</tab>
+        <visibility>Available</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Aegis_Flow_Operations</tab>
+        <visibility>Available</visibility>
+    </tabSettings>
+    <tabSettings>
+        <tab>Aegis_Flow_Setup</tab>
         <visibility>Available</visibility>
     </tabSettings>
 </PermissionSet>

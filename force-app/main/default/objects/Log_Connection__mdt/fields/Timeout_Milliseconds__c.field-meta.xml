@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Timeout_Milliseconds__c</fullName>
+    <defaultValue>5000</defaultValue>
+    <description>Each read timeout is bounded in Apex to 1000-10000 milliseconds. A collection uses at most two read-only callouts.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Timeout Milliseconds</label>
+    <precision>5</precision>
+    <scale>0</scale>
+    <type>Number</type>
+</CustomField>

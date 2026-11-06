@@ -51,7 +51,12 @@ public without sharing class AEIR_UserNotificationService {
         }
         if (dedupeKeys.isEmpty()) return;
         Set<String> existingKeys = new Set<String>();
-        for (User_Notification__c existing : [SELECT Dedupe_Key__c FROM User_Notification__c WHERE Dedupe_Key__c IN :dedupeKeys]) {
+        // Internal capture maintenance must see an affected user's private notice even
+        // when the authorized processor is a different user. Consumer reads below
+        // retain their current-user filters and user-mode access.
+        for (User_Notification__c existing : (List<User_Notification__c>) Database.queryWithBinds(
+            'SELECT Dedupe_Key__c FROM User_Notification__c WHERE Dedupe_Key__c IN :dedupeKeys',
+            new Map<String, Object>{ 'dedupeKeys' => dedupeKeys }, AccessLevel.SYSTEM_MODE)) {
             existingKeys.add(existing.Dedupe_Key__c);
         }
         // Severity, cooldown, and hourly-cap gating (spec 9.1). Evaluated for the whole
@@ -80,6 +85,7 @@ public without sharing class AEIR_UserNotificationService {
             item.Dedupe_Key__c = dedupe;
             item.OwnerId = log.User__c;
             toInsert.add(item);
+            existingKeys.add(dedupe);
         }
         if (toInsert.isEmpty()) return;
         Database.SaveResult[] insertResults = Database.insert(toInsert, false, AccessLevel.SYSTEM_MODE);
@@ -93,18 +99,7 @@ public without sharing class AEIR_UserNotificationService {
                 continue;
             }
             item.Id = sr.getId();
-            events.add(new Aegis_User_Alert__e(
-                Correlation_Id__c = item.Correlation_Id__c,
-                Target_User_Id__c = String.valueOf(item.Target_User__c),
-                Error_Log_Id__c = String.valueOf(item.Error_Log__c),
-                Notification_Type__c = item.Notification_Type__c,
-                Severity__c = item.Severity__c,
-                Headline__c = item.Headline__c,
-                Short_Message__c = item.Short_Message__c,
-                Action_Available__c = item.Action_Available__c,
-                Occurred_At__c = nowValue,
-                Expires_At__c = item.Expires_At__c
-            ));
+            events.add(wakeUpEvent(item.Correlation_Id__c, item.Target_User__c));
         }
         if (!events.isEmpty()) {
             Database.SaveResult[] eventResults = EventBus.publish(events);
@@ -157,13 +152,16 @@ public without sharing class AEIR_UserNotificationService {
 
         // Keyed on correlation id + user, the same pair the single-record query filtered on.
         Map<String, User_Notification__c> existingByKey = new Map<String, User_Notification__c>();
-        for (User_Notification__c row : [
-            SELECT Id, Correlation_Id__c, Target_User__c, Notification_Type__c, Headline__c,
-                   Short_Message__c, Action_Available__c, Status__c
-            FROM User_Notification__c
-            WHERE Correlation_Id__c IN :correlationIds AND Target_User__c IN :userIds
-            ORDER BY CreatedDate ASC
-        ]) {
+        // Callers pass only captured logs or diagnosis-authorized logs. This trusted
+        // maintenance read is limited to their affected users and correlations; it
+        // does not grant the processor browser access to those users' private alerts.
+        for (User_Notification__c row : (List<User_Notification__c>) Database.queryWithBinds(
+            'SELECT Id, Correlation_Id__c, Target_User__c, Notification_Type__c, Headline__c, ' +
+            'Short_Message__c, Action_Available__c, Status__c FROM User_Notification__c ' +
+            'WHERE Correlation_Id__c IN :correlationIds AND Target_User__c IN :userIds ' +
+            'ORDER BY CreatedDate ASC',
+            new Map<String, Object>{ 'correlationIds' => correlationIds, 'userIds' => userIds },
+            AccessLevel.SYSTEM_MODE)) {
             // ASC so the last write wins, matching the single-record "most recent" query.
             existingByKey.put(row.Correlation_Id__c + '|' + row.Target_User__c, row);
         }
@@ -191,18 +189,7 @@ public without sharing class AEIR_UserNotificationService {
                 toUpdate.add(existing);
             }
 
-            alerts.add(new Aegis_User_Alert__e(
-                Correlation_Id__c = log.Correlation_Id__c,
-                Target_User_Id__c = String.valueOf(log.User__c),
-                Error_Log_Id__c = String.valueOf(log.Id),
-                Notification_Type__c = 'Diagnosed',
-                Severity__c = String.isBlank(log.Severity__c) ? 'Medium' : log.Severity__c,
-                Headline__c = headline,
-                Short_Message__c = message,
-                Action_Available__c = action,
-                Occurred_At__c = Datetime.now(),
-                Expires_At__c = Datetime.now().addHours(24)
-            ));
+            alerts.add(wakeUpEvent(log.Correlation_Id__c, log.User__c));
             alerted.add(log);
         }
 
@@ -222,6 +209,19 @@ public without sharing class AEIR_UserNotificationService {
     }
 
 
+    /**
+     * Platform event subscribers share a channel. Keep diagnostic content in the
+     * recipient-authorized durable record, and use the event only as a wake-up hint.
+     * Retain the existing schema for compatibility with installed subscribers.
+     */
+    @TestVisible
+    private static Aegis_User_Alert__e wakeUpEvent(String correlationId, Id targetUserId) {
+        return new Aegis_User_Alert__e(
+            Correlation_Id__c = correlationId,
+            Target_User_Id__c = String.valueOf(targetUserId)
+        );
+    }
+
     /** Spec 6.5 wording, chosen by fixability. */
     private static String headlineForFixability(String fixability) {
         if (fixability == 'USER_FIXABLE') return 'I have identified the issue.';
@@ -238,7 +238,7 @@ public without sharing class AEIR_UserNotificationService {
         return 'HELP';
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<AlertDTO> getOpenAlerts() {
         Id uid = UserInfo.getUserId();
         Datetime nowValue = Datetime.now();
@@ -251,6 +251,27 @@ public without sharing class AEIR_UserNotificationService {
             output.add(toDto(item));
         }
         return output;
+    }
+
+    /**
+     * Resolve an untrusted streaming hint without changing unread/viewed state.
+     * Deliberately uncached: dismissal, expiry and diagnosis upgrades must be checked
+     * against durable state on every wake-up. A missing result is safe to ignore.
+     */
+    @AuraEnabled
+    public static AlertDTO resolveAlert(String correlationId) {
+        if (String.isBlank(correlationId)) return null;
+        Id uid = UserInfo.getUserId();
+        Datetime nowValue = Datetime.now();
+        List<User_Notification__c> notices = [
+            SELECT Id, Error_Log__c, Correlation_Id__c, Headline__c, Short_Message__c, Severity__c,
+                   Notification_Type__c, Action_Available__c, Status__c, Expires_At__c, CreatedDate
+            FROM User_Notification__c
+            WHERE Correlation_Id__c = :correlationId AND Target_User__c = :uid
+                  AND Status__c IN ('New', 'Viewed') AND Expires_At__c > :nowValue
+            ORDER BY CreatedDate DESC LIMIT 1
+        ];
+        return notices.isEmpty() ? null : toDto(notices[0]);
     }
 
     /**

@@ -5,15 +5,18 @@
   "description": "Aegis Flow: governed Salesforce error intelligence, remediation, retry, and escalation.",
   "scripts": {
     "audit:local": "python3 scripts/local_audit.py",
-    "deploy": "sf project deploy start --source-dir force-app --target-org aegis-target --test-level RunLocalTests --wait 60",
+    "deploy": "bash scripts/deploy.sh",
     "docs:datamodel": "python3 scripts/generate_data_model_doc.py",
-    "open": "sf org open --target-org aegis-target",
-    "smoke": "sf apex run --file scripts/smoke_test.apex --target-org aegis-target",
-    "test": "sf apex run test --class-names AEIR_CoreTest,AEIR_ReconciledFeaturesTest --target-org aegis-target --code-coverage --result-format human --wait 60",
+    "open": "bash scripts/org_command.sh open",
+    "smoke": "bash scripts/org_command.sh smoke",
+    "test": "bash scripts/org_command.sh test",
     "test:unit": "sfdx-lwc-jest",
     "test:unit:coverage": "sfdx-lwc-jest -- --coverage",
-    "validate:production": "sf project deploy validate --source-dir force-app --target-org aegis-target --test-level RunLocalTests --wait 60",
-    "validate:sandbox": "sf project deploy start --source-dir force-app --target-org aegis-target --dry-run --test-level RunLocalTests --wait 60"
+    "test:mcp": "node --test integrations/mcp/test/*.test.mjs",
+    "mcp": "node integrations/mcp/server.mjs",
+    "verify": "npm run audit:local && npm run test:unit -- -- --runInBand && npm run test:mcp",
+    "validate:production": "sf project deploy validate --manifest manifest/package.xml --test-level RunLocalTests --wait 60",
+    "validate:sandbox": "bash scripts/validate_sandbox.sh"
   },
   "devDependencies": {
     "@salesforce/cli": "latest",

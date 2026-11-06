@@ -20,18 +20,31 @@ public with sharing class AEIR_ErrorNormalizationService {
         c.recommendedAction = 'Review the captured context and escalate if no safe fix is available.';
         c.retryEligible = false;
         String lower = String.isBlank(message) ? '' : message.toLowerCase();
-        for (Error_Rule__mdt rule : getActiveRules()) {
-            if (!String.isBlank(rule.Pattern__c) && lower.contains(rule.Pattern__c.toLowerCase())) {
-                c.category = safeCategory(rule.Category__c);
-                c.severity = safeSeverity(rule.Severity__c);
-                c.fixability = String.isBlank(rule.Fixability__c) ? 'UNKNOWN' : rule.Fixability__c;
-                c.userMessage = rule.User_Message__c;
-                c.remediationActionKey = rule.Remediation_Action_Key__c;
-                c.recommendedAction = rule.Recommended_Action__c;
-                c.retryEligible = c.fixability == 'RETRYABLE' || c.category == 'Locking';
-                c.matchedPattern = rule.Pattern__c;
-                return c;
+        Error_Rule__mdt selected;
+        Error_Rule__mdt wrapper;
+        for (Error_Rule__mdt candidate : getActiveRules()) {
+            if (String.isBlank(candidate.Pattern__c) || !lower.contains(candidate.Pattern__c.toLowerCase())) continue;
+            String pattern = candidate.Pattern__c.toUpperCase();
+            if (pattern == 'CANNOT_EXECUTE_FLOW_TRIGGER' || pattern == 'CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY') {
+                if (wrapper == null) wrapper = candidate;
+                continue;
             }
+            if (selected == null) selected = candidate;
+        }
+        // Salesforce often wraps a useful missing-field/validation cause in a generic
+        // Flow/trigger failure. Prefer the causal rule; retain wrapper-only diagnosis.
+        if (selected == null) selected = wrapper;
+        if (selected != null) {
+            Error_Rule__mdt rule = selected;
+            c.category = safeCategory(rule.Category__c);
+            c.severity = safeSeverity(rule.Severity__c);
+            c.fixability = String.isBlank(rule.Fixability__c) ? 'UNKNOWN' : rule.Fixability__c;
+            c.userMessage = rule.User_Message__c;
+            c.remediationActionKey = rule.Remediation_Action_Key__c;
+            c.recommendedAction = rule.Recommended_Action__c;
+            c.retryEligible = c.fixability == 'RETRYABLE' || c.category == 'Locking';
+            c.matchedPattern = rule.Pattern__c;
+            return c;
         }
         if (lower.contains('required_field_missing')) { c.category = 'Missing Data'; c.fixability = 'USER_FIXABLE'; }
         else if (lower.contains('validation')) { c.category = 'Validation Rule'; c.fixability = 'ADMIN_FIXABLE'; }

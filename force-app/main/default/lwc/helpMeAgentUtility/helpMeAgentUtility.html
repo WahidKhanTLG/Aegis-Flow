@@ -20,7 +20,7 @@
                 </div>
                 <div class="privacy-line"><lightning-icon icon-name="utility:shield" size="xx-small" alternative-text="Protected"></lightning-icon> Sensitive values are masked before diagnosis or escalation.</div>
                 <lightning-combobox name="issueType" label="Request type" value={issueType} options={issueTypeOptions} onchange={handleIssueType}></lightning-combobox>
-                <lightning-textarea label="Describe the task or issue" value={description} onchange={handleDescription} placeholder="Example: I tried to save the Account after updating the tax code, but the process failed." class="field-space"></lightning-textarea>
+                <lightning-textarea label="Describe the task or issue" value={description} maxlength="4000" onchange={handleDescription} placeholder="Describe the action, record or process that did not complete." class="field-space"></lightning-textarea>
                 <button class="primary-action" onclick={startDiagnosis} disabled={isStartDisabled}>
                     <lightning-icon icon-name="utility:search" size="x-small" alternative-text="Start"></lightning-icon>
                     Start secure diagnosis
@@ -52,9 +52,9 @@
                 </template>
 
                 <div class="action-stack">
-                    <button class="primary-action" onclick={askAgent}><lightning-icon icon-name="utility:sparkles" size="x-small" alternative-text="Diagnose"></lightning-icon>{diagnoseButtonLabel}</button>
-                    <button class="secondary-action" onclick={sendReport}><lightning-icon icon-name="utility:send" size="x-small" alternative-text="Escalate"></lightning-icon>Send governed report</button>
-                    <button class="text-action" onclick={reset}>Start a new session</button>
+                    <button class="primary-action" onclick={askAgent} disabled={isLoading}><lightning-icon icon-name="utility:sparkles" size="x-small" alternative-text="Diagnose"></lightning-icon>{diagnoseButtonLabel}</button>
+                    <button class="secondary-action" onclick={sendReport} disabled={isReportDisabled}><lightning-icon icon-name="utility:send" size="x-small" alternative-text="Escalate"></lightning-icon>Send governed report</button>
+                    <button class="text-action" onclick={reset} disabled={isLoading}>Start a new session</button>
                 </div>
             </template>
 

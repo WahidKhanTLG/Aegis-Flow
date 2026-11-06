@@ -1,57 +1,81 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='UTF-8'?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
         <members>AEIR_AdminConsoleController</members>
         <members>AEIR_AegisHeadlessMonitorController</members>
         <members>AEIR_AgentDiagnosisRequestedEventHandler</members>
+        <members>AEIR_AgentforceClient</members>
+        <members>AEIR_AgentforceClientTest</members>
+        <members>AEIR_AgentforceDiagnosisJob</members>
         <members>AEIR_AgentforceGatewayService</members>
+        <members>AEIR_ApprovedFlowRetryHandler</members>
+        <members>AEIR_ApprovedFlowRetryTest</members>
         <members>AEIR_AsyncJobMonitorScheduler</members>
+        <members>AEIR_AsyncLifecycleTest</members>
         <members>AEIR_BatchApexErrorEventHandler</members>
         <members>AEIR_BatchApexErrorTriggerTest</members>
+        <members>AEIR_BulkEntryPointTest</members>
+        <members>AEIR_BulkSafetyTest</members>
         <members>AEIR_CaptureFlowFaultAction</members>
+        <members>AEIR_CaptureOptionsTest</members>
+        <members>AEIR_CaptureRetryBulkTest</members>
         <members>AEIR_ClientErrorController</members>
+        <members>AEIR_ConfigAndRoutingTest</members>
+        <members>AEIR_ConnectorDeliveryJob</members>
+        <members>AEIR_ConnectorDeliveryTest</members>
         <members>AEIR_ContextSnapshotService</members>
         <members>AEIR_CoreTest</members>
         <members>AEIR_CorrelationIdService</members>
+        <members>AEIR_CoverageAndGuardTest</members>
         <members>AEIR_CreateEscalationAction</members>
+        <members>AEIR_CrossBusinessScenarioTest</members>
+        <members>AEIR_DiagnosisPayloadTest</members>
         <members>AEIR_DiagnosticSessionRequestHandler</members>
         <members>AEIR_DiagnosticSessionService</members>
+        <members>AEIR_EndUserJourneyTest</members>
         <members>AEIR_ErrorCaptureService</members>
         <members>AEIR_ErrorCapturedEventHandler</members>
         <members>AEIR_ErrorNormalizationService</members>
-        <members>AEIR_EscalationRequestedEventHandler</members>
-        <members>AEIR_BulkEntryPointTest</members>
         <members>AEIR_EscalationBulkTest</members>
+        <members>AEIR_EscalationRequestedEventHandler</members>
         <members>AEIR_EscalationService</members>
+        <members>AEIR_EventBoundaryCoverageTest</members>
         <members>AEIR_ExecuteRemediationAction</members>
         <members>AEIR_ExecuteRetryHandlerAction</members>
-        <members>AEIR_FeatureFlagService</members>
         <members>AEIR_FailingBatchTestHelper</members>
+        <members>AEIR_FeatureFlagService</members>
+        <members>AEIR_FeedbackService</members>
         <members>AEIR_FindRecentErrorsAction</members>
+        <members>AEIR_FlowCoverageService</members>
+        <members>AEIR_FlowInterviewMonitor</members>
+        <members>AEIR_FlowInterviewMonitorTest</members>
         <members>AEIR_GetErrorContextAction</members>
         <members>AEIR_GetRecordSnapshotAction</members>
-        <members>AEIR_HelpMeController</members>
-        <members>AEIR_FlowInterviewMonitorTest</members>
-        <members>AEIR_FlowInterviewMonitor</members>
-        <members>AEIR_CoverageAndGuardTest</members>
         <members>AEIR_Guard</members>
-        <members>AEIR_FlowCoverageService</members>
-        <members>AEIR_ConfigAndRoutingTest</members>
-        <members>AEIR_FeedbackService</members>
-        <members>AEIR_PolicyConfigService</members>
-        <members>AEIR_IncidentAndSecurityTest</members>
-        <members>AEIR_IncidentAggregationService</members>
+        <members>AEIR_HeadlessApiTest</members>
+        <members>AEIR_HeadlessRestService</members>
+        <members>AEIR_HelpMeController</members>
         <members>AEIR_InboundDiagnosticRestService</members>
+        <members>AEIR_IncidentAggregationService</members>
+        <members>AEIR_IncidentAndSecurityTest</members>
+        <members>AEIR_InputBoundaryTest</members>
         <members>AEIR_InvokeDiagnosisAction</members>
         <members>AEIR_LogCollectorService</members>
-        <members>AEIR_EndUserJourneyTest</members>
-        <members>AEIR_OrgSetupTest</members>
-        <members>AEIR_OrgSetupService</members>
-        <members>AEIR_NotificationPolicyTest</members>
+        <members>AEIR_LogCollectorTest</members>
+        <members>AEIR_MonitorAndTelemetryTest</members>
+        <members>AEIR_NotificationBoundaryTest</members>
         <members>AEIR_NotificationPolicyService</members>
+        <members>AEIR_NotificationPolicyTest</members>
+        <members>AEIR_ObservabilityCoverageTest</members>
+        <members>AEIR_OrgSetupService</members>
+        <members>AEIR_OrgSetupTest</members>
+        <members>AEIR_PolicyConfigService</members>
         <members>AEIR_QueueableFinalizer</members>
         <members>AEIR_QueueableFinalizerExample</members>
         <members>AEIR_ReconciledFeaturesTest</members>
+        <members>AEIR_ReleaseSecurityTest</members>
+        <members>AEIR_RemediationController</members>
+        <members>AEIR_RemediationControllerTest</members>
         <members>AEIR_RemediationOrchestrator</members>
         <members>AEIR_RetentionPurgeBatch</members>
         <members>AEIR_RetentionScheduler</members>
@@ -59,13 +83,13 @@
         <members>AEIR_RetryHandler</members>
         <members>AEIR_RetryOrchestrationService</members>
         <members>AEIR_SampleTaxRetryHandler</members>
-        <members>AEIR_SecuritySanitizerService</members>
         <members>AEIR_SecurityBoundaryTest</members>
-        <members>AEIR_SubscriberTelemetry</members>
-        <members>AEIR_MonitorAndTelemetryTest</members>
-        <members>AEIR_BulkSafetyTest</members>
-        <members>AEIR_SetupHealthCheckTest</members>
+        <members>AEIR_SecuritySanitizerService</members>
         <members>AEIR_SetupHealthCheckService</members>
+        <members>AEIR_SetupHealthCheckTest</members>
+        <members>AEIR_SubscriberTelemetry</members>
+        <members>AEIR_UiSaveErrorController</members>
+        <members>AEIR_UiSaveErrorControllerTest</members>
         <members>AEIR_UpdateMissingFieldAction</members>
         <members>AEIR_UserNotificationService</members>
         <name>ApexClass</name>
@@ -81,25 +105,354 @@
     <types>
         <members>AEIR_Admin</members>
         <members>standard__LightningSales</members>
+        <members>standard__LightningSalesConsole</members>
+        <members>standard__LightningService</members>
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>AI_Diagnosis__c.Agent_Status__c</members>
+        <members>AI_Diagnosis__c.Confidence__c</members>
+        <members>AI_Diagnosis__c.Correlation_Id__c</members>
+        <members>AI_Diagnosis__c.Diagnostic_Session__c</members>
+        <members>AI_Diagnosis__c.Error_Log__c</members>
+        <members>AI_Diagnosis__c.Escalation_Required__c</members>
+        <members>AI_Diagnosis__c.Fixability__c</members>
+        <members>AI_Diagnosis__c.Input_Payload_JSON__c</members>
+        <members>AI_Diagnosis__c.Needs_User_Input__c</members>
+        <members>AI_Diagnosis__c.Output_JSON__c</members>
+        <members>AI_Diagnosis__c.Recommended_Action__c</members>
+        <members>AI_Diagnosis__c.Root_Cause__c</members>
+        <members>AI_Diagnosis__c.Safe_Remediation_Action_Key__c</members>
+        <members>AI_Diagnosis__c.Summary__c</members>
+        <members>Account.Tax_Code__c</members>
+        <members>Aegis_Org_Setting__c.Admin_Team_Email__c</members>
+        <members>Aegis_Org_Setting__c.Company_Name__c</members>
+        <members>Aegis_Org_Setting__c.Developer_Team_Email__c</members>
+        <members>Aegis_Org_Setting__c.Fallback_To_System_Admins__c</members>
+        <members>Aegis_Org_Setting__c.Onboarding_Completed_At__c</members>
+        <members>Aegis_Org_Setting__c.Onboarding_Completed_By__c</members>
+        <members>Aegis_Org_Setting__c.Share_Diagnostics_With_Vendor__c</members>
+        <members>Aegis_Org_Setting__c.Vendor_Support_Email__c</members>
+        <members>Aegis_User_Alert__e.Action_Available__c</members>
+        <members>Aegis_User_Alert__e.Correlation_Id__c</members>
+        <members>Aegis_User_Alert__e.Error_Log_Id__c</members>
+        <members>Aegis_User_Alert__e.Expires_At__c</members>
+        <members>Aegis_User_Alert__e.Headline__c</members>
+        <members>Aegis_User_Alert__e.Notification_Type__c</members>
+        <members>Aegis_User_Alert__e.Occurred_At__c</members>
+        <members>Aegis_User_Alert__e.Severity__c</members>
+        <members>Aegis_User_Alert__e.Short_Message__c</members>
+        <members>Aegis_User_Alert__e.Target_User_Id__c</members>
+        <members>Agent_Connection__mdt.Active__c</members>
+        <members>Agent_Connection__mdt.Agent_Id__c</members>
+        <members>Agent_Connection__mdt.Named_Credential__c</members>
+        <members>Agent_Connection__mdt.Timeout_Milliseconds__c</members>
+        <members>Agent_Diagnosis_Requested__e.Correlation_Id__c</members>
+        <members>Agent_Diagnosis_Requested__e.Error_Log_Id__c</members>
+        <members>Agent_Diagnosis_Requested__e.Prompt_Input_JSON__c</members>
+        <members>Agent_Diagnosis_Requested__e.Session_Id__c</members>
+        <members>Agent_Diagnosis_Requested__e.Target_User_Id__c</members>
+        <members>Context_Field_Setting__mdt.Active__c</members>
+        <members>Context_Field_Setting__mdt.Field_API_Name__c</members>
+        <members>Context_Field_Setting__mdt.Include_In_Agent__c</members>
+        <members>Context_Field_Setting__mdt.Include_In_Escalation__c</members>
+        <members>Context_Field_Setting__mdt.Object__c</members>
+        <members>Delivery_Attempt__c.Attempt_Count__c</members>
+        <members>Delivery_Attempt__c.Channel__c</members>
+        <members>Delivery_Attempt__c.Correlation_Id__c</members>
+        <members>Delivery_Attempt__c.Developer_Escalation__c</members>
+        <members>Delivery_Attempt__c.Endpoint__c</members>
+        <members>Delivery_Attempt__c.Idempotency_Key__c</members>
+        <members>Delivery_Attempt__c.Next_Retry_At__c</members>
+        <members>Delivery_Attempt__c.Payload_Summary__c</members>
+        <members>Delivery_Attempt__c.Response_Body__c</members>
+        <members>Delivery_Attempt__c.Status__c</members>
+        <members>Delivery_Audit__c.Attempt_Count__c</members>
+        <members>Delivery_Audit__c.Channel__c</members>
+        <members>Delivery_Audit__c.Correlation_Id__c</members>
+        <members>Delivery_Audit__c.Developer_Escalation__c</members>
+        <members>Delivery_Audit__c.Endpoint__c</members>
+        <members>Delivery_Audit__c.Payload_Summary__c</members>
+        <members>Delivery_Audit__c.Response_Body__c</members>
+        <members>Delivery_Audit__c.Status__c</members>
+        <members>Developer_Escalation__c.Channel__c</members>
+        <members>Developer_Escalation__c.Correlation_Id__c</members>
+        <members>Developer_Escalation__c.Diagnostic_Package_JSON__c</members>
+        <members>Developer_Escalation__c.Diagnostic_Session__c</members>
+        <members>Developer_Escalation__c.Error_Log__c</members>
+        <members>Developer_Escalation__c.External_Ticket_Id__c</members>
+        <members>Developer_Escalation__c.Recipient__c</members>
+        <members>Developer_Escalation__c.Route_Key__c</members>
+        <members>Developer_Escalation__c.SLA_Due_At__c</members>
+        <members>Developer_Escalation__c.Sent_At__c</members>
+        <members>Developer_Escalation__c.Severity__c</members>
+        <members>Developer_Escalation__c.Status__c</members>
+        <members>Developer_Escalation__c.Subject__c</members>
+        <members>Developer_Escalation__c.Summary__c</members>
+        <members>Diagnostic_Session_Requested__e.Correlation_Id__c</members>
+        <members>Diagnostic_Session_Requested__e.Page_Reference_JSON__c</members>
+        <members>Diagnostic_Session_Requested__e.Session_Id__c</members>
+        <members>Diagnostic_Session_Requested__e.User_Description__c</members>
+        <members>Diagnostic_Session_Requested__e.User_Id__c</members>
+        <members>Diagnostic_Session__c.Action_Name__c</members>
+        <members>Diagnostic_Session__c.Agent_Response__c</members>
+        <members>Diagnostic_Session__c.App_Name__c</members>
+        <members>Diagnostic_Session__c.Browser_Context_JSON__c</members>
+        <members>Diagnostic_Session__c.Context_Record_Id__c</members>
+        <members>Diagnostic_Session__c.Correlation_Id__c</members>
+        <members>Diagnostic_Session__c.Created_From__c</members>
+        <members>Diagnostic_Session__c.Detected_Issue_Type__c</members>
+        <members>Diagnostic_Session__c.Needs_Escalation__c</members>
+        <members>Diagnostic_Session__c.Object_API_Name__c</members>
+        <members>Diagnostic_Session__c.Page_Reference_JSON__c</members>
+        <members>Diagnostic_Session__c.Page_URL__c</members>
+        <members>Diagnostic_Session__c.Recent_Error_Log__c</members>
+        <members>Diagnostic_Session__c.Resolution_Status__c</members>
+        <members>Diagnostic_Session__c.User_Description__c</members>
+        <members>Diagnostic_Session__c.User__c</members>
+        <members>Error_Attachment__c.Attachment_Type__c</members>
+        <members>Error_Attachment__c.Content_Document_Id__c</members>
+        <members>Error_Attachment__c.Error_Log__c</members>
+        <members>Error_Attachment__c.File_Name__c</members>
+        <members>Error_Attachment__c.Retention_Expires_At__c</members>
+        <members>Error_Attachment__c.Sanitized__c</members>
+        <members>Error_Captured__e.Action_Name__c</members>
+        <members>Error_Captured__e.Context_JSON__c</members>
+        <members>Error_Captured__e.Correlation_Id__c</members>
+        <members>Error_Captured__e.Error_Message__c</members>
+        <members>Error_Captured__e.Object_API_Name__c</members>
+        <members>Error_Captured__e.Page_URL__c</members>
+        <members>Error_Captured__e.Record_Id__c</members>
+        <members>Error_Captured__e.Severity__c</members>
+        <members>Error_Captured__e.Source_Name__c</members>
+        <members>Error_Captured__e.Source_Type__c</members>
+        <members>Error_Captured__e.Stack_Trace__c</members>
+        <members>Error_Captured__e.User_Id__c</members>
+        <members>Error_Context__c.Context_Type__c</members>
+        <members>Error_Context__c.Correlation_Id__c</members>
+        <members>Error_Context__c.Error_Log__c</members>
+        <members>Error_Context__c.Masked__c</members>
+        <members>Error_Context__c.Payload_JSON__c</members>
+        <members>Error_Context__c.Sequence__c</members>
+        <members>Error_Context__c.Source__c</members>
+        <members>Error_Feedback__c.Comments__c</members>
+        <members>Error_Feedback__c.Diagnostic_Session__c</members>
+        <members>Error_Feedback__c.Error_Log__c</members>
+        <members>Error_Feedback__c.Helpful__c</members>
+        <members>Error_Feedback__c.Outcome__c</members>
+        <members>Error_Feedback__c.Submitted_By__c</members>
+        <members>Error_Log__c.Action_Name__c</members>
+        <members>Error_Log__c.Agentforce_Status__c</members>
+        <members>Error_Log__c.Async_Job_Id__c</members>
+        <members>Error_Log__c.Changed_Fields_JSON__c</members>
+        <members>Error_Log__c.Context_JSON__c</members>
+        <members>Error_Log__c.Correlation_Id__c</members>
+        <members>Error_Log__c.Debug_Log_Id__c</members>
+        <members>Error_Log__c.Debug_Log_Link__c</members>
+        <members>Error_Log__c.Error_Category__c</members>
+        <members>Error_Log__c.Error_Type__c</members>
+        <members>Error_Log__c.First_Seen_At__c</members>
+        <members>Error_Log__c.Incident_Key__c</members>
+        <members>Error_Log__c.Incident__c</members>
+        <members>Error_Log__c.Last_Seen_At__c</members>
+        <members>Error_Log__c.Normalized_Message__c</members>
+        <members>Error_Log__c.Object_API_Name__c</members>
+        <members>Error_Log__c.Original_Error_Message__c</members>
+        <members>Error_Log__c.Page_Reference_JSON__c</members>
+        <members>Error_Log__c.Page_URL__c</members>
+        <members>Error_Log__c.Record_Id__c</members>
+        <members>Error_Log__c.Related_Diagnostic_Session__c</members>
+        <members>Error_Log__c.Retry_Eligible__c</members>
+        <members>Error_Log__c.Severity__c</members>
+        <members>Error_Log__c.Source_Name__c</members>
+        <members>Error_Log__c.Source_Type__c</members>
+        <members>Error_Log__c.Stack_Trace__c</members>
+        <members>Error_Log__c.Status__c</members>
+        <members>Error_Log__c.User__c</members>
+        <members>Error_Rule__mdt.Active__c</members>
+        <members>Error_Rule__mdt.Category__c</members>
+        <members>Error_Rule__mdt.Fixability__c</members>
+        <members>Error_Rule__mdt.Pattern__c</members>
+        <members>Error_Rule__mdt.Recommended_Action__c</members>
+        <members>Error_Rule__mdt.Remediation_Action_Key__c</members>
+        <members>Error_Rule__mdt.Severity__c</members>
+        <members>Error_Rule__mdt.User_Message__c</members>
+        <members>Escalation_Requested__e.Channel__c</members>
+        <members>Escalation_Requested__e.Correlation_Id__c</members>
+        <members>Escalation_Requested__e.Error_Log_Id__c</members>
+        <members>Escalation_Requested__e.Route_Key__c</members>
+        <members>Escalation_Requested__e.Session_Id__c</members>
+        <members>Escalation_Requested__e.Severity__c</members>
+        <members>Escalation_Route__mdt.Active__c</members>
+        <members>Escalation_Route__mdt.Channel__c</members>
+        <members>Escalation_Route__mdt.Endpoint_Path__c</members>
+        <members>Escalation_Route__mdt.Group_Duplicates__c</members>
+        <members>Escalation_Route__mdt.Named_Credential__c</members>
+        <members>Escalation_Route__mdt.Owner_Team__c</members>
+        <members>Escalation_Route__mdt.Recipient__c</members>
+        <members>Escalation_Route__mdt.Route_Key__c</members>
+        <members>Escalation_Route__mdt.Severity__c</members>
+        <members>Escalation_Route__mdt.Source_Type__c</members>
+        <members>Escalation_Route__mdt.Target__c</members>
+        <members>Feature_Flag__mdt.Active__c</members>
+        <members>Feature_Flag__mdt.Description__c</members>
+        <members>Feature_Flag__mdt.Enabled__c</members>
+        <members>Feature_Flag__mdt.Feature_Key__c</members>
+        <members>Feature_Flag__mdt.Minimum_Edition__c</members>
+        <members>Incident__c.Affected_Record_Count__c</members>
+        <members>Incident__c.Affected_User_Count__c</members>
+        <members>Incident__c.Failed_Element__c</members>
+        <members>Incident__c.First_Seen_At__c</members>
+        <members>Incident__c.Highest_Severity__c</members>
+        <members>Incident__c.Incident_Key__c</members>
+        <members>Incident__c.Last_Seen_At__c</members>
+        <members>Incident__c.Normalized_Category__c</members>
+        <members>Incident__c.Occurrence_Count__c</members>
+        <members>Incident__c.Source_Name__c</members>
+        <members>Incident__c.Source_Type__c</members>
+        <members>Incident__c.Status__c</members>
+        <members>Incident__c.Summary__c</members>
+        <members>Log_Connection__mdt.Active__c</members>
+        <members>Log_Connection__mdt.Maximum_Log_Bytes__c</members>
+        <members>Log_Connection__mdt.Named_Credential__c</members>
+        <members>Log_Connection__mdt.Timeout_Milliseconds__c</members>
+        <members>Notification_Policy__mdt.Active__c</members>
+        <members>Notification_Policy__mdt.Allow_Dismissal__c</members>
+        <members>Notification_Policy__mdt.Auto_Open_Utility__c</members>
+        <members>Notification_Policy__mdt.Cooldown_Minutes__c</members>
+        <members>Notification_Policy__mdt.Critical_Mode__c</members>
+        <members>Notification_Policy__mdt.Description__c</members>
+        <members>Notification_Policy__mdt.Group_By_Key__c</members>
+        <members>Notification_Policy__mdt.Maximum_Alerts_Per_Hour__c</members>
+        <members>Notification_Policy__mdt.Minimum_Confidence__c</members>
+        <members>Notification_Policy__mdt.Minimum_Severity__c</members>
+        <members>Notification_Policy__mdt.Notify_Admin__c</members>
+        <members>Notification_Policy__mdt.Notify_Affected_User__c</members>
+        <members>Notification_Policy__mdt.Source_Type__c</members>
+        <members>Remediation_Action_Setting__mdt.Action_Key__c</members>
+        <members>Remediation_Action_Setting__mdt.Active__c</members>
+        <members>Remediation_Action_Setting__mdt.Apex_Class__c</members>
+        <members>Remediation_Action_Setting__mdt.Field__c</members>
+        <members>Remediation_Action_Setting__mdt.Flow_API_Name__c</members>
+        <members>Remediation_Action_Setting__mdt.Object__c</members>
+        <members>Remediation_Action_Setting__mdt.Requires_Confirmation__c</members>
+        <members>Remediation_Action_Setting__mdt.Risk_Level__c</members>
+        <members>Remediation_Action__c.Action_Key__c</members>
+        <members>Remediation_Action__c.After_Value__c</members>
+        <members>Remediation_Action__c.Approved_By__c</members>
+        <members>Remediation_Action__c.Before_Value__c</members>
+        <members>Remediation_Action__c.Correlation_Id__c</members>
+        <members>Remediation_Action__c.Diagnostic_Session__c</members>
+        <members>Remediation_Action__c.Error_Log__c</members>
+        <members>Remediation_Action__c.Executed_By__c</members>
+        <members>Remediation_Action__c.Field_API_Name__c</members>
+        <members>Remediation_Action__c.Object_API_Name__c</members>
+        <members>Remediation_Action__c.Requested_By__c</members>
+        <members>Remediation_Action__c.Requires_Confirmation__c</members>
+        <members>Remediation_Action__c.Result_Message__c</members>
+        <members>Remediation_Action__c.Retry_Recommended__c</members>
+        <members>Remediation_Action__c.Status__c</members>
+        <members>Remediation_Action__c.Target_Record_Id__c</members>
+        <members>Retention_Policy__mdt.Active__c</members>
+        <members>Retention_Policy__mdt.Delete_Attachments__c</members>
+        <members>Retention_Policy__mdt.Object_Name__c</members>
+        <members>Retention_Policy__mdt.Retention_Days__c</members>
+        <members>Retry_Attempt__c.Attempt_Number__c</members>
+        <members>Retry_Attempt__c.Completed_At__c</members>
+        <members>Retry_Attempt__c.Correlation_Id__c</members>
+        <members>Retry_Attempt__c.Error_Log__c</members>
+        <members>Retry_Attempt__c.External_Reference__c</members>
+        <members>Retry_Attempt__c.Handler_Key__c</members>
+        <members>Retry_Attempt__c.Idempotency_Key__c</members>
+        <members>Retry_Attempt__c.Payload_JSON__c</members>
+        <members>Retry_Attempt__c.Result_Message__c</members>
+        <members>Retry_Attempt__c.Started_At__c</members>
+        <members>Retry_Attempt__c.Status__c</members>
+        <members>Retry_Attempt__c.Target_Record_Id__c</members>
+        <members>Retry_Handler__mdt.Active__c</members>
+        <members>Retry_Handler__mdt.Apex_Class__c</members>
+        <members>Retry_Handler__mdt.Backoff_Minutes__c</members>
+        <members>Retry_Handler__mdt.Flow_API_Name__c</members>
+        <members>Retry_Handler__mdt.Handler_Key__c</members>
+        <members>Retry_Handler__mdt.Idempotency_Strategy__c</members>
+        <members>Retry_Handler__mdt.Max_Attempts__c</members>
+        <members>Retry_Handler__mdt.Required_Permission__c</members>
+        <members>Retry_Handler__mdt.Target_Object__c</members>
+        <members>SLA_Policy__mdt.Active__c</members>
+        <members>SLA_Policy__mdt.Description__c</members>
+        <members>SLA_Policy__mdt.Escalation_Minutes__c</members>
+        <members>SLA_Policy__mdt.Owner_Team__c</members>
+        <members>SLA_Policy__mdt.Response_Minutes__c</members>
+        <members>SLA_Policy__mdt.Severity__c</members>
+        <members>Sensitive_Field__mdt.Active__c</members>
+        <members>Sensitive_Field__mdt.Field__c</members>
+        <members>Sensitive_Field__mdt.Masking_Strategy__c</members>
+        <members>Sensitive_Field__mdt.Object__c</members>
+        <members>Sensitive_Field__mdt.Regex__c</members>
+        <members>Severity_Rule__mdt.Active__c</members>
+        <members>Severity_Rule__mdt.Description__c</members>
+        <members>Severity_Rule__mdt.Impact_Score__c</members>
+        <members>Severity_Rule__mdt.Pattern__c</members>
+        <members>Severity_Rule__mdt.Severity__c</members>
+        <members>Severity_Rule__mdt.Source_Type__c</members>
+        <members>Surface_Config__mdt.Active__c</members>
+        <members>Surface_Config__mdt.App_Name__c</members>
+        <members>Surface_Config__mdt.Experience_Enabled__c</members>
+        <members>Surface_Config__mdt.Mobile_Enabled__c</members>
+        <members>Surface_Config__mdt.Utility_Enabled__c</members>
+        <members>User_Notification__c.Action_Available__c</members>
+        <members>User_Notification__c.Correlation_Id__c</members>
+        <members>User_Notification__c.Dedupe_Key__c</members>
+        <members>User_Notification__c.Dismissed_At__c</members>
+        <members>User_Notification__c.Error_Log__c</members>
+        <members>User_Notification__c.Expires_At__c</members>
+        <members>User_Notification__c.Headline__c</members>
+        <members>User_Notification__c.Incident__c</members>
+        <members>User_Notification__c.Notification_Type__c</members>
+        <members>User_Notification__c.Severity__c</members>
+        <members>User_Notification__c.Short_Message__c</members>
+        <members>User_Notification__c.Source_Event_Replay_Id__c</members>
+        <members>User_Notification__c.Status__c</members>
+        <members>User_Notification__c.Target_User__c</members>
+        <members>User_Notification__c.Viewed_At__c</members>
+        <name>CustomField</name>
+    </types>
+    <types>
+        <members>Agent_Connection.DEFAULT</members>
         <members>Context_Field_Setting.ACCOUNT_DESCRIPTION</members>
         <members>Context_Field_Setting.ACCOUNT_NAME</members>
         <members>Error_Rule.APEX_CPU_TIME_LIMIT_EXCEEDED</members>
+        <members>Error_Rule.CALLOUT_EXCEPTION</members>
+        <members>Error_Rule.CANNOT_EXECUTE_FLOW_TRIGGER</members>
         <members>Error_Rule.CANNOT_INSERT_UPDATE_ACTIVATE_ENTITY</members>
+        <members>Error_Rule.DUPLICATES_DETECTED</members>
+        <members>Error_Rule.DUPLICATE_VALUE</members>
         <members>Error_Rule.FIELD_CUSTOM_VALIDATION_EXCEPTION</members>
+        <members>Error_Rule.HEAP_SIZE_TOO_LARGE</members>
+        <members>Error_Rule.HTTP_429</members>
+        <members>Error_Rule.HTTP_503</members>
         <members>Error_Rule.INSUFFICIENT_ACCESS</members>
+        <members>Error_Rule.INVALID_CROSS_REFERENCE_KEY</members>
+        <members>Error_Rule.INVALID_PICKLIST_VALUE</members>
+        <members>Error_Rule.INVALID_SESSION_ID</members>
         <members>Error_Rule.MIXED_DML_OPERATION</members>
         <members>Error_Rule.NULL_POINTER</members>
+        <members>Error_Rule.READ_TIMED_OUT</members>
+        <members>Error_Rule.REQUEST_LIMIT_EXCEEDED</members>
         <members>Error_Rule.REQUIRED_FIELD_MISSING</members>
+        <members>Error_Rule.STORAGE_LIMIT_EXCEEDED</members>
+        <members>Error_Rule.STRING_TOO_LONG</members>
+        <members>Error_Rule.TOO_MANY_DML_STATEMENTS</members>
+        <members>Error_Rule.TOO_MANY_SOQL_QUERIES</members>
         <members>Error_Rule.UNABLE_TO_LOCK_ROW</members>
         <members>Escalation_Route.DEFAULT_ADMIN_EMAIL</members>
         <members>Escalation_Route.DEFAULT_DEV_EMAIL</members>
         <members>Feature_Flag.AI_DIAGNOSIS</members>
+        <members>Feature_Flag.AUTO_DIAGNOSIS</members>
         <members>Feature_Flag.CONNECTOR_EXTENSIONS</members>
         <members>Feature_Flag.GOVERNED_REMEDIATION</members>
         <members>Feature_Flag.USER_NOTIFICATIONS</members>
+        <members>Log_Connection.DEFAULT</members>
         <members>Notification_Policy.DEFAULT</members>
         <members>Remediation_Action_Setting.UPDATE_ACCOUNT_DESCRIPTION</members>
         <members>Remediation_Action_Setting.UPDATE_ACCOUNT_TAX_CODE</members>
@@ -116,6 +469,7 @@
         <members>AI_Diagnosis__c</members>
         <members>Aegis_Org_Setting__c</members>
         <members>Aegis_User_Alert__e</members>
+        <members>Agent_Connection__mdt</members>
         <members>Agent_Diagnosis_Requested__e</members>
         <members>Context_Field_Setting__mdt</members>
         <members>Delivery_Attempt__c</members>
@@ -133,9 +487,10 @@
         <members>Escalation_Route__mdt</members>
         <members>Feature_Flag__mdt</members>
         <members>Incident__c</members>
+        <members>Log_Connection__mdt</members>
         <members>Notification_Policy__mdt</members>
-        <members>Remediation_Action__c</members>
         <members>Remediation_Action_Setting__mdt</members>
+        <members>Remediation_Action__c</members>
         <members>Retention_Policy__mdt</members>
         <members>Retry_Attempt__c</members>
         <members>Retry_Handler__mdt</members>
@@ -147,19 +502,17 @@
         <name>CustomObject</name>
     </types>
     <types>
-        <members>Account.Tax_Code__c</members>
-        <members>Retry_Handler__mdt.Backoff_Minutes__c</members>
-        <members>Error_Rule__mdt.Remediation_Action_Key__c</members>
-        <members>Error_Captured__e.Page_URL__c</members>
-        <members>Error_Captured__e.Action_Name__c</members>
-        <members>Error_Captured__e.Stack_Trace__c</members>
-        <members>Error_Log__c.Incident_Key__c</members>
-        <members>Error_Log__c.Incident__c</members>
-        <members>Agent_Diagnosis_Requested__e.Target_User_Id__c</members>
-        <name>CustomField</name>
+        <members>AEIR_Execute_Remediation</members>
+        <members>AEIR_Execute_Retry</members>
+        <members>AEIR_Headless_Access</members>
+        <members>AEIR_Inbound_Diagnostic_Capture</members>
+        <members>AEIR_Process_Diagnostics</members>
+        <members>AEIR_View_Sensitive_Context</members>
+        <name>CustomPermission</name>
     </types>
     <types>
         <members>AI_Diagnosis__c</members>
+        <members>Aegis_Flow_Operations</members>
         <members>Aegis_Flow_Setup</members>
         <members>Delivery_Attempt__c</members>
         <members>Delivery_Audit__c</members>
@@ -171,6 +524,40 @@
         <members>Retry_Attempt__c</members>
         <members>User_Notification__c</members>
         <name>CustomTab</name>
+    </types>
+    <types>
+        <members>Aegis_Flow_Admin_UtilityBar</members>
+        <members>Aegis_Flow_Operations</members>
+        <members>LightningSalesConsole_UtilityBar</members>
+        <members>LightningSales_UtilityBar</members>
+        <members>LightningService_UtilityBar</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>Aegis_Error_Capture_Fault_Subflow</members>
+        <name>Flow</name>
+    </types>
+    <types>
+        <members>Contact-Contact Layout</members>
+        <members>Error_Feedback__c-Error Feedback Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>adminErrorConsole</members>
+        <members>aegisDiagnosticPanel</members>
+        <members>aegisEscalationConfirmation</members>
+        <members>aegisGetHelpPanel</members>
+        <members>aegisHeadlessMonitor</members>
+        <members>aegisNotificationCard</members>
+        <members>aegisRemediationConfirmation</members>
+        <members>aegisSetupWizard</members>
+        <members>aegisUiSaveCapture</members>
+        <members>aegisWorkspace</members>
+        <members>developerEscalationViewer</members>
+        <members>errorBoundaryWrapper</members>
+        <members>helpMeAgentUtility</members>
+        <members>remediationConfirmationModal</members>
+        <name>LightningComponentBundle</name>
     </types>
     <types>
         <members>AI_Diagnosis__c.All</members>
@@ -189,36 +576,9 @@
         <name>ListView</name>
     </types>
     <types>
-        <members>adminErrorConsole</members>
-        <members>aegisDiagnosticPanel</members>
-        <members>aegisEscalationConfirmation</members>
-        <members>aegisGetHelpPanel</members>
-        <members>aegisHeadlessMonitor</members>
-        <members>aegisNotificationCard</members>
-        <members>aegisRemediationConfirmation</members>
-        <members>aegisSetupWizard</members>
-        <members>developerEscalationViewer</members>
-        <members>errorBoundaryWrapper</members>
-        <members>helpMeAgentUtility</members>
-        <members>remediationConfirmationModal</members>
-        <name>LightningComponentBundle</name>
-    </types>
-    <types>
-        <members>AEIR_Execute_Remediation</members>
-        <members>AEIR_Inbound_Diagnostic_Capture</members>
-        <members>AEIR_View_Sensitive_Context</members>
-        <name>CustomPermission</name>
-    </types>
-    <types>
-        <members>Aegis_Flow_Admin_UtilityBar</members>
-        <members>LightningService_UtilityBar</members>
-        <members>LightningSalesConsole_UtilityBar</members>
-        <members>LightningSales_UtilityBar</members>
-        <name>FlexiPage</name>
-    </types>
-    <types>
         <members>AEIR_Developer_Viewer</members>
         <members>AEIR_End_User</members>
+        <members>AEIR_Headless_User</members>
         <members>AEIR_Integration_User</members>
         <members>AEIR_Product_Admin</members>
         <members>AEIR_Sample_Account_Remediation</members>
@@ -226,13 +586,22 @@
         <name>PermissionSet</name>
     </types>
     <types>
+        <members>AEIR_AgentDiagnosisRequestedEventTrigger</members>
+        <members>AEIR_BatchApexErrorEventTrigger</members>
+        <members>AEIR_DiagnosticSessionRequestTrigger</members>
+        <members>AEIR_ErrorCapturedEventTrigger</members>
+        <members>AEIR_EscalationRequestedEventTrigger</members>
+        <name>PlatformEventSubscriberConfig</name>
+    </types>
+    <types>
+        <members>Case.Aegis_Save_With_Diagnostics</members>
+        <members>Contact.Aegis_Save_With_Diagnostics</members>
+        <name>QuickAction</name>
+    </types>
+    <types>
         <members>AegisFlowBrand</members>
         <members>AegisFlowLogo</members>
         <name>StaticResource</name>
-    </types>
-    <types>
-        <members>Aegis_Error_Capture_Fault_Subflow</members>
-        <name>Flow</name>
     </types>
     <version>67.0</version>
 </Package>

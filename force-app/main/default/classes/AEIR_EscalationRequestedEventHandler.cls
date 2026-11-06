@@ -1,77 +1,59 @@
-/**
- * Escalation_Requested__e subscriber.
- *
- * The platform delivers up to 200 events per batch, so this ran createForError() 200 times
- * in a loop. Each call cost several DML, which meant an incident storm - the exact condition
- * that raises escalations in the first place - blew the DML limit and the whole batch was
- * retried, then discarded. Events are now grouped by route key and each group escalated in
- * one bulk call.
- */
+/** Bulk escalation subscriber. Invalid events and failed routes do not abandon other groups. */
 public with sharing class AEIR_EscalationRequestedEventHandler {
+    public class EventReferenceException extends Exception {}
 
     public static void handle(List<Escalation_Requested__e> events) {
+        if (events == null || events.isEmpty()) return;
         AEIR_SubscriberTelemetry telemetry = new AEIR_SubscriberTelemetry('EscalationRequested');
-
-        // Route key varies per event and the bulk API resolves one route per call, so the
-        // batch is partitioned by route. A blank key means "let the router decide" and is a
-        // group of its own.
         Map<String, List<Id>> logIdsByRoute = new Map<String, List<Id>>();
         Map<String, List<Id>> sessionIdsByRoute = new Map<String, List<Id>>();
-        Map<String, String> correlationById = new Map<String, String>();
-
+        Map<String, Map<Id, Set<String>>> correlationsByRoute = new Map<String, Map<Id, Set<String>>>();
         for (Escalation_Requested__e evt : events) {
-            String routeKey = String.isBlank(evt.Route_Key__c) ? '' : evt.Route_Key__c;
             try {
-                if (!String.isBlank(evt.Error_Log_Id__c)) {
-                    add(logIdsByRoute, routeKey, (Id) evt.Error_Log_Id__c);
-                    correlationById.put(evt.Error_Log_Id__c, evt.Correlation_Id__c);
-                } else if (!String.isBlank(evt.Session_Id__c)) {
-                    add(sessionIdsByRoute, routeKey, (Id) evt.Session_Id__c);
-                    correlationById.put(evt.Session_Id__c, evt.Correlation_Id__c);
-                }
+                if (evt == null) throw new EventReferenceException('An escalation event is required.');
+                String routeKey = String.isBlank(evt.Route_Key__c) ? '' : evt.Route_Key__c.trim();
+                Boolean hasError = !String.isBlank(evt.Error_Log_Id__c);
+                Boolean hasSession = !String.isBlank(evt.Session_Id__c);
+                if (hasError == hasSession) throw new EventReferenceException('An escalation event must identify exactly one error or session.');
+                Id reference = validReference(hasError ? evt.Error_Log_Id__c : evt.Session_Id__c,
+                    hasError ? Error_Log__c.SObjectType : Diagnostic_Session__c.SObjectType);
+                add(hasError ? logIdsByRoute : sessionIdsByRoute, correlationsByRoute,
+                    routeKey, reference, evt.Correlation_Id__c);
             } catch (Exception malformed) {
-                // A malformed id must not cost the other 199 events their escalation.
-                telemetry.record(evt.Correlation_Id__c, malformed);
+                telemetry.record(evt == null ? null : evt.Correlation_Id__c, malformed);
             }
         }
-
         for (String routeKey : logIdsByRoute.keySet()) {
-            List<Id> logIds = logIdsByRoute.get(routeKey);
-            try {
-                AEIR_EscalationService.createForErrors(logIds, blankToNull(routeKey), true);
-            } catch (Exception groupFailure) {
-                // Report every event in the group. A route-level failure such as a
-                // deactivated Escalation_Route__mdt affects all of them, and recording it
-                // once would understate the blast radius in the telemetry.
-                recordAll(telemetry, logIds, correlationById, groupFailure);
-            }
+            try { AEIR_EscalationService.createForErrors(logIdsByRoute.get(routeKey), blankToNull(routeKey), true); }
+            catch (Exception groupFailure) { recordAll(telemetry, logIdsByRoute.get(routeKey), correlationsByRoute.get(routeKey), groupFailure); }
         }
-
         for (String routeKey : sessionIdsByRoute.keySet()) {
-            List<Id> sessionIds = sessionIdsByRoute.get(routeKey);
-            try {
-                AEIR_EscalationService.createForSessions(sessionIds, blankToNull(routeKey), true);
-            } catch (Exception groupFailure) {
-                recordAll(telemetry, sessionIds, correlationById, groupFailure);
-            }
+            try { AEIR_EscalationService.createForSessions(sessionIdsByRoute.get(routeKey), blankToNull(routeKey), true); }
+            catch (Exception groupFailure) { recordAll(telemetry, sessionIdsByRoute.get(routeKey), correlationsByRoute.get(routeKey), groupFailure); }
         }
-
         telemetry.flush();
     }
 
-    private static void add(Map<String, List<Id>> target, String key, Id value) {
+    private static Id validReference(String value, Schema.SObjectType expectedType) {
+        Id reference;
+        try { reference = (Id)value; }
+        catch (Exception invalidId) { throw new EventReferenceException('The event contains an invalid Salesforce record Id.'); }
+        if (reference.getSObjectType() != expectedType) throw new EventReferenceException('The event record Id belongs to the wrong object.');
+        return reference;
+    }
+    private static void add(Map<String, List<Id>> target, Map<String, Map<Id, Set<String>>> correlations,
+        String key, Id value, String correlation) {
         if (!target.containsKey(key)) target.put(key, new List<Id>());
-        target.get(key).add(value);
-    }
-
-    private static void recordAll(AEIR_SubscriberTelemetry telemetry, List<Id> ids,
-                                  Map<String, String> correlationById, Exception failure) {
-        for (Id recordId : ids) {
-            telemetry.record(correlationById.get(String.valueOf(recordId)), failure);
+        if (!correlations.containsKey(key)) correlations.put(key, new Map<Id, Set<String>>());
+        if (!correlations.get(key).containsKey(value)) {
+            correlations.get(key).put(value, new Set<String>());
+            target.get(key).add(value);
         }
+        correlations.get(key).get(value).add(correlation);
     }
-
-    private static String blankToNull(String value) {
-        return String.isBlank(value) ? null : value;
+    private static void recordAll(AEIR_SubscriberTelemetry telemetry, List<Id> ids,
+        Map<Id, Set<String>> correlations, Exception failure) {
+        for (Id reference : ids) for (String correlation : correlations.get(reference)) telemetry.record(correlation, failure);
     }
+    private static String blankToNull(String value) { return String.isBlank(value) ? null : value; }
 }

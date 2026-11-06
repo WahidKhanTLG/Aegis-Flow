@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://soap.sforce.com/2006/04/metadata">
+  <label>Integration throttling</label>
+  <protected>false</protected>
+  <values>
+    <field>Active__c</field>
+    <value xsi:type="xsd:boolean">true</value>
+  </values>
+  <values>
+    <field>Category__c</field>
+    <value xsi:type="xsd:string">Integration</value>
+  </values>
+  <values>
+    <field>Fixability__c</field>
+    <value xsi:type="xsd:string">RETRYABLE</value>
+  </values>
+  <values>
+    <field>Pattern__c</field>
+    <value xsi:type="xsd:string">HTTP 429</value>
+  </values>
+  <values>
+    <field>Recommended_Action__c</field>
+    <value xsi:type="xsd:string">Respect the service retry-after policy and use bounded backoff through an idempotent registered handler.</value>
+  </values>
+  <values>
+    <field>Severity__c</field>
+    <value xsi:type="xsd:string">High</value>
+  </values>
+  <values>
+    <field>User_Message__c</field>
+    <value xsi:type="xsd:string">The connected service is limiting request throughput.</value>
+  </values>
+</CustomMetadata>

@@ -72,7 +72,7 @@ public with sharing class AEIR_EscalationService {
                 Error_Log__c = log.Id,
                 Route_Key__c = route.Route_Key__c,
                 Channel__c = safeChannel(route.Channel__c),
-                Recipient__c = effectiveRecipient('Developer', route.Recipient__c),
+                Recipient__c = recipientFor(route, 'Developer'),
                 Severity__c = log.Severity__c,
                 Subject__c = '[Aegis Flow] ' + log.Severity__c + ' | ' + log.Source_Type__c + ' | ' + log.Correlation_Id__c,
                 Summary__c = log.Normalized_Message__c,
@@ -137,7 +137,7 @@ public with sharing class AEIR_EscalationService {
                 Diagnostic_Session__c = session.Id,
                 Route_Key__c = route.Route_Key__c,
                 Channel__c = safeChannel(route.Channel__c),
-                Recipient__c = effectiveRecipient('Admin', route.Recipient__c),
+                Recipient__c = recipientFor(route, 'Admin'),
                 Severity__c = 'Medium',
                 Subject__c = '[Aegis Flow] Manual diagnostic | ' + session.Correlation_Id__c,
                 Summary__c = session.User_Description__c,
@@ -163,12 +163,13 @@ public with sharing class AEIR_EscalationService {
     // ---------- routing ----------
 
     /** Cached per transaction: a bulk caller resolves a route for every record. */
-    private static List<Escalation_Route__mdt> cachedRoutes;
+    @TestVisible private static List<Escalation_Route__mdt> cachedRoutes;
 
     private static List<Escalation_Route__mdt> routes() {
         if (cachedRoutes == null) {
             cachedRoutes = [
-                SELECT DeveloperName, Route_Key__c, Channel__c, Recipient__c, Source_Type__c, Severity__c, Active__c
+                SELECT DeveloperName, Route_Key__c, Channel__c, Recipient__c, Source_Type__c, Severity__c, Active__c,
+                    Named_Credential__c, Endpoint_Path__c, Target__c
                 FROM Escalation_Route__mdt WHERE Active__c = true ORDER BY DeveloperName LIMIT 200
             ];
         }
@@ -197,6 +198,26 @@ public with sharing class AEIR_EscalationService {
             if (score > bestScore) { best = route; bestScore = score; }
         }
         return best == null ? available[0] : best;
+    }
+
+    /** Trusted metadata-only lookup used again when an asynchronous connector runs. */
+    public static Map<String, Escalation_Route__mdt> connectorRoutes(Set<String> keys) {
+        Map<String, Escalation_Route__mdt> selected = new Map<String, Escalation_Route__mdt>();
+        Set<String> ambiguous = new Set<String>();
+        for (Escalation_Route__mdt route : routes()) {
+            if (keys == null || !keys.contains(route.Route_Key__c)) continue;
+            if (selected.containsKey(route.Route_Key__c)) ambiguous.add(route.Route_Key__c);
+            selected.put(route.Route_Key__c, route);
+        }
+        for (String key : ambiguous) selected.remove(key);
+        return selected;
+    }
+
+    private static String recipientFor(Escalation_Route__mdt route, String role) {
+        String channel = safeChannel(route.Channel__c);
+        if (channel == 'Email') return effectiveRecipient(role, route.Recipient__c);
+        // Connector destinations come exclusively from validated Named Credential metadata.
+        return channel == 'Case' || channel == 'None' ? null : route.Named_Credential__c;
     }
 
     // ---------- package ----------
@@ -269,8 +290,8 @@ public with sharing class AEIR_EscalationService {
     /**
      * Batched dispatch. Channels are collected first, then flushed one operation each.
      *
-     * Email and Case are Release 1 scope (spec 18). Jira, Slack, Teams, GitHub and webhook
-     * record a Pending audit rather than silently appearing delivered.
+     * Email and Case flush synchronously. Configured external connectors create durable
+     * Pending audit claims and deliver in a separate callout-capable queueable transaction.
      */
     @TestVisible
     private static void dispatchAll(List<Developer_Escalation__c> escalations, List<String> packages, Boolean sendNow) {
@@ -281,6 +302,7 @@ public with sharing class AEIR_EscalationService {
         List<Case> cases = new List<Case>();
         List<Developer_Escalation__c> caseEscalations = new List<Developer_Escalation__c>();
         List<Delivery_Audit__c> audits = new List<Delivery_Audit__c>();
+        List<Delivery_Audit__c> connectorAudits = new List<Delivery_Audit__c>();
         List<Developer_Escalation__c> toUpdate = new List<Developer_Escalation__c>();
 
         Boolean caseCreatable = Schema.SObjectType.Case.isCreateable();
@@ -289,7 +311,7 @@ public with sharing class AEIR_EscalationService {
 
         for (Integer i = 0; i < escalations.size(); i++) {
             Developer_Escalation__c escalation = escalations[i];
-            String diagnosticPackage = i < packages.size() ? packages[i] : '';
+            String diagnosticPackage = packages != null && i < packages.size() ? packages[i] : '';
 
             if (escalation.Channel__c == 'Email') {
                 List<String> toAddresses = validAddresses(escalation.Recipient__c);
@@ -333,9 +355,18 @@ public with sharing class AEIR_EscalationService {
             } else if (escalation.Channel__c != 'None') {
                 escalation.Status__c = 'Pending';
                 toUpdate.add(escalation);
-                audits.add(audit(escalation, escalation.Channel__c, 'Pending',
-                    'The ' + escalation.Channel__c + ' connector is not implemented in this release. '
-                    + 'Configure a Named Credential connector before enabling this route.'));
+                String problem = 'Connector extensions are disabled.';
+                if (AEIR_FeatureFlagService.isEnabled(AEIR_FeatureFlagService.CONNECTOR_EXTENSIONS)) {
+                    Escalation_Route__mdt route;
+                    try { route = findRoute(escalation.Route_Key__c, null, null); }
+                    catch (Exception missingRoute) { route = null; }
+                    problem = AEIR_ConnectorDeliveryJob.routeConfigurationError(route);
+                    if (problem == null && route.Channel__c != escalation.Channel__c) problem = 'The configured route channel does not match the escalation.';
+                }
+                Delivery_Audit__c pending = audit(escalation, escalation.Channel__c, 'Pending',
+                    problem == null ? 'Ready for asynchronous connector delivery.' : problem);
+                audits.add(pending);
+                if (problem == null) connectorAudits.add(pending);
             }
         }
 
@@ -401,6 +432,17 @@ public with sharing class AEIR_EscalationService {
         // landed is worse than no audit at all, because the console shows a clean history.
         if (!toUpdate.isEmpty()) reportPartialFailures(Database.update(toUpdate, false, AccessLevel.SYSTEM_MODE), 'escalation status update');
         if (!audits.isEmpty()) reportPartialFailures(Database.insert(audits, false, AccessLevel.SYSTEM_MODE), 'delivery audit insert');
+        List<Delivery_Audit__c> persistedConnectorAudits = new List<Delivery_Audit__c>();
+        for (Delivery_Audit__c pending : connectorAudits) if (pending.Id != null) persistedConnectorAudits.add(pending);
+        if (!persistedConnectorAudits.isEmpty()) {
+            try { AEIR_ConnectorDeliveryJob.enqueueAudits(persistedConnectorAudits); }
+            catch (Exception queueFailure) {
+                for (Delivery_Audit__c pending : persistedConnectorAudits) pending.Response_Body__c =
+                    'Not queued: connector work requires an explicit retry after queue/configuration recovery.';
+                reportPartialFailures(Database.update(persistedConnectorAudits, false, AccessLevel.SYSTEM_MODE), 'connector queue failure audit');
+                System.debug(LoggingLevel.WARN, 'Aegis Flow: connector work was not queued; Pending audits remain available.');
+            }
+        }
     }
 
     // ---------- helpers ----------

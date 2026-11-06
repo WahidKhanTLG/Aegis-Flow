@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<CustomMetadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://soap.sforce.com/2006/04/metadata">
+  <label>Integration service unavailable</label>
+  <protected>false</protected>
+  <values>
+    <field>Active__c</field>
+    <value xsi:type="xsd:boolean">true</value>
+  </values>
+  <values>
+    <field>Category__c</field>
+    <value xsi:type="xsd:string">Integration</value>
+  </values>
+  <values>
+    <field>Fixability__c</field>
+    <value xsi:type="xsd:string">RETRYABLE</value>
+  </values>
+  <values>
+    <field>Pattern__c</field>
+    <value xsi:type="xsd:string">HTTP 503</value>
+  </values>
+  <values>
+    <field>Recommended_Action__c</field>
+    <value xsi:type="xsd:string">Check service health and retry only through an approved idempotent handler with bounded backoff.</value>
+  </values>
+  <values>
+    <field>Severity__c</field>
+    <value xsi:type="xsd:string">High</value>
+  </values>
+  <values>
+    <field>User_Message__c</field>
+    <value xsi:type="xsd:string">A connected service is temporarily unavailable.</value>
+  </values>
+</CustomMetadata>

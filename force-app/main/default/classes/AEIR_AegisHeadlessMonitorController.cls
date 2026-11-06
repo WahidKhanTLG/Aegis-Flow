@@ -97,9 +97,13 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
         return AEIR_FeedbackService.submitFeedbackJson(feedbackJson);
     }
 
-    @AuraEnabled(cacheable=true)
+    @AuraEnabled
     public static List<AEIR_UserNotificationService.AlertDTO> getOpenAlerts() {
         return AEIR_UserNotificationService.getOpenAlerts();
+    }
+    @AuraEnabled
+    public static AEIR_UserNotificationService.AlertDTO resolveAlert(String correlationId) {
+        return AEIR_UserNotificationService.resolveAlert(correlationId);
     }
     @AuraEnabled
     public static AEIR_UserNotificationService.DetailDTO getAlertDetails(String correlationId) {
@@ -111,11 +115,25 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
     }
     @AuraEnabled
     public static AEIR_HelpMeController.HelpMeResponse startHelpFromAlert(String correlationId, String contextJson, String userDescription) {
-        AEIR_UserNotificationService.DetailDTO detail = AEIR_UserNotificationService.getAlertDetails(correlationId);
         Map<String,Object> contextMap = new Map<String,Object>();
         if (!String.isBlank(contextJson)) {
-            try { contextMap = (Map<String,Object>) JSON.deserializeUntyped(contextJson); } catch (Exception ex) { contextMap = new Map<String,Object>(); }
+            if (contextJson.length() > 32768) throw contextError('The diagnostic context exceeds the supported length.');
+            try {
+                Object parsed = JSON.deserializeUntyped(contextJson);
+                if (!(parsed instanceof Map<String, Object>)) throw contextError('Diagnostic context must be a JSON object.');
+                contextMap = (Map<String, Object>) parsed;
+            } catch (AuraHandledException rejected) { throw rejected; }
+            catch (Exception invalidJson) { throw contextError('Diagnostic context must be a valid JSON object.'); }
         }
+        for (String key : new List<String>{'correlationId', 'recordId', 'objectApiName', 'pageUrl'}) {
+            if (contextMap.get(key) != null && !(contextMap.get(key) instanceof String)) {
+                throw contextError('Diagnostic context fields must have the expected text type.');
+            }
+        }
+        if (contextMap.get('pageReference') != null && !(contextMap.get('pageReference') instanceof Map<String, Object>)) {
+            throw contextError('Diagnostic page reference must be a JSON object.');
+        }
+        AEIR_UserNotificationService.DetailDTO detail = AEIR_UserNotificationService.getAlertDetails(correlationId);
         contextMap.put('correlationId', correlationId);
         if (detail != null && detail.errorLog != null) {
             contextMap.put('recordId', detail.errorLog.affectedRecordId);
@@ -123,6 +141,11 @@ public with sharing class AEIR_AegisHeadlessMonitorController {
             contextMap.put('pageUrl', detail.errorLog.pageUrl);
         }
         return AEIR_HelpMeController.createSession(JSON.serialize(contextMap), String.isBlank(userDescription) ? 'User requested help from an Aegis Flow alert.' : userDescription, 'Process Failed');
+    }
+    private static AuraHandledException contextError(String message) {
+        AuraHandledException failure = new AuraHandledException(message);
+        failure.setMessage(message);
+        return failure;
     }
     @AuraEnabled
     public static AEIR_EscalationService.EscalationResult escalateAlert(String correlationId) {

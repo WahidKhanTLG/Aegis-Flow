@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "id": "aegis-flow",
+  "title": "Aegis Flow diagnostic and approved recovery contracts",
+  "customer": "global",
+  "product": "aegis-flow",
+  "processes": [
+    "diagnostic-capture",
+    "read-only-diagnosis",
+    "approved-flow-recovery"
+  ],
+  "summary": "Current-local product contracts for capturing Salesforce failures, reading authorized diagnostic evidence and requesting explicitly approved recovery. This is source knowledge, not evidence of deployment or permission in any customer org. Customer writes remain separately authorized.",
+  "lastReviewed": "2026-11-03",
+  "orgVerification": "not-checked",
+  "claims": [
+    {
+      "id": "capture-contract",
+      "text": "Direct capture persists a normalized error and context, reuses the same correlation for the same affected user, and rejects a correlation already attributed to a different user. Trusted server callers can suppress notification and diagnosis follow-up through CaptureOptions.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "a2"
+      ]
+    },
+    {
+      "id": "classification-contract",
+      "text": "Deterministic classification matches configured error patterns, prefers actionable underlying causes over generic Flow/trigger wrappers, and retains a fallback classification for unknown failures. A diagnosis recommendation does not authorize a business write.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "a3",
+        "a1"
+      ]
+    },
+    {
+      "id": "authorized-read-contract",
+      "text": "The headless API exposes capabilities, recent errors, incidents, current-user notifications and sanitized context. It requires Headless Access; visible scope additionally requires Sensitive Context permission, with object/field/record checks. Knowing a customer or source path does not confer access.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "a4",
+        "a5"
+      ]
+    },
+    {
+      "id": "flow-recovery-boundary",
+      "text": "Approved Flow recovery requires a unique active registration with exact Flow, object and recovery custom permission, plus Execute Retry and native target access. It accepts fixed server-built inputs rather than arbitrary payload variables, and requires Boolean success tied to the same target.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "a6",
+        "a1"
+      ]
+    },
+    {
+      "id": "audit-and-replay-contract",
+      "text": "Call recovery through RetryOrchestrationService. It bounds a synchronous batch to 20 requests, prefetches existing retry state, deduplicates an attempt, and rolls back unsuccessful handler mutations. Audit completion failure rolls back the batch. Explicit later attempts still require business-level idempotency.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "a7",
+        "a1"
+      ]
+    },
+    {
+      "id": "configuration-required",
+      "text": "The reusable Flow extension ships without an enabled customer business registration. Before enabling one, obtain the process owner, reviewed Flow/version, approved writes and related records, recovery permission, durable idempotency/postcondition and volume expectations. Do not infer tax, order, shipment or accounting logic.",
+      "state": "documented",
+      "sourceIds": [
+        "a1"
+      ]
+    },
+    {
+      "id": "read-only-triage-proposal",
+      "text": "Proposed diagnosis sequence: identify the customer/process and source freshness; read authorized capabilities and matching diagnostic evidence; compare the captured object, action and correlation with the cited process contract; report likely failed prerequisites and uncertainties. Stop before mutation or external delivery.",
+      "state": "proposed",
+      "sourceIds": [
+        "a4",
+        "a5",
+        "a1"
+      ]
+    },
+    {
+      "id": "acceptance-proposal",
+      "text": "Proposed isolated acceptance: duplicate correlation capture returns the same log; an unauthorized retry performs no business write; a failed approved recovery leaves an audit and no surviving mutation; a repeated approved operation satisfies its reviewed idempotency postcondition. These are candidate checks, not executed customer acceptance.",
+      "state": "proposed",
+      "sourceIds": [
+        "a2",
+        "a7",
+        "a1"
+      ]
+    },
+    {
+      "id": "customer-runtime-unknown",
+      "text": "Customer org deployment parity, instrumentation, role assignments, approved business registrations and live endpoint behavior have not been checked by this knowledge ingestion. No recovery authorization or customer completion claim follows from reading this document.",
+      "state": "unknown",
+      "sourceIds": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "a1",
+      "repository": "aegis-flow",
+      "path": "docs/APPROVED_FLOW_RECOVERY.md",
+      "sha256": "0d96e93026a444d5db3119236cc8a8f57a496a3692e26ceb11199d559a09f84d",
+      "lines": {
+        "start": 1,
+        "end": 62
+      }
+    },
+    {
+      "id": "a2",
+      "repository": "aegis-flow",
+      "path": "force-app/main/default/classes/AEIR_ErrorCaptureService.cls",
+      "sha256": "b4cdbc022531c6353d4d2c25fceca66c5eae0039fcaa655c5d2a4ec335abe20e",
+      "lines": {
+        "start": 36,
+        "end": 79
+      }
+    },
+    {
+      "id": "a3",
+      "repository": "aegis-flow",
+      "path": "force-app/main/default/classes/AEIR_ErrorNormalizationService.cls",
+      "sha256": "c312c05dc7096fcc0dd57dbb405933f1b220cf87dcaefee497001c248f5c0aa6",
+      "lines": {
+        "start": 14,
+        "end": 50
+      }
+    },
+    {
+      "id": "a4",
+      "repository": "aegis-flow",
+      "path": "force-app/main/default/classes/AEIR_HeadlessRestService.cls",
+      "sha256": "a9470b162a1bd2f3d6414aa053264005d40cf395b7d117126d202bda459139ae",
+      "lines": {
+        "start": 20,
+        "end": 55
+      }
+    },
+    {
+      "id": "a5",
+      "repository": "aegis-flow",
+      "path": "force-app/main/default/classes/AEIR_HeadlessRestService.cls",
+      "sha256": "a9470b162a1bd2f3d6414aa053264005d40cf395b7d117126d202bda459139ae",
+      "lines": {
+        "start": 271,
+        "end": 295
+      }
+    },
+    {
+      "id": "a6",
+      "repository": "aegis-flow",
+      "path": "force-app/main/default/classes/AEIR_ApprovedFlowRetryHandler.cls",
+      "sha256": "971ea3ddd8a272b30994d5df02df7791e935e834eca2561e461ccb53d9802026",
+      "lines": {
+        "start": 26,
+        "end": 108
+      }
+    },
+    {
+      "id": "a7",
+      "repository": "aegis-flow",
+      "path": "force-app/main/default/classes/AEIR_RetryOrchestrationService.cls",
+      "sha256": "3c3d99dcf72ae6adbb3dd065c16d7deffa1d923eb1f7b2488da97fd128c9a65d",
+      "lines": {
+        "start": 44,
+        "end": 245
+      }
+    }
+  ]
+}

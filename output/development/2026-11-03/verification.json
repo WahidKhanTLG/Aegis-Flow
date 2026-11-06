@@ -1,0 +1,314 @@
+{
+  "date": "2026-11-03",
+  "timezone": "Asia/Karachi",
+  "generatedAtUtc": "2026-11-02T23:45:07.867242+00:00",
+  "status": "Deployed and validated development release; required standard-user UI acceptance completed",
+  "scope": [
+    "Sales",
+    "Service",
+    "custom objects",
+    "integrations",
+    "source-cited ABC and SoCal MCP knowledge"
+  ],
+  "allCustomerBusinessScenariosCertified": false,
+  "managedPackagingIncluded": false,
+  "target": {
+    "alias": "SyncBridge-Product",
+    "orgId": "00DgL00000YDvsvUAD",
+    "edition": "Developer Edition",
+    "metadataApiVersion": "67.0"
+  },
+  "delivery": {
+    "productionCustomerOrgsAccessed": false,
+    "committed": false,
+    "pushed": false,
+    "selectedUniqueMetadataComponents": 552,
+    "deployments": [
+      {
+        "change": "product release",
+        "id": "0AfgL00000cRx7mSAC",
+        "status": "Succeeded",
+        "checkOnly": false,
+        "components": 551,
+        "apexTestsPassed": 283,
+        "testFailures": 0,
+        "coverageWarnings": []
+      },
+      {
+        "change": "subscriber telemetry masking",
+        "id": "0AfgL00000cRxisSAC",
+        "status": "Succeeded",
+        "checkOnly": false,
+        "components": 2,
+        "apexTestsPassed": 284,
+        "testFailures": 0,
+        "coverageWarnings": []
+      },
+      {
+        "change": "Contact Cancel",
+        "id": "0AfgL00000cS8w3SAC",
+        "status": "Succeeded",
+        "checkOnly": false,
+        "components": 1,
+        "apexTestsPassed": 0,
+        "testFailures": 0,
+        "coverageWarnings": []
+      },
+      {
+        "change": "setup loading and scheduler health",
+        "id": "0AfgL00000cRsJOSA0",
+        "status": "Succeeded",
+        "checkOnly": false,
+        "components": 3,
+        "apexTestsPassed": 286,
+        "testFailures": 0,
+        "coverageWarnings": []
+      },
+      {
+        "change": "Feedback Comments layout",
+        "id": "0AfgL00000cSH3FSAW",
+        "status": "Succeeded",
+        "checkOnly": false,
+        "components": 1,
+        "apexTestsPassed": 0,
+        "testFailures": 0,
+        "coverageWarnings": []
+      },
+      {
+        "change": "Monitor connection status, bounded saved refresh and race protection",
+        "id": "0AfgL00000cTYurSAG",
+        "status": "Succeeded",
+        "checkOnly": false,
+        "components": 1,
+        "apexTestsPassed": 0,
+        "testFailures": 0,
+        "coverageWarnings": [],
+        "validation": "LWC-only patch; 105 LWC tests passed, no Apex changed"
+      }
+    ]
+  },
+  "validation": {
+    "finalApexTests": 286,
+    "testClasses": 34,
+    "lwcTests": 105,
+    "lwcSuites": 12,
+    "mcpTests": 30,
+    "localVerify": "PASS",
+    "xmlFilesAudited": 561,
+    "classDefinitions": 91,
+    "triggers": 5,
+    "lwcBundles": 14,
+    "permissionSets": 7,
+    "baselineFullReleaseCoverage": {
+      "returnedComponents": 60,
+      "coveredLines": 4614,
+      "executableLines": 4976,
+      "percent": 92.73,
+      "scope": "Baseline full-release deployment coverage for returned Aegis components; not org-wide coverage and not a fresh full coverage percentage for later patches"
+    },
+    "otherChecks": [
+      "git diff --check",
+      "bash -n deployment/validation/org scripts",
+      "Python syntax checks",
+      "Node syntax and protocol tests",
+      "24 cited source references / 17 matching local source hashes"
+    ],
+    "eslint": "Not run: no installed ESLint executable or package script; no lint dependency added",
+    "monitorLwcTests": 53,
+    "endUserLiveAcceptance": "PASS",
+    "apexSourceUnchangedSince286TestRun": true,
+    "mcpSourceUnchangedSince30TestRun": true
+  },
+  "parity": {
+    "result": "PASS",
+    "sourceFilesCompared": 689,
+    "codeFilesCompared": 135,
+    "unexpectedDifferences": 0,
+    "missingFiles": 0,
+    "expectedEnvironmentConfigurationFiles": 7,
+    "report": "parity.json",
+    "normalizedOnly": [
+      "one final source newline",
+      "XML serialization/order of known unordered sets",
+      "typed numeric/null/default metadata representations"
+    ],
+    "preservesOrderSensitiveLayoutsAndFlows": true
+  },
+  "configuration": {
+    "subscriberCount": 5,
+    "subscriberBatchSize": 200,
+    "subscriberIdentity": "Existing authorized development operator; actual runtime CreatedById verified",
+    "subscriberState": "All Running; zero retries/last errors at verification",
+    "refresh": "User explicitly approved Suspend then Resume from earliest retained unprocessed event; unrelated SyncBridge subscriber untouched",
+    "enabledFeatures": [
+      "USER_NOTIFICATIONS",
+      "AUTO_DIAGNOSIS",
+      "GOVERNED_REMEDIATION"
+    ],
+    "disabledOptionalFeatures": [
+      "AI_DIAGNOSIS",
+      "CONNECTOR_EXTENSIONS"
+    ],
+    "optionalAgentAndLogConnections": "Disabled; no approved Aegis external Named Credential supplied",
+    "schedules": "All six original IDs and cron expressions preserved",
+    "headlessRole": "AEIR_Headless_User assigned to existing development operator",
+    "loginAccessPolicy": {
+      "originalValue": false,
+      "finalValue": false,
+      "explicitTemporaryApproval": true,
+      "metadataVerified": true,
+      "securitySettingsMatchOriginal": true,
+      "qaUserInactiveAfterTesting": true
+    }
+  },
+  "acceptance": {
+    "health": {
+      "overallStatus": "PASS",
+      "passCount": 10,
+      "warningCount": 0,
+      "failCount": 0,
+      "checks": [
+        {
+          "name": "Onboarding",
+          "status": "PASS"
+        },
+        {
+          "name": "Permission sets",
+          "status": "PASS"
+        },
+        {
+          "name": "Escalation routing",
+          "status": "PASS"
+        },
+        {
+          "name": "Deterministic rule library",
+          "status": "PASS"
+        },
+        {
+          "name": "Notification policy",
+          "status": "PASS"
+        },
+        {
+          "name": "Feature flags",
+          "status": "PASS"
+        },
+        {
+          "name": "Monitored surfaces",
+          "status": "PASS"
+        },
+        {
+          "name": "Flow fault framework",
+          "status": "PASS"
+        },
+        {
+          "name": "Scheduled jobs",
+          "status": "PASS"
+        },
+        {
+          "name": "Governed remediation",
+          "status": "PASS"
+        }
+      ]
+    },
+    "crossBusinessRollback": {
+      "cleanup": "PASS: synthetic records rolled back",
+      "synchronousAssertions": "PASS",
+      "diagnoses": 4,
+      "captures": 4,
+      "businessAreas": [
+        "Sales",
+        "Service",
+        "Custom",
+        "Integration"
+      ],
+      "scope": "Synchronous synthetic diagnostics; rollback cleanup; no remote connectivity assertion",
+      "run": "AEIR-ACCEPT-2026-11-02_19:55:53.675"
+    },
+    "realApprovedFlow": {
+      "cleanup": "ROLLED_BACK",
+      "unapprovedMarker": "DENIED",
+      "flowIdempotency": "PASS",
+      "serviceDedupe": "PASS",
+      "realFlowWrite": "PASS",
+      "correlation": "AEIR-QA-FLOW-1793649334413"
+    },
+    "qaFlowAfterAcceptance": "No active version; registration inactive; temporary QA entitlement removed",
+    "events": "event-acceptance.json",
+    "nativeMcp": "mcp-acceptance.json",
+    "renderedUi": "ui-acceptance/observations.json",
+    "endUserRenderedCheck": "PASS: own notice/details, Help/Analyze, dismissal surviving reload, foreign notice absence and foreign-record access denial",
+    "endUserRuntimeEvidence": "ui-acceptance/end-user-runtime.json",
+    "monitorRetest": {
+      "result": "passed_with_optional_flow_stream_limitation",
+      "coreLiveNoticeObserved": true,
+      "savedRefreshClickCount": 1,
+      "savedRefreshCompleted": true,
+      "genericActionFailureAbsent": true,
+      "actionErrorElementCount": 0,
+      "optionalFlowWarningVisible": true,
+      "optionalFlowWarningText": "Live Flow error capture is unavailable. Refresh alerts checks saved notices; reload this app to try the Flow connection again.",
+      "optionalFlowWarningCauseUnconfirmed": true,
+      "correlationId": "AEIR-ENDUSER-2026-11-02_23:24:51.236-RECHECK",
+      "noNewHelpSession": true,
+      "localLwcTestsPassed": 105,
+      "monitorTestsPassed": 53,
+      "testSuitesPassed": 12,
+      "nativeScreenshotsCapturedInline": true,
+      "policyFinalOffVerified": true
+    }
+  },
+  "knowledge": {
+    "transport": "Local Node stdio; actual spawned protocol host tested",
+    "documents": 3,
+    "claims": 28,
+    "sourceCitations": 24,
+    "uniqueLocalSourceHashesVerified": 17,
+    "scopes": [
+      "global Aegis",
+      "ABC opt-in",
+      "SoCal opt-in"
+    ],
+    "customerOrgParity": "Not checked; neither customer org accessed",
+    "automaticCustomerRecoveryRegistration": "None",
+    "guide": "../../../integrations/mcp/README.md"
+  },
+  "caseDecision": {
+    "nativeCaseLayoutPreserved": true,
+    "solutionRecordCountBeforeAndAfter": 10,
+    "saveSurface": "Aegis Operations workspace; no Case header placement change"
+  },
+  "cleanup": {
+    "report": "cleanup.json",
+    "activeBusinessAndDiagnosticResidue": 0,
+    "temporaryQaUserActive": false,
+    "temporaryNonProfileGrants": 0,
+    "preExistingSmokeAccount": "Read only; not changed/deleted",
+    "originalQaOrderFlowsAndContactRule": "Preserved; excluded from product deployment",
+    "contentDocumentsDeleted": false,
+    "endUserFollowup": "PASS; see cleanup.json"
+  },
+  "sourceSnapshot": {
+    "sha256File": "source-hashes.json",
+    "fileCount": 780,
+    "workingTreeInventory": "working-tree-files.json",
+    "note": "Final source/document hashes after the deployed monitor correction and live acceptance; Apex and MCP source unchanged from their passing test runs."
+  },
+  "remainingActions": [
+    {
+      "kind": "customer rollout",
+      "action": "Review ABC/SoCal proposed scenarios and approve exact recovery writes, target permissions, durable idempotency/success criteria and volume acceptance in each customer nonproduction org before activation."
+    },
+    {
+      "kind": "conditional integrations",
+      "action": "If selected, supply approved Agentforce/Tooling/external delivery credentials, principals and test destinations for live tenant acceptance. They remain disabled."
+    },
+    {
+      "kind": "client configuration",
+      "action": "Register the documented local stdio entry in the chosen MCP client; global client settings and shared hosting were not modified."
+    }
+  ],
+  "limitations": [
+    "Optional native Flow error streaming was unavailable in the QA session. Core Aegis live alerts, saved unread refresh and user actions passed; no broader permissions were granted.",
+    "Customer org business recoveries/production pilots, optional external provider acceptance, and chosen MCP client registration remain separately scoped."
+  ]
+}

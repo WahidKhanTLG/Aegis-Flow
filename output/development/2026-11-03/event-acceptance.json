@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "date": "2026-11-03",
+  "scope": "Real development-org Platform Event capture, deterministic diagnosis and canonical notice upgrade; operator and standard-user synthetic fixtures",
+  "publisherRollbackSurvived": true,
+  "captureLogs": 2,
+  "diagnoses": 2,
+  "canonicalNotices": 2,
+  "successfulEventDeliveryAudits": 4,
+  "subscriberProcessingIdentity": "Verified configured development operator via actual CreatedById",
+  "ownership": "Log, diagnosis and notice follow affected user",
+  "foreignAffectedUserSnapshot": "OMITTED_DIFFERENT_AFFECTED_USER",
+  "credentialMasking": "PASS",
+  "externalAgentOrDeliveryActivated": false,
+  "captureAndDiagnosisListenersRefreshedBeforePublish": true
+}

@@ -1,0 +1,216 @@
+{
+  "schemaVersion": 1,
+  "id": "abc-pick-pack-ship",
+  "title": "ABC pick, warehouse collection and shipment lifecycle",
+  "customer": "abc",
+  "product": "abc-salesforce-fulfillment",
+  "processes": [
+    "pick-print",
+    "warehouse-collection",
+    "shipment-lifecycle"
+  ],
+  "summary": "A limited current-local source snapshot of American Book Company warehouse fulfillment. It distinguishes print jobs, collection confirmation and actual shipment quantities. Customer org parity and recovery authorization are unverified; no order records, recipient details or integration credentials are included.",
+  "lastReviewed": "2026-11-03",
+  "orgVerification": "not-checked",
+  "claims": [
+    {
+      "id": "product-and-process",
+      "text": "Repository documentation describes a Salesforce commerce, sales and fulfillment application for educational print/digital products. Pick Lists represent warehouse printing work; Ship Lists represent collection checks before the separate packaging and Create Shipment process.",
+      "state": "documented",
+      "sourceIds": [
+        "b1"
+      ]
+    },
+    {
+      "id": "printing-transition",
+      "text": "markPicked accepts separate book-job and guide-job IDs, records printing fields, and performs user-mode updates. Ship List creation belongs to PickListTriggerHandler, which acts on transition into Printed and checks existing related ship rows before inserting. A Printed-to-Printed save skips that transition.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "b2",
+        "b3"
+      ]
+    },
+    {
+      "id": "collection-boundary",
+      "text": "The bulk Ship List uses one book collection check and separate guide checks. Only fully checked visible book rows enter Mark Ready to Ship; complete books can proceed while other books still await required guides. The action saves checks, confirms the captured IDs and refreshes the list.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "b4",
+        "b5",
+        "b6",
+        "b9"
+      ]
+    },
+    {
+      "id": "guide-and-preview-boundary",
+      "text": "The shared worksheet helper suppresses guide rows for Preview Copy orders even if an older response contains a guide count. Other required guide collection checks remain locked until printing and after row completion. The box-complete predicate requires the book check and any displayed guide check.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "b6"
+      ],
+      "limitations": [
+        "Guide quantity calculation and historical variants are outside this curated subset."
+      ]
+    },
+    {
+      "id": "status-is-not-shipment",
+      "text": "Lifecycle policy distinguishes packed/Ready to Ship quantities from actual shipped and delivered quantities. Partial shipment remains partial; sufficient delivered quantities are distinct from Completed, which also requires digital fulfillment when applicable and settled billing. A warehouse status check is not proof of carrier delivery.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "b7",
+        "b8"
+      ]
+    },
+    {
+      "id": "read-only-missing-ship-row",
+      "text": "Proposed diagnosis for a printed job missing from a Ship List: inspect its current print state, related ship-row existence, captured transaction failure and user access. Do not toggle statuses to manufacture a transition or blindly rerun Mark Printed: the existing Printed-to-Printed path intentionally skips ship-row creation.",
+      "state": "proposed",
+      "sourceIds": [
+        "b2",
+        "b3"
+      ]
+    },
+    {
+      "id": "read-only-ready-to-ship",
+      "text": "Proposed diagnosis for a disabled readiness action: compare the current filtered rows, book collection checks, guide presence/printing/collection and save state. If an order is only Ready to Ship, inspect actual shipment-item quantities before asserting it is shipped. No warehouse fact should be inferred from a UI click alone.",
+      "state": "proposed",
+      "sourceIds": [
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ]
+    },
+    {
+      "id": "acceptance-candidates",
+      "text": "Proposed owner-reviewed sandbox checks: an already-Printed save does not add another ship row; a missing guide check keeps its book pending while a complete sibling is eligible; filtering limits the confirmed IDs; Preview Copy has no guide row; a partial actual shipment does not become fully shipped. These are source-derived candidate checks, not completed acceptance.",
+      "state": "proposed",
+      "sourceIds": [
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7"
+      ]
+    },
+    {
+      "id": "approval-required-writes",
+      "text": "Printing/collection state changes, missing-row repair, shipment creation, carrier replay, invoice changes and lifecycle reconciliation require a concrete customer-approved operation, native access, audit, postcondition and idempotency design. This knowledge import registers no recovery and authorizes no customer data or external write.",
+      "state": "proposed",
+      "sourceIds": [
+        "b2",
+        "b5",
+        "b7",
+        "b10"
+      ]
+    },
+    {
+      "id": "live-boundaries-unknown",
+      "text": "Live ABC source parity, current order data, carrier/payment/accounting state, approved Aegis instrumentation and customer-specific recovery success criteria have not been verified. Historical release notes do not prove the current org state.",
+      "state": "unknown",
+      "sourceIds": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "b1",
+      "repository": "abc",
+      "path": "README.md",
+      "sha256": "569ba2ba7261920f80f0f4be0d0f4459860b519329a6d491efe47bad2e77bb1a",
+      "lines": {
+        "start": 21,
+        "end": 40
+      }
+    },
+    {
+      "id": "b2",
+      "repository": "abc",
+      "path": "force-app/main/default/classes/PickShipController.cls",
+      "sha256": "e2ea9f8f78c0378cf454e3b64a8604051a7e58844222b786804762269c49654f",
+      "lines": {
+        "start": 808,
+        "end": 861
+      }
+    },
+    {
+      "id": "b3",
+      "repository": "abc",
+      "path": "force-app/main/default/classes/PickListTriggerHandler.cls",
+      "sha256": "f5729e284f35fffc252704d74e479e36fd5443b4868b0b342e97e13c833f8086",
+      "lines": {
+        "start": 23,
+        "end": 77
+      }
+    },
+    {
+      "id": "b4",
+      "repository": "abc",
+      "path": "force-app/main/default/lwc/bulkShipList/bulkShipList.js",
+      "sha256": "e687e56346ea64e3650141b94a56f573f67adccf7321281a2d0a83b82b7ec757",
+      "lines": {
+        "start": 240,
+        "end": 270
+      }
+    },
+    {
+      "id": "b5",
+      "repository": "abc",
+      "path": "force-app/main/default/lwc/bulkShipList/bulkShipList.js",
+      "sha256": "e687e56346ea64e3650141b94a56f573f67adccf7321281a2d0a83b82b7ec757",
+      "lines": {
+        "start": 390,
+        "end": 405
+      }
+    },
+    {
+      "id": "b6",
+      "repository": "abc",
+      "path": "force-app/main/default/lwc/pickShipTableSupport/pickShipTableSupport.js",
+      "sha256": "c70c036df4628295e2a08d2b045844970b09b19f394d31726d83118542ad72df",
+      "lines": {
+        "start": 217,
+        "end": 312
+      }
+    },
+    {
+      "id": "b7",
+      "repository": "abc",
+      "path": "force-app/main/default/classes/ABC_OrderLifecyclePolicy.cls",
+      "sha256": "f25ff67f9466b19dafdfeb91a680dc9b7e99448baa82482eea6c4cfc8a2c60ab",
+      "lines": {
+        "start": 181,
+        "end": 245
+      }
+    },
+    {
+      "id": "b8",
+      "repository": "abc",
+      "path": "docs/architecture/order-lifecycle.md",
+      "sha256": "0e421c973a4ef17394726fe65b4843b1b8aabbabfe29b2280f887ed7a7671f1a",
+      "lines": {
+        "start": 36,
+        "end": 55
+      }
+    },
+    {
+      "id": "b9",
+      "repository": "abc",
+      "path": "docs/reviews/2026-10-31-ship-list-checkbox.md",
+      "sha256": "16cb7af9786ac4495b1daab8cd706179afd06729ddbbee775aaaa826cd589420",
+      "lines": {
+        "start": 10,
+        "end": 31
+      }
+    },
+    {
+      "id": "b10",
+      "repository": "aegis-flow",
+      "path": "docs/APPROVED_FLOW_RECOVERY.md",
+      "sha256": "0d96e93026a444d5db3119236cc8a8f57a496a3692e26ceb11199d559a09f84d",
+      "lines": {
+        "start": 19,
+        "end": 61
+      }
+    }
+  ]
+}

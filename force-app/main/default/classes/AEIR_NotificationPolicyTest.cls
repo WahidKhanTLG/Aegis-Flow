@@ -5,6 +5,11 @@
 @IsTest
 private class AEIR_NotificationPolicyTest {
 
+    @TestSetup
+    static void authorizeEventSubscriber() {
+        AEIR_CoreTest.createEventProcessorFixtures('Notification');
+    }
+
     private static List<Error_Log__c> buildLogs(Integer count, String severity) {
         List<Error_Log__c> logs = new List<Error_Log__c>();
         for (Integer i = 0; i < count; i++) {
@@ -66,6 +71,76 @@ private class AEIR_NotificationPolicyTest {
     }
 
     @IsTest
+    static void processorCountsPrivateCooldownAndHourlyHistory() {
+        Error_Log__c log = buildLogs(1, 'Medium')[0];
+        User processor = AEIR_CoreTest.eventActor('Notification', true);
+        List<User_Notification__c> history = new List<User_Notification__c>();
+        for (Integer i = 0; i < 3; i++) {
+            history.add(new User_Notification__c(
+                Correlation_Id__c = 'PRIVATE-HISTORY-' + i,
+                Target_User__c = log.User__c, OwnerId = log.User__c,
+                Notification_Type__c = 'Detected', Severity__c = 'Medium',
+                Headline__c = 'Existing alert', Short_Message__c = 'Policy history.',
+                Action_Available__c = 'VIEW', Status__c = 'New',
+                Expires_At__c = Datetime.now().addHours(24),
+                Dedupe_Key__c = 'PRIVATE-HISTORY-' + i + ':' + log.User__c));
+        }
+        insert history;
+
+        System.runAs(processor) {
+            System.assert(Schema.sObjectType.User_Notification__c.isAccessible(),
+                'Use a reader who lacks record visibility, not object permission.');
+            System.assertEquals(0, [SELECT count() FROM User_Notification__c
+                WHERE Target_User__c = :log.User__c], 'The processor has no blanket access to private alerts.');
+            System.assertEquals(null, AEIR_UserNotificationService.resolveAlert('PRIVATE-HISTORY-0'),
+                'Internal policy maintenance must not expose another user\'s alert.');
+            AEIR_NotificationPolicyService.Decision decision =
+                AEIR_NotificationPolicyService.evaluate(new List<Error_Log__c>{ log }).get(log.Id);
+            System.assertEquals(false, decision.allowed, 'Private recent alerts count toward cooldown.');
+            System.assert(decision.reason.contains('cooldown'), decision.reason);
+        }
+
+        // Outside the 15 minute cooldown but inside the one hour maximum, the same
+        // private records must still consume the affected user's three-alert budget.
+        for (User_Notification__c notice : history) {
+            Test.setCreatedDate(notice.Id, Datetime.now().addMinutes(-30));
+        }
+        Test.startTest();
+        System.runAs(processor) {
+            AEIR_NotificationPolicyService.Decision decision =
+                AEIR_NotificationPolicyService.evaluate(new List<Error_Log__c>{ log }).get(log.Id);
+            System.assertEquals(false, decision.allowed, 'Private history must consume the hourly budget.');
+            System.assert(decision.reason.contains('Hourly alert limit'), decision.reason);
+        }
+        Test.stopTest();
+    }
+
+    @IsTest
+    static void processorDeduplicatesPrivateAndRepeatedBatchNotices() {
+        Error_Log__c log = buildLogs(1, 'Critical')[0];
+        User processor = AEIR_CoreTest.eventActor('Notification', true);
+        Test.startTest();
+        System.runAs(processor) {
+            // Critical bypasses policy throttling, so this proves actual dedupe both
+            // within the first batch and against the affected-user-owned result.
+            AEIR_UserNotificationService.notifyForErrorLogs(new List<Error_Log__c>{ log, log });
+            AEIR_UserNotificationService.notifyForErrorLogs(new List<Error_Log__c>{ log });
+            System.assertEquals(0, [SELECT count() FROM User_Notification__c
+                WHERE Correlation_Id__c = :log.Correlation_Id__c]);
+            System.assertEquals(null, AEIR_UserNotificationService.resolveAlert(log.Correlation_Id__c));
+        }
+        Test.stopTest();
+        List<User_Notification__c> notices = [SELECT OwnerId, Target_User__c FROM User_Notification__c
+            WHERE Correlation_Id__c = :log.Correlation_Id__c];
+        System.assertEquals(1, notices.size(), 'One durable notice survives both kinds of duplicate input.');
+        System.assertEquals(log.User__c, notices[0].OwnerId);
+        System.assertEquals(log.User__c, notices[0].Target_User__c);
+        System.assertEquals(0, [SELECT count() FROM Delivery_Attempt__c
+            WHERE Correlation_Id__c = :log.Correlation_Id__c AND Status__c = 'Failed'],
+            'Dedupe must avoid duplicate DML failures, rather than relying on the unique field.');
+    }
+
+    @IsTest
     static void featureFlagDisablesNotifications() {
         List<Error_Log__c> logs = buildLogs(2, 'Critical');
         AEIR_FeatureFlagService.overrides.put(AEIR_FeatureFlagService.USER_NOTIFICATIONS, false);
@@ -115,7 +190,7 @@ private class AEIR_NotificationPolicyTest {
      * nothing published either side, so the utility spinner never resolved.
      */
     @IsTest
-    static void diagnosisUpgradesTheAlertInPlace() {
+    static void eventDeliveryRespectsSubscriberAuthorization() {
         AEIR_FeatureFlagService.overrides.put(AEIR_FeatureFlagService.AI_DIAGNOSIS, true);
 
         AEIR_ErrorCaptureService.ErrorInput input = new AEIR_ErrorCaptureService.ErrorInput();
@@ -126,6 +201,7 @@ private class AEIR_NotificationPolicyTest {
 
         Test.startTest();
         AEIR_ErrorCaptureService.CaptureResult captured = AEIR_ErrorCaptureService.capture(input);
+        Boolean subscriberAuthorized = AEIR_CoreTest.eventSubscriberAuthorized(captured.errorLogId);
 
         // Before the event bus drains, only the "Detected" spinner state exists.
         User_Notification__c detected = [
@@ -134,20 +210,71 @@ private class AEIR_NotificationPolicyTest {
         ];
         System.assertEquals('Detected', detected.Notification_Type__c, 'Capture should create the Detected alert.');
 
-        // stopTest() delivers Agent_Diagnosis_Requested__e, which runs the gateway.
+        // Exercise the real transport. Its native principal must either complete
+        // processing when authorized or fail closed with observable telemetry.
+        Test.getEventBus().deliver();
         Test.stopTest();
 
         User_Notification__c upgraded = [
             SELECT Notification_Type__c, Headline__c, Action_Available__c FROM User_Notification__c
             WHERE Correlation_Id__c = :captured.correlationId LIMIT 1
         ];
+        if (!subscriberAuthorized) {
+            System.assertEquals('Detected', upgraded.Notification_Type__c, 'An unauthorized subscriber must not fabricate an outcome.');
+            System.assertEquals(detected.Headline__c, upgraded.Headline__c);
+            System.assertEquals(1, [SELECT count() FROM User_Notification__c WHERE Correlation_Id__c = :captured.correlationId]);
+            System.assertEquals('New', [SELECT Status__c FROM Error_Log__c WHERE Id = :captured.errorLogId].Status__c);
+            AEIR_CoreTest.assertSubscriberRejection(captured.errorLogId, captured.correlationId);
+            return;
+        }
         System.assertEquals('Diagnosed', upgraded.Notification_Type__c,
-            'The published diagnosis request must upgrade the same notification in place.');
+            'An authorized diagnosis subscriber must upgrade the same notification in place.');
         System.assertEquals(1, [SELECT count() FROM User_Notification__c WHERE Correlation_Id__c = :captured.correlationId],
             'The upgrade must replace the alert, not stack a second one.');
         System.assertNotEquals(detected.Headline__c, upgraded.Headline__c,
             'The upgraded alert should carry an outcome-specific headline.');
         System.assertEquals('Diagnosed', [SELECT Status__c FROM Error_Log__c WHERE Id = :captured.errorLogId].Status__c);
+    }
+
+    @IsTest
+    static void configuredProcessorUpgradesTheAlertInPlace() {
+        // Transport authorization is tested independently above. Exercise the same
+        // handler with an explicitly configured normal runtime user's native grants.
+        AEIR_FeatureFlagService.overrides.put(AEIR_FeatureFlagService.AI_DIAGNOSIS, false);
+        AEIR_ErrorCaptureService.ErrorInput input = new AEIR_ErrorCaptureService.ErrorInput();
+        input.sourceType = 'Apex Class'; input.sourceName = 'ConfiguredRoundTripTest';
+        input.originalMessage = 'FIELD_CUSTOM_VALIDATION_EXCEPTION: Tax Code is required.';
+        input.severity = 'High';
+        User processor = AEIR_CoreTest.eventActor('Notification', true);
+        Test.startTest();
+        AEIR_ErrorCaptureService.CaptureResult captured = AEIR_ErrorCaptureService.capture(input);
+        User_Notification__c detected = [SELECT Notification_Type__c, Headline__c
+            FROM User_Notification__c WHERE Correlation_Id__c = :captured.correlationId LIMIT 1];
+        System.assertEquals('Detected', detected.Notification_Type__c);
+        System.runAs(processor) {
+            System.assert(FeatureManagement.checkPermission('AEIR_Process_Diagnostics'), 'Use the native runtime capability.');
+            System.assert(!FeatureManagement.checkPermission('AEIR_View_Sensitive_Context'));
+            System.assertEquals(0, [SELECT count() FROM User_Notification__c
+                WHERE Correlation_Id__c = :captured.correlationId], 'The processor cannot browse the private alert.');
+            System.assertEquals(null, AEIR_UserNotificationService.resolveAlert(captured.correlationId));
+            AEIR_AgentDiagnosisRequestedEventHandler.handle(new List<Agent_Diagnosis_Requested__e>{
+                new Agent_Diagnosis_Requested__e(Correlation_Id__c = captured.correlationId,
+                    Error_Log_Id__c = String.valueOf(captured.errorLogId))
+            });
+        }
+        Test.stopTest();
+        User_Notification__c upgraded = [SELECT Notification_Type__c, Headline__c, Action_Available__c
+            FROM User_Notification__c WHERE Correlation_Id__c = :captured.correlationId LIMIT 1];
+        System.assertEquals('Diagnosed', upgraded.Notification_Type__c,
+            'The configured processor must upgrade the same notification in place.');
+        System.assertEquals(1, [SELECT count() FROM User_Notification__c WHERE Correlation_Id__c = :captured.correlationId],
+            'The upgrade must replace the alert, not stack a second one.');
+        System.assertNotEquals(detected.Headline__c, upgraded.Headline__c,
+            'The upgraded alert must carry an outcome-specific headline.');
+        System.assertEquals('Diagnosed', [SELECT Status__c FROM Error_Log__c WHERE Id = :captured.errorLogId].Status__c);
+        AI_Diagnosis__c diagnosis = [SELECT CreatedById, OwnerId FROM AI_Diagnosis__c WHERE Error_Log__c = :captured.errorLogId];
+        System.assertEquals(processor.Id, diagnosis.CreatedById);
+        System.assertEquals(UserInfo.getUserId(), diagnosis.OwnerId, 'Preserve affected-user result ownership.');
     }
 
     @IsTest

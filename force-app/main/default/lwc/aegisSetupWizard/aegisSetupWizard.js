@@ -3,7 +3,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { refreshApex } from '@salesforce/apex';
 import getConfig from '@salesforce/apex/AEIR_OrgSetupService.getConfig';
 import saveConfig from '@salesforce/apex/AEIR_OrgSetupService.saveConfig';
-import runHealthCheck from '@salesforce/apex/AEIR_SetupHealthCheckService.runWithProbe';
+import runHealthCheck from '@salesforce/apex/AEIR_SetupHealthCheckService.run';
+import runCaptureProbe from '@salesforce/apex/AEIR_SetupHealthCheckService.runWithProbe';
 import scanFlows from '@salesforce/apex/AEIR_FlowCoverageService.scan';
 
 export default class AegisSetupWizard extends LightningElement {
@@ -21,28 +22,36 @@ export default class AegisSetupWizard extends LightningElement {
     step = 1;
     isSaving = false;
     isChecking = false;
+    probeConfirmed = false;
     error;
     wiredConfig;
+    isLoadingConfig = true;
+    configLoaded = false;
 
     @wire(getConfig)
     loadConfig(result) {
         this.wiredConfig = result;
         if (result.data) {
+            this.isLoadingConfig = false;
+            this.configLoaded = true;
             this.config = { ...this.config, ...result.data };
             if (result.data.onboardingComplete) this.step = 3;
         } else if (result.error) {
+            this.isLoadingConfig = false;
+            this.configLoaded = false;
             this.error = this.readError(result.error);
         }
     }
 
-    get isStep1() { return this.step === 1; }
-    get isStep2() { return this.step === 2; }
-    get isStep3() { return this.step === 3; }
+    get isStep1() { return this.configLoaded && this.step === 1; }
+    get isStep2() { return this.configLoaded && this.step === 2; }
+    get isStep3() { return this.configLoaded && this.step === 3; }
     get hasReport() { return !!this.report; }
     get hasCoverage() { return !!this.coverage; }
+    get probeDisabled() { return this.isChecking || !this.probeConfirmed; }
     get coverageVariant() {
         if (!this.coverage) return 'base';
-        return this.coverage.uncapturedFailures > 0 ? 'warning' : 'success';
+        return !this.coverage.interviewDataReadable || this.coverage.uncapturedFailures > 0 ? 'warning' : 'success';
     }
     get riskyFlows() {
         if (!this.coverage) return [];
@@ -57,7 +66,7 @@ export default class AegisSetupWizard extends LightningElement {
     get routingSummary() {
         if (this.config.developerTeamEmail) return `Findings go to ${this.config.developerTeamEmail}`;
         if (this.config.fallbackToSystemAdmins) return 'No team named yet, so findings go to your System Administrators.';
-        return 'No recipient configured. Findings will not be delivered.';
+        return 'No default team mailbox configured. Email routes can supply their own recipient; review channel readiness below.';
     }
     get overallVariant() {
         if (!this.report) return 'base';
@@ -69,6 +78,7 @@ export default class AegisSetupWizard extends LightningElement {
         return this.report.checks.map((c) => ({
             ...c,
             key: c.name,
+            remediationLabel: c.status === 'PASS' ? 'Scope:' : 'Next step:',
             badgeClass:
                 c.status === 'PASS'
                     ? 'slds-badge slds-theme_success'
@@ -105,9 +115,21 @@ export default class AegisSetupWizard extends LightningElement {
     }
 
     check() {
+        this.loadReport(runHealthCheck);
+    }
+
+    handleProbeConfirmation(event) { this.probeConfirmed = event.target.checked; }
+    probe() {
+        if (this.probeDisabled) return;
+        this.probeConfirmed = false;
+        this.loadReport(runCaptureProbe);
+    }
+
+    loadReport(operation) {
+        if (this.isChecking) return;
         this.isChecking = true;
         this.error = undefined;
-        runHealthCheck()
+        operation()
             .then((r) => { this.report = r; })
             .catch((e) => { this.error = this.readError(e); })
             .finally(() => { this.isChecking = false; });

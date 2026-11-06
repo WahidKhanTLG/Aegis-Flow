@@ -91,9 +91,16 @@ public with sharing class AEIR_PolicyConfigService {
             slaCache = new Map<String, SLA_Policy__mdt>();
             for (SLA_Policy__mdt policy : [
                 SELECT DeveloperName, Severity__c, Response_Minutes__c, Escalation_Minutes__c, Owner_Team__c, Active__c
-                FROM SLA_Policy__mdt WHERE Active__c = true LIMIT 200
+                FROM SLA_Policy__mdt WHERE Active__c = true ORDER BY DeveloperName LIMIT 200
             ]) {
-                if (!String.isBlank(policy.Severity__c)) slaCache.put(policy.Severity__c.toUpperCase(), policy);
+                // Legacy orgs can contain a misnamed DEFAULT_HIGH whose severity is Medium.
+                // Prefer the canonical default deterministically, rather than whichever row
+                // happens to be returned last. No existing customer metadata is deleted.
+                if (!String.isBlank(policy.Severity__c)) {
+                    String key = policy.Severity__c.toUpperCase();
+                    SLA_Policy__mdt prior = slaCache.get(key);
+                    if (prior == null || policy.DeveloperName == 'DEFAULT_' + key) slaCache.put(key, policy);
+                }
             }
         }
         return slaCache;

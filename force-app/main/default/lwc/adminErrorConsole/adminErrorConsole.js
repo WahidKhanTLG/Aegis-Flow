@@ -10,6 +10,10 @@ export default class AdminErrorConsole extends LightningElement {
     wiredErrorsResult;
     wiredMetricsResult;
     logoUrl = AEGIS_LOGO;
+    errorsLoading = true;
+    metricsLoading = true;
+    errorsError;
+    metricsError;
     columns = [
         { label: 'Reference', fieldName: 'recordUrl', type: 'url', typeAttributes: { label: { fieldName: 'Name' }, target: '_blank' }, initialWidth: 130 },
         { label: 'Severity', fieldName: 'Severity__c', initialWidth: 105 },
@@ -20,17 +24,28 @@ export default class AdminErrorConsole extends LightningElement {
     ];
 
     get hasErrors() { return this.errors && this.errors.length > 0; }
+    get isLoading() { return this.errorsLoading || this.metricsLoading; }
+    get error() { return this.errorsError || this.metricsError; }
+    get showEmpty() { return !this.isLoading && !this.errorsError && !this.hasErrors; }
 
     @wire(getRecentErrors, { status: null, severity: null, limitSize: 50 })
     wiredErrors(result) {
         this.wiredErrorsResult = result;
-        if (result.data) this.errors = result.data.map(row => ({ ...row, recordUrl: `/${row.Id}` }));
+        if (result.data) {
+            this.errors = result.data.map(row => ({ ...row, recordUrl: `/${row.Id}` }));
+            this.errorsError = null;
+        } else if (result.error) {
+            this.errorsError = 'Diagnostic records could not be loaded. Check your access and refresh.';
+        }
+        if (result.data || result.error) this.errorsLoading = false;
     }
 
     @wire(getMetrics)
     wiredMetrics(result) {
         this.wiredMetricsResult = result;
-        if (result.data) this.metrics = result.data;
+        if (result.data) { this.metrics = result.data; this.metricsError = null; }
+        else if (result.error) this.metricsError = 'Diagnostic metrics could not be loaded. Check your access and refresh.';
+        if (result.data || result.error) this.metricsLoading = false;
     }
 
     handleRefresh() {

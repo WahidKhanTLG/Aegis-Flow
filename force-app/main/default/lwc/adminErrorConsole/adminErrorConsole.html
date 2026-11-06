@@ -10,18 +10,20 @@
                 </div>
             </div>
             <div class="hero-actions">
-                <span class="system-state"><span class="pulse"></span> Monitoring active</span>
+                <span class="system-state">Diagnostic records</span>
                 <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh console" title="Refresh console" onclick={handleRefresh}></lightning-button-icon>
             </div>
         </header>
 
         <div class="content">
+            <template if:true={isLoading}><lightning-spinner size="small" alternative-text="Loading diagnostics"></lightning-spinner></template>
+            <template if:true={error}><p role="alert" class="slds-text-color_error slds-var-m-bottom_small">{error}</p></template>
             <div class="section-heading">
                 <div>
                     <p class="eyebrow dark">OPERATIONS OVERVIEW</p>
                     <h2>Diagnostic command center</h2>
                 </div>
-                <div class="scope-note">Last 50 captured incidents</div>
+                <div class="scope-note">Last 50 captured errors</div>
             </div>
 
             <template if:true={metrics}>
@@ -56,7 +58,7 @@
                 <template if:true={hasErrors}>
                     <lightning-datatable key-field="Id" data={errors} columns={columns} hide-checkbox-column show-row-number-column></lightning-datatable>
                 </template>
-                <template if:false={hasErrors}>
+                <template if:true={showEmpty}>
                     <div class="empty-state">
                         <lightning-icon icon-name="utility:shield" size="medium" alternative-text="No incidents"></lightning-icon>
                         <h3>No diagnostic incidents found</h3>

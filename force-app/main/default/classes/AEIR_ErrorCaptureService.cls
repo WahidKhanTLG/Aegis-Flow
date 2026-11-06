@@ -32,12 +32,22 @@ public without sharing class AEIR_ErrorCaptureService {
         @AuraEnabled public String message;
     }
 
+    /** Server-only controls for probes/imports that must not publish follow-up work. */
+    public class CaptureOptions {
+        public Boolean notifyUser = true;
+        public Boolean requestDiagnosis = true;
+    }
+
     /**
      * Persists an error in the current transaction. Use this when the caller can
      * safely commit the diagnostic record. This method intentionally does not
      * publish Error_Captured__e, which prevents duplicate/racing persistence.
      */
     public static CaptureResult capture(ErrorInput input) {
+        return capture(input, null);
+    }
+
+    public static CaptureResult capture(ErrorInput input, CaptureOptions options) {
         if (input == null) input = new ErrorInput();
         String cid = normalizeCorrelationId(input.correlationId);
         Id affectedUserId = validUserId(input.userId) ? (Id)input.userId : UserInfo.getUserId();
@@ -57,8 +67,10 @@ public without sharing class AEIR_ErrorCaptureService {
         AEIR_IncidentAggregationService.assign(new List<Error_Log__c>{ log });
         Database.insert(new List<Error_Log__c>{ log }, true, AccessLevel.SYSTEM_MODE);
         insertContextRows(log.Id, cid, input);
-        AEIR_UserNotificationService.notifyForErrorLogs(new List<Error_Log__c>{ log });
-        requestDiagnosis(new List<Error_Log__c>{ log });
+        if (options == null || options.notifyUser != false) {
+            AEIR_UserNotificationService.notifyForErrorLogs(new List<Error_Log__c>{ log });
+        }
+        if (options == null || options.requestDiagnosis != false) requestDiagnosis(new List<Error_Log__c>{ log });
         return resultFromLog(log, true, 'Diagnostic captured.');
     }
 
@@ -67,88 +79,171 @@ public without sharing class AEIR_ErrorCaptureService {
      * may not survive (for example, a transaction that will be rolled back).
      */
     public static PublishResult publish(ErrorInput input) {
-        if (input == null) input = new ErrorInput();
-        String cid = normalizeCorrelationId(input.correlationId);
-        input.correlationId = cid;
-        Error_Captured__e evt = new Error_Captured__e(
-            Correlation_Id__c = cid,
-            Source_Type__c = String.isBlank(input.sourceType) ? 'Unknown' : input.sourceType,
-            Source_Name__c = input.sourceName,
-            Error_Message__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.originalMessage), 32000),
-            Record_Id__c = input.recordId,
-            Object_API_Name__c = input.objectApiName,
-            User_Id__c = validUserId(input.userId) ? input.userId : UserInfo.getUserId(),
-            Context_JSON__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.contextJson), 32000),
-            Severity__c = input.severity,
-            Stack_Trace__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.stackTrace), 32000),
-            Action_Name__c = input.actionName,
-            Page_URL__c = AEIR_SecuritySanitizerService.mask(input.pageUrl)
-        );
-        Database.SaveResult saveResult = EventBus.publish(evt);
-        PublishResult result = new PublishResult();
-        result.success = saveResult.isSuccess();
-        result.correlationId = cid;
-        result.message = saveResult.isSuccess() ? 'Diagnostic capture event published.' : firstError(saveResult.getErrors());
-        return result;
+        return publishAll(new List<ErrorInput>{ input })[0];
     }
 
-    /** Bulk persistence entry point used only by the platform-event subscriber. */
+    /** One publish statement for the batch; one ordered acknowledgement per input. */
+    public static List<PublishResult> publishAll(List<ErrorInput> inputs) {
+        List<PublishResult> output = new List<PublishResult>();
+        if (inputs == null || inputs.isEmpty()) return output;
+        List<Error_Captured__e> events = new List<Error_Captured__e>();
+        List<Integer> positions = new List<Integer>();
+        for (Integer i = 0; i < inputs.size(); i++) {
+            ErrorInput input = inputs[i] == null ? new ErrorInput() : inputs[i];
+            PublishResult result = new PublishResult();
+            result.success = false;
+            output.add(result);
+            try {
+                String cid = normalizeCorrelationId(input.correlationId);
+                input.correlationId = cid;
+                result.correlationId = cid;
+                events.add(new Error_Captured__e(
+                    Correlation_Id__c = cid,
+                    Source_Type__c = String.isBlank(input.sourceType) ? 'Unknown' : input.sourceType,
+                    Source_Name__c = input.sourceName,
+                    Error_Message__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.originalMessage), 32000),
+                    Record_Id__c = input.recordId,
+                    Object_API_Name__c = input.objectApiName,
+                    User_Id__c = validUserId(input.userId) ? input.userId : UserInfo.getUserId(),
+                    Context_JSON__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.contextJson), 32000),
+                    Severity__c = input.severity,
+                    Stack_Trace__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.stackTrace), 32000),
+                    Action_Name__c = input.actionName,
+                    Page_URL__c = AEIR_SecuritySanitizerService.mask(input.pageUrl)
+                ));
+                positions.add(i);
+            } catch (Exception invalidInput) {
+                result.message = AEIR_SecuritySanitizerService.mask(invalidInput.getMessage());
+            }
+        }
+        if (!events.isEmpty()) {
+            List<Database.SaveResult> saveResults = EventBus.publish(events);
+            for (Integer i = 0; i < saveResults.size(); i++) {
+                PublishResult result = output[positions[i]];
+                result.success = saveResults[i].isSuccess();
+                result.message = result.success ? 'Diagnostic capture event accepted for asynchronous persistence.'
+                    : firstError(saveResults[i].getErrors());
+            }
+        }
+        return output;
+    }
+
+    /**
+     * Bulk persistence for trusted server adapters and event subscribers. Result slots
+     * stay aligned with inputs even when existing and new correlations are mixed.
+     * Correlation keys are case-insensitive, matching the unique external-id field.
+     */
     public static List<CaptureResult> captureFromEvents(List<ErrorInput> inputs) {
+        return captureFromEvents(inputs, null);
+    }
+
+    public static List<CaptureResult> captureFromEvents(List<ErrorInput> inputs, CaptureOptions options) {
         List<CaptureResult> output = new List<CaptureResult>();
         if (inputs == null || inputs.isEmpty()) return output;
 
+        List<ErrorInput> normalizedInputs = new List<ErrorInput>();
         Set<String> correlationIds = new Set<String>();
-        for (ErrorInput input : inputs) {
-            if (input == null) input = new ErrorInput();
-            input.correlationId = normalizeCorrelationId(input.correlationId);
-            correlationIds.add(input.correlationId);
+        for (ErrorInput item : inputs) {
+            ErrorInput input = item == null ? new ErrorInput() : item;
+            normalizedInputs.add(input);
+            output.add(null);
+            try {
+                input.correlationId = normalizeCorrelationId(input.correlationId);
+                correlationIds.add(input.correlationId);
+            } catch (Exception invalidInput) {
+                output[output.size() - 1] = failedCapture(input.correlationId, invalidInput.getMessage());
+            }
         }
         Map<String, Error_Log__c> existingByCorrelation = new Map<String, Error_Log__c>();
-        for (Error_Log__c existing : [
-            SELECT Id, Correlation_Id__c, Status__c, Error_Category__c, Severity__c,
-                   Normalized_Message__c, Retry_Eligible__c
-            FROM Error_Log__c WHERE Correlation_Id__c IN :correlationIds
-        ]) existingByCorrelation.put(existing.Correlation_Id__c, existing);
+        if (!correlationIds.isEmpty()) {
+            for (Error_Log__c existing : [
+                SELECT Id, User__c, Correlation_Id__c, Status__c, Error_Category__c, Severity__c,
+                       Normalized_Message__c, Retry_Eligible__c
+                FROM Error_Log__c WHERE Correlation_Id__c IN :correlationIds
+            ]) existingByCorrelation.put(existing.Correlation_Id__c.toLowerCase(), existing);
+        }
 
         List<Error_Log__c> logsToInsert = new List<Error_Log__c>();
         List<ErrorInput> inputsToInsert = new List<ErrorInput>();
-        for (ErrorInput input : inputs) {
-            if (existingByCorrelation.containsKey(input.correlationId)) {
-                output.add(resultFromLog(existingByCorrelation.get(input.correlationId), true, 'Duplicate capture event ignored.'));
+        Map<String, ErrorInput> firstInputByCorrelation = new Map<String, ErrorInput>();
+        Map<String, CaptureResult> resultByCorrelation = new Map<String, CaptureResult>();
+        for (Integer i = 0; i < normalizedInputs.size(); i++) {
+            if (output[i] != null) continue;
+            ErrorInput input = normalizedInputs[i];
+            String key = input.correlationId.toLowerCase();
+            Id affectedUserId = effectiveUserId(input);
+            if (existingByCorrelation.containsKey(key)) {
+                Error_Log__c existing = existingByCorrelation.get(key);
+                output[i] = existing.User__c == affectedUserId
+                    ? resultFromLog(existing, true, 'Duplicate capture event ignored.')
+                    : failedCapture(input.correlationId, 'That diagnostic correlation is not available to this user.');
+            } else if (firstInputByCorrelation.containsKey(key)) {
+                if (effectiveUserId(firstInputByCorrelation.get(key)) != affectedUserId) {
+                    output[i] = failedCapture(input.correlationId, 'A correlation cannot identify different affected users.');
+                }
             } else {
-                logsToInsert.add(buildLog(input, input.correlationId));
-                inputsToInsert.add(input);
+                firstInputByCorrelation.put(key, input);
+                try {
+                    logsToInsert.add(buildLog(input, input.correlationId));
+                    inputsToInsert.add(input);
+                } catch (Exception invalidInput) {
+                    resultByCorrelation.put(key, failedCapture(input.correlationId, invalidInput.getMessage()));
+                }
             }
         }
 
         if (!logsToInsert.isEmpty()) {
             AEIR_IncidentAggregationService.assign(logsToInsert);
-            Database.SaveResult[] saveResults = Database.insert(logsToInsert, false, AccessLevel.SYSTEM_MODE);
+            List<Database.SaveResult> saveResults = Database.insert(logsToInsert, false, AccessLevel.SYSTEM_MODE);
             List<Error_Context__c> contextRows = new List<Error_Context__c>();
+            List<Error_Log__c> insertedLogs = new List<Error_Log__c>();
             for (Integer i = 0; i < saveResults.size(); i++) {
                 Database.SaveResult sr = saveResults[i];
                 Error_Log__c log = logsToInsert[i];
                 ErrorInput input = inputsToInsert[i];
+                CaptureResult result;
                 if (sr.isSuccess()) {
                     log.Id = sr.getId();
                     contextRows.addAll(buildContextRows(log.Id, input.correlationId, input));
-                    output.add(resultFromLog(log, true, 'Diagnostic captured from platform event.'));
+                    insertedLogs.add(log);
+                    result = resultFromLog(log, true, 'Diagnostic captured from platform event.');
                 } else {
-                    CaptureResult failure = new CaptureResult();
-                    failure.success = false;
-                    failure.correlationId = input.correlationId;
-                    failure.status = 'Failed';
-                    failure.message = firstError(sr.getErrors());
-                    output.add(failure);
+                    result = failedCapture(input.correlationId, firstError(sr.getErrors()));
                 }
+                resultByCorrelation.put(input.correlationId.toLowerCase(), result);
             }
-            if (!contextRows.isEmpty()) Database.insert(contextRows, false, AccessLevel.SYSTEM_MODE);
-            List<Error_Log__c> insertedLogs = new List<Error_Log__c>();
-            for (Error_Log__c log : logsToInsert) if (log.Id != null) insertedLogs.add(log);
-            AEIR_UserNotificationService.notifyForErrorLogs(insertedLogs);
-            requestDiagnosis(insertedLogs);
+            if (!contextRows.isEmpty()) {
+                reportPartialFailures(Database.insert(contextRows, false, AccessLevel.SYSTEM_MODE), 'diagnostic context');
+            }
+            if (options == null || options.notifyUser != false) AEIR_UserNotificationService.notifyForErrorLogs(insertedLogs);
+            if (options == null || options.requestDiagnosis != false) requestDiagnosis(insertedLogs);
+        }
+        for (Integer i = 0; i < normalizedInputs.size(); i++) {
+            if (output[i] == null) output[i] = resultByCorrelation.get(normalizedInputs[i].correlationId.toLowerCase());
         }
         return output;
+    }
+
+    private static CaptureResult failedCapture(String cid, String message) {
+        CaptureResult result = new CaptureResult();
+        result.success = false;
+        result.correlationId = cid;
+        result.status = 'Failed';
+        result.message = AEIR_SecuritySanitizerService.mask(message);
+        return result;
+    }
+
+    private static Id effectiveUserId(ErrorInput input) {
+        return validUserId(input.userId) ? (Id)input.userId : UserInfo.getUserId();
+    }
+
+    private static void reportPartialFailures(List<Database.SaveResult> results, String operation) {
+        for (Database.SaveResult result : results) {
+            if (!result.isSuccess()) {
+                System.debug(LoggingLevel.WARN, 'Aegis Flow: ' + operation + ' persistence failed: '
+                    + AEIR_SecuritySanitizerService.mask(firstError(result.getErrors())));
+            }
+        }
     }
 
     @AuraEnabled
@@ -231,11 +326,13 @@ public without sharing class AEIR_ErrorCaptureService {
     /**
      * Kicks off asynchronous diagnosis. Publishing rather than calling the gateway inline
      * keeps AI work out of the failing transaction (spec section 23) and lets the utility
-     * bar show a spinner immediately. Gated on the AI_DIAGNOSIS flag, which ships off.
+     * bar show a spinner immediately. Deterministic automatic diagnosis is separate
+     * from remote AI enrichment; the legacy AI flag still opts into both paths.
      */
     private static void requestDiagnosis(List<Error_Log__c> logs) {
         if (logs == null || logs.isEmpty()) return;
-        if (!AEIR_FeatureFlagService.isEnabled(AEIR_FeatureFlagService.AI_DIAGNOSIS)) return;
+        if (!AEIR_FeatureFlagService.isEnabled(AEIR_FeatureFlagService.AUTO_DIAGNOSIS)
+            && !AEIR_FeatureFlagService.isEnabled(AEIR_FeatureFlagService.AI_DIAGNOSIS)) return;
         List<Agent_Diagnosis_Requested__e> events = new List<Agent_Diagnosis_Requested__e>();
         for (Error_Log__c log : logs) {
             if (log == null || log.Id == null || String.isBlank(log.Correlation_Id__c)) continue;
@@ -249,12 +346,17 @@ public without sharing class AEIR_ErrorCaptureService {
     }
 
     private static String normalizeCorrelationId(String value) {
-        return String.isBlank(value) ? AEIR_CorrelationIdService.nextId() : value.trim();
+        String correlationId = String.isBlank(value) ? AEIR_CorrelationIdService.nextId() : value.trim();
+        if (correlationId.length() > 80) throw new CaptureException('Correlation id must be at most 80 characters.');
+        return correlationId;
     }
     private static Boolean validUserId(String userId) {
-        return !String.isBlank(userId) && (userId.length() == 15 || userId.length() == 18) && userId.startsWith('005');
+        if (String.isBlank(userId)) return false;
+        try { return ((Id)userId).getSObjectType() == User.SObjectType; }
+        catch (Exception invalidId) { return false; }
     }
     private static String firstError(Database.Error[] errors) {
-        return errors == null || errors.isEmpty() ? 'Unknown platform error.' : errors[0].getMessage();
+        return errors == null || errors.isEmpty() ? 'Unknown platform error.' : AEIR_SecuritySanitizerService.mask(errors[0].getMessage());
     }
+    public class CaptureException extends Exception {}
 }

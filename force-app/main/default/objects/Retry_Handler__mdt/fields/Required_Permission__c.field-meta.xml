@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Required_Permission__c</fullName>
+    <description>Exact custom permission required in addition to AEIR_Execute_Retry before the approved recovery Flow can run.</description>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Required Recovery Permission</label>
+    <length>255</length>
+    <required>false</required>
+    <type>Text</type>
+</CustomField>

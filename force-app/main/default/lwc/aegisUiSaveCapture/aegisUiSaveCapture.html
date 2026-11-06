@@ -1,0 +1,19 @@
+<template>
+    <div class="aegis-save-capture">
+        <p class="hint">
+            Save normally. If a validation rule or save error occurs, Aegis Flow will preserve the
+            diagnostic evidence and notify you.
+        </p>
+        <lightning-record-form
+            record-id={recordId}
+            object-api-name={objectApiName}
+            layout-type="Full"
+            mode="edit"
+            columns="2"
+            onsubmit={handleSubmit}
+            onsuccess={handleSuccess}
+            oncancel={handleCancel}
+            onerror={handleError}
+        ></lightning-record-form>
+    </div>
+</template>

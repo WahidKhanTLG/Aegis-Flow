@@ -157,7 +157,8 @@ private class AEIR_EscalationBulkTest {
     }
 
     @IsTest
-    static void unimplementedConnectorRecordsPendingRatherThanLookingDelivered() {
+    static void disabledConnectorRecordsPendingRatherThanLookingDelivered() {
+        AEIR_FeatureFlagService.overrides.put(AEIR_FeatureFlagService.CONNECTOR_EXTENSIONS, false);
         List<Developer_Escalation__c> escalations = escalationsOn('Slack', null, 3);
 
         Test.startTest();
@@ -165,12 +166,12 @@ private class AEIR_EscalationBulkTest {
         Test.stopTest();
 
         System.assertEquals(3, [SELECT count() FROM Developer_Escalation__c WHERE Status__c = 'Pending'],
-            'An unbuilt connector must not report the escalation as sent.');
+            'A disabled connector must not report the escalation as sent.');
         List<Delivery_Audit__c> audits = [SELECT Status__c, Response_Body__c FROM Delivery_Audit__c];
         System.assertEquals(3, audits.size());
         for (Delivery_Audit__c a : audits) {
             System.assertEquals('Pending', a.Status__c);
-            System.assert(a.Response_Body__c.contains('not implemented'), 'The audit must say why nothing was delivered.');
+            System.assert(a.Response_Body__c.contains('disabled'), 'The audit must say why nothing was delivered.');
         }
     }
 

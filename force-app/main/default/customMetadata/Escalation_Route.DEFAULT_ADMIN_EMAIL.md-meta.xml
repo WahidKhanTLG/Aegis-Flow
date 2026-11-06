@@ -20,7 +20,7 @@
     </values>
     <values>
         <field>Recipient__c</field>
-        <value xsi:type="xsd:string">wahid@thelodestonegroup.com</value>
+        <value xsi:nil="true"/>
     </values>
     <values>
         <field>Route_Key__c</field>

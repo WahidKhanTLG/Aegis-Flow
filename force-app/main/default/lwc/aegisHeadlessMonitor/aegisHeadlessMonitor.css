@@ -1,9 +1,13 @@
 :host { --aegis-navy: #061b2d; --aegis-cyan: #10dce8; --aegis-muted: #65798a; display: block; }
 .monitor { min-width: 300px; }
+.monitor-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.connection-warning { margin: 0 0 12px; padding: 10px; border: 1px solid #dccb87; border-radius: 10px; color: #614b14; background: #fff9e7; font-size: 12px; line-height: 1.45; }
 .dormant, .alert-strip, .panel { border: 1px solid #dceaf0; border-radius: 14px; background: #ffffff; box-shadow: 0 10px 32px rgba(6,27,45,.13); }
 .dormant { padding: 14px; display: grid; gap: 10px; }
 .eyebrow { margin: 0 0 3px; color: var(--aegis-cyan); font-size: 10px; font-weight: 800; letter-spacing: .16em; }
 .dormant p:last-of-type { margin: 0; color: var(--aegis-muted); font-size: 12px; line-height: 1.45; }
+.dormant-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.capture-form { margin-top: 6px; padding: 12px; border: 1px dashed #b8d1dc; border-radius: 12px; background: #f7fbfc; display: grid; gap: 10px; }
 .alert-strip { padding: 13px; display: grid; gap: 12px; }
 .alert-main { display: flex; gap: 10px; align-items: flex-start; }
 .alert-main h2 { margin: 0 0 4px; font-size: 15px; color: #102f43; }

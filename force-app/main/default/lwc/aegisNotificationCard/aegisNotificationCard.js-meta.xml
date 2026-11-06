@@ -4,4 +4,9 @@
     <isExposed>true</isExposed>
     <masterLabel>Aegis Notification Card</masterLabel>
     <targets><target>lightning__RecordPage</target><target>lightning__AppPage</target><target>lightning__HomePage</target></targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage,lightning__AppPage,lightning__HomePage">
+            <property name="correlationId" type="String" label="Diagnostic reference" description="Optional initial Aegis diagnostic correlation reference."/>
+        </targetConfig>
+    </targetConfigs>
 </LightningComponentBundle>

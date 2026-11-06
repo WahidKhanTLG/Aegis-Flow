@@ -1,9 +1,12 @@
 <template>
     <lightning-card title="Aegis Flow Setup" icon-name="utility:settings">
         <div class="slds-p-horizontal_medium slds-p-bottom_medium">
+            <template if:true={isLoadingConfig}>
+                <lightning-spinner size="small" alternative-text="Loading saved setup"></lightning-spinner>
+            </template>
 
             <template if:true={error}>
-                <div class="slds-text-color_error slds-p-bottom_small">{error}</div>
+                <div class="slds-text-color_error slds-p-bottom_small" role="alert">{error}</div>
             </template>
 
             <!-- Step 1: who you are -->
@@ -30,7 +33,7 @@
                                  data-field="fallbackToSystemAdmins" checked={config.fallbackToSystemAdmins}
                                  onchange={handleChange}></lightning-input>
                 <p class="slds-text-body_small slds-p-bottom_medium">
-                    Recommended. This keeps every finding inside your Salesforce org and guarantees it reaches someone.
+                    Uses active administrators' email addresses when no team or route recipient is configured. Delivery still depends on valid mailboxes and Salesforce email settings.
                 </p>
 
                 <lightning-input type="checkbox" label="Also share a sanitized summary with Aegis Flow support"
@@ -55,15 +58,24 @@
             <template if:true={isStep3}>
                 <div class="slds-box slds-box_x-small slds-m-bottom_medium">{routingSummary}</div>
                 <lightning-button label="Edit setup" onclick={back} class="slds-m-right_x-small"></lightning-button>
-                <lightning-button variant="brand" label="Run health check" onclick={check}
+                <lightning-button variant="brand" label="Run read-only health check" onclick={check}
                                   disabled={isChecking}></lightning-button>
                 <lightning-button label="Scan automations" onclick={scan}
                                   disabled={isScanning} class="slds-m-left_x-small"></lightning-button>
+                <p class="slds-text-body_small slds-var-m-top_small">The health check reads configuration and scheduled jobs. It does not send a report or verify delivery.</p>
+                <details class="slds-var-m-top_medium">
+                    <summary>Optional capture probe</summary>
+                    <p class="slds-text-body_small slds-var-m-top_small">Creates temporary Aegis diagnostics and attempts cleanup, with follow-up notifications and diagnosis requests suppressed. It verifies capture, classification and incident grouping. Browser notices, asynchronous diagnosis and external delivery require separate acceptance checks.</p>
+                    <lightning-input type="checkbox" label="I understand this probe creates temporary Aegis diagnostics." checked={probeConfirmed} onchange={handleProbeConfirmation} disabled={isChecking}></lightning-input>
+                    <lightning-button label="Run capture probe" onclick={probe} disabled={probeDisabled}></lightning-button>
+                </details>
+                <template if:true={isChecking}><lightning-spinner size="small" alternative-text="Reading setup readiness"></lightning-spinner></template>
 
                 <template if:true={hasCoverage}>
                     <div class="slds-box slds-box_x-small slds-m-top_medium">
                         <lightning-badge label={coverage.uncapturedFailures} class={coverageVariant}></lightning-badge>
-                        <strong class="slds-p-left_x-small">Flow failures not captured by Aegis Flow</strong>
+                        <strong class="slds-p-left_x-small">Estimated gap in retained Flow failure evidence</strong>
+                        <p class="slds-text-body_small">Counts compare retained interviews with captured history; they do not prove a one-to-one match.</p>
                         <p class="slds-text-body_small slds-p-top_x-small">{coverage.summary}</p>
                         <template if:true={riskyFlows.length}>
                             <ul class="slds-has-dividers_bottom slds-p-top_small">
@@ -96,7 +108,7 @@
                                     <div class="slds-text-body_small">{c.detail}</div>
                                     <template if:true={c.remediation}>
                                         <div class="slds-text-body_small slds-text-color_weak">
-                                            Fix: {c.remediation}
+                                            {c.remediationLabel} {c.remediation}
                                         </div>
                                     </template>
                                 </li>

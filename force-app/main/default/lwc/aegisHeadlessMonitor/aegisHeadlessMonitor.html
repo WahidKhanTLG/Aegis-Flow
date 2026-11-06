@@ -1,5 +1,15 @@
 <template>
     <section class="monitor" aria-label="Aegis Flow headless monitor">
+        <p class="slds-text-body_small slds-var-p-bottom_small" role="status">{monitoringMessage}</p>
+        <template if:true={connectionWarning}><p class="connection-warning" role="status">{connectionWarning}</p></template>
+        <template if:true={optionalFlowWarning}><p class="connection-warning" role="status">{optionalFlowWarning}</p></template>
+        <template if:true={monitoringEnabled}>
+            <div class="monitor-toolbar">
+                <lightning-button label="Refresh alerts" onclick={refreshAlerts} disabled={isRefreshingAlerts}></lightning-button>
+                <span class="slds-text-body_small" role="status">{savedAlertsMessage}</span>
+            </div>
+        </template>
+        <template if:true={error}><p class="error" role="alert">{error}</p></template>
         <template if:true={hasAlerts}>
             <div class="alert-strip" role="status">
                 <div class="alert-main">
@@ -19,8 +29,30 @@
         <template if:false={hasAlerts}>
             <div class="dormant">
                 <p class="eyebrow">AEGIS FLOW</p>
-                <p>No active alerts. Get Help remains available when a user needs diagnostic assistance.</p>
-                <lightning-button label="Get Help" onclick={startManualHelp}></lightning-button>
+                <p>{emptyAlertsMessage}</p>
+                <div class="dormant-actions">
+                    <lightning-button label="Get Help" onclick={startManualHelp}></lightning-button>
+                    <lightning-button label="Capture Screen Issue" onclick={openCaptureForm}></lightning-button>
+                </div>
+                <template if:true={showCaptureForm}>
+                    <div class="capture-form">
+                        <lightning-textarea
+                            label="What went wrong?"
+                            value={captureDescription}
+                            onchange={handleCaptureDescription}
+                            placeholder="Describe the validation or screen error you saw..."
+                        ></lightning-textarea>
+                        <div class="dormant-actions">
+                            <lightning-button
+                                variant="brand"
+                                label="Submit"
+                                onclick={submitScreenCapture}
+                                disabled={captureSubmitDisabled}
+                            ></lightning-button>
+                            <lightning-button label="Cancel" onclick={closeCaptureForm}></lightning-button>
+                        </div>
+                    </div>
+                </template>
             </div>
         </template>
 
@@ -90,9 +122,6 @@
                     </div>
                 </template>
 
-                <template if:true={error}>
-                    <div class="error" role="alert">{error}</div>
-                </template>
             </div>
         </template>
     </section>

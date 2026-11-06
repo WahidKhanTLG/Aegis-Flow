@@ -81,17 +81,14 @@ public with sharing class AEIR_NotificationPolicyService {
             if (log != null && log.User__c != null) userIds.add(log.User__c);
         }
 
+        // Internal notification policy must count the affected user's private
+        // history, not just notices visible to the capture/diagnosis processor.
+        // No consumer data is returned; getAlertBehavior exposes metadata only.
         // One query covers both the cooldown window and the hourly ceiling.
         Datetime windowStart = nowValue.addHours(-1);
         Map<Id, List<Datetime>> recentByUser = new Map<Id, List<Datetime>>();
         if (!userIds.isEmpty()) {
-            for (User_Notification__c existing : [
-                SELECT Target_User__c, CreatedDate
-                FROM User_Notification__c
-                WHERE Target_User__c IN :userIds AND CreatedDate >= :windowStart
-                ORDER BY CreatedDate DESC
-                LIMIT 2000
-            ]) {
+            for (User_Notification__c existing : new HistoryReader().read(userIds, windowStart)) {
                 if (!recentByUser.containsKey(existing.Target_User__c)) {
                     recentByUser.put(existing.Target_User__c, new List<Datetime>());
                 }
@@ -113,6 +110,18 @@ public with sharing class AEIR_NotificationPolicyService {
             }
         }
         return decisions;
+    }
+
+    // Keep privileged history access isolated from the policy/UI helper surface.
+    private without sharing class HistoryReader {
+        public List<User_Notification__c> read(Set<Id> userIds, Datetime windowStart) {
+            return Database.queryWithBinds(
+                'SELECT Target_User__c, CreatedDate FROM User_Notification__c ' +
+                'WHERE Target_User__c IN :userIds AND CreatedDate >= :windowStart ' +
+                'ORDER BY CreatedDate DESC LIMIT 2000',
+                new Map<String, Object>{ 'userIds' => userIds, 'windowStart' => windowStart },
+                AccessLevel.SYSTEM_MODE);
+        }
     }
 
     private static Decision decide(

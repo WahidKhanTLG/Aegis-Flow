@@ -1,5 +1,5 @@
 <template>
-    <section class="remediation-shell" role="dialog" aria-modal="true" aria-label="Confirm governed remediation">
+    <section class="remediation-shell" role="dialog" aria-modal="true" aria-label="Confirm governed remediation" onkeydown={handleKeydown}>
         <header><div class="shield"><lightning-icon icon-name="utility:shield" size="small" alternative-text="Governed action"></lightning-icon></div><div><p>AEGIS FLOW CONTROL</p><h2>Confirm governed remediation</h2></div></header>
         <div class="body">
             <div class="risk-row"><span class="risk-label">WRITE ACTION</span><span class="risk-pill">Confirmation required</span></div>

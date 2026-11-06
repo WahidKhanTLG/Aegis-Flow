@@ -1,16 +1,18 @@
 # Aegis Flow Headless Technical Document
 
-**Version:** Sprint 2 working draft
-**Last updated:** 2026-08-01
-**Primary org used for validation:** `Aegis Flow_WA_Dev`
+**Version:** Cross-business application development
+**Last updated:** 2026-11-03
+**Current verified development alias:** `SyncBridge-Product` (same recorded org ID; former default alias is stale)
 
 ## 1. Purpose
 
 Aegis Flow is a Salesforce-native diagnostic and response layer for automation failures, user-facing Flow failures, Apex failures, async failures, batch failures, custom LWC errors, and explicit integration diagnostics. The current utility bar experience is one delivery surface. The product direction is broader: Aegis Flow should behave as a headless diagnostic platform that can serve Lightning utility bars, Agentforce actions, MCP tools, APIs, admin consoles, and external operations surfaces from the same governed incident model.
 
-## 2. Screenshots
+## 2. Historical screenshots
 
-The current org validation shows the Aegis utility bar highlighted when open alerts exist:
+These retained images document the earlier UI. Current November 3 rendered acceptance is
+recorded in the [dated verification](../output/development/2026-11-03/verification.json).
+The earlier org validation showed the Aegis utility bar highlighted when open alerts exist:
 
 ![Aegis Flow highlighted utility alerts](images/aegis-utility-highlighted-alerts.png)
 
@@ -21,6 +23,20 @@ The proactive utility panel opens with a plain-language diagnosis for the affect
 The detail panel exposes the diagnostic metadata and escalation controls:
 
 ![Aegis Flow diagnostic details](images/aegis-utility-alert-details.png)
+
+## Current deployed acceptance
+
+The November 3 release and follow-up patches passed 286 Apex, 105 LWC and 30 MCP tests.
+Live event capture/diagnosis/notice ownership, rollback-resilient publication, authorized MCP
+reads and rendered Contact/Case surfaces were tested separately. The retrieved manifest scope
+matches 689 local release files, with seven explicit environment configuration overrides.
+See the dated verification for job IDs and limits; this does not certify customer production.
+
+The dependency-free MCP server adds offline scoped resources and two knowledge tools to its
+five Salesforce reads. Initial reviewed content covers Aegis, ABC pick/ship and SoCal crew-day
+processes, with local source hashes, proposed checks and unknowns distinguished. See the
+[MCP guide](../integrations/mcp/README.md). Customer knowledge cannot enable a recovery write
+or establish current customer-org parity. Optional external services remain disabled.
 
 ## 3. Technical Summary
 
@@ -165,25 +181,21 @@ Aegis Flow is designed around least-privilege diagnostics:
 | Real Agentforce callout | Deferred | Current product stores deterministic/contract-ready diagnosis; live Agentforce integration remains Phase 2. |
 | Namespace and second-generation managed package readiness | Deferred | Tracked separately in namespace readiness work. |
 
-## 12. Phase 2: Aegis Flow Headless Line Items
+## 12. Headless application development status (2026-11-02)
 
-Phase 2 should make the headless model explicit. The Lightning utility should remain a polished surface, but not the only way to consume Aegis.
+The diagnostic REST facade, local MCP bridge, optional Agent API enrichment and Named
+Credential escalation adapters are now implemented in source. They require final Salesforce
+validation and deployment before live use. The utility remains a client of the same governed
+services. See `DEVELOPER_EXTENSION_GUIDE.md` for the precise API and credential contracts and
+`SCENARIO_COVERAGE.md` for business acceptance boundaries.
 
-| Line item | Goal | Notes |
-| --- | --- | --- |
-| Headless product contract | Define Aegis Flow as a diagnostic service layer with UI, agent, and API clients. | Use stable logical keys, not namespaced API names, in external payloads. |
-| Diagnostic API facade | Add Apex service methods that return current errors, incident summaries, notification state, and recommended next actions. | Keep payloads sanitized and permission-checked. |
-| MCP server toolset | Expose tools such as `find_recent_errors`, `get_error_context`, `list_incidents`, `dismiss_notification`, `create_escalation`, `run_health_check`, and `scan_flow_coverage`. | This makes Aegis usable by Codex, Claude Code, internal agents, and support copilots. |
-| Agentforce action package | Package the current invocable actions as governed agent actions once real Agentforce callout configuration is enabled. | Preserve deterministic fallback when the model/action is unavailable. |
-| External operations channels | Add optional Slack, Teams, webhook, or customer support console subscribers. | These should subscribe through governed server-side services, not raw event payloads. |
-| Headless auth model | Define Connected App, integration permission set, IP/session rules, and per-tool scopes. | Avoid broad admin tokens for diagnostic clients. |
-| API observability | Add delivery audits, request ids, usage counts, and failure logs for headless consumers. | Required before customer-facing headless rollout. |
-| Packaging boundary | Complete namespace and 2GP review before managed package creation. | Keep namespace readiness deferred until the package org path is chosen. |
-| Demo scenario | Build a demo where an agent asks, "Why did this Order Flow fail?" and Aegis returns the incident, rule cause, affected record, and safe next step. | Utility bar remains optional; headless response is the product proof. |
+Managed packaging is excluded by the user's current instruction. No namespace, package or
+live external connection was created. No claim is made that arbitrary customer-specific
+business logic can be inferred or repaired without configuration.
 
 ## 13. Validation Evidence
 
-Current validation evidence for this working branch:
+Historical sprint evidence below predates the November development. Use the latest task verification results for current execution status:
 
 - LWC unit tests: `npm run test:unit` passed 18 of 18 tests.
 - Local audit: `python3 scripts/local_audit.py` passed after current sprint fixes.
@@ -194,7 +206,7 @@ Current validation evidence for this working branch:
 
 ## 14. Known Deferred Work
 
-- Namespace readiness and second-generation managed package creation.
-- Live Agentforce callout configuration and real action execution.
+- Managed packaging is explicitly outside the current development scope.
+- Live Agentforce tenant configuration and acceptance of the new optional API client.
 - Marketplace/AppExchange collateral and go-to-market packaging.
 - Direct standard page validation-rule and duplicate-rule capture, which remains a Salesforce platform boundary unless the customer uses custom forms, Flow fault paths, Apex wrappers, or browser-assisted manual diagnostics.

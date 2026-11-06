@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "id": "socal-field-service",
+  "title": "SoCal Seismic field-service crew checklists",
+  "customer": "socal",
+  "product": "socal-salesforce-field-service",
+  "processes": [
+    "crew-checklists",
+    "work-order-estimate-context"
+  ],
+  "summary": "Identified local SoCal Seismic Construction Salesforce project. This initial subset covers crew-day checklists and work-order estimate context, supported by README and owning Apex. It is not an org inspection, security audit or complete description of scheduling, pricing or QuickBooks operations.",
+  "lastReviewed": "2026-11-03",
+  "orgVerification": "not-checked",
+  "claims": [
+    {
+      "id": "identified-project",
+      "text": "The local README identifies service appointment generation, crew management, field-service operations and QuickBooks integration. This document curates only the inspected crew-checklist and work-order estimate paths; the broader component list does not prove operational connectivity.",
+      "state": "documented",
+      "sourceIds": [
+        "s1",
+        "s2"
+      ]
+    },
+    {
+      "id": "crew-day-discovery",
+      "text": "getCrewChecklistData derives candidate calendar days from the work order's service appointments, deduplicates dates, includes existing crew-plan dates after rescheduling, and marks dates on or before today noneditable in its returned day views. Template readiness is exposed separately.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "s3"
+      ]
+    },
+    {
+      "id": "existing-day-boundary",
+      "text": "createCrewChecklists re-derives existing days on the server. It skips existing days on or before today. For an existing future day it validates supplied plan IDs against that day and skips already-present section slots on stale new-section payloads. A plan from another day causes a selection-out-of-date failure.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "s4"
+      ]
+    },
+    {
+      "id": "new-day-and-step-boundary",
+      "text": "New days on or before today use template-derived sections; future new days can use submitted sections. Crew WorkPlans are parented to the work order with Crew_Day__c and no WorkOrderLineItemId. Existing step IDs are skipped by step insertion; this is not proof that every possible replay of newly appended steps is idempotent.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "s5"
+      ]
+    },
+    {
+      "id": "estimate-context-boundary",
+      "text": "WorkOrderLineItemController reads the work order's Estimate__c link and, when present, the related opportunity pricebook and estimate lines. A work order without that link returns hasEstimate=false. Diagnosis should distinguish absent estimate linkage from a downstream line-generation failure.",
+      "state": "implemented-local",
+      "sourceIds": [
+        "s6"
+      ],
+      "limitations": [
+        "This limited read does not establish pricing formulas, authorization completeness or a safe line-write recovery."
+      ]
+    },
+    {
+      "id": "read-only-triage-proposal",
+      "text": "Proposed checklist diagnosis: inspect work-order access, schedule dates, template readiness, existing Crew_Day__c plans and the plan/day association. For selection-out-of-date, reopen and compare current server-derived plans before proposing a change. Do not automatically replay an old mutation payload.",
+      "state": "proposed",
+      "sourceIds": [
+        "s3",
+        "s4",
+        "s5"
+      ]
+    },
+    {
+      "id": "acceptance-candidates",
+      "text": "Proposed owner-reviewed sandbox checks: rescheduling still displays existing crew days; an existing past/today day is not modified; an existing future day rejects another day's plan ID; repeating a new-section payload does not duplicate an existing section; a missing estimate link is diagnosed explicitly. Newly appended-step replay requires a separately proven business postcondition.",
+      "state": "proposed",
+      "sourceIds": [
+        "s3",
+        "s4",
+        "s5",
+        "s6"
+      ]
+    },
+    {
+      "id": "approval-required-writes",
+      "text": "Creating/changing WorkPlans or WorkSteps, modifying estimate lines, generating appointments and replaying accounting calls require separately approved operations, access, audit and idempotency. No SoCal recovery handler is registered by this corpus, and knowledge retrieval grants no write or org access.",
+      "state": "proposed",
+      "sourceIds": [
+        "s4",
+        "s5",
+        "s6",
+        "s7"
+      ]
+    },
+    {
+      "id": "unverified-operational-scope",
+      "text": "SoCal org parity, live crew assignments, pricing requirements, QuickBooks credentials/connectivity/reconciliation, customer recovery permissions and success criteria remain unknown. No customer org was authenticated or changed for this ingestion.",
+      "state": "unknown",
+      "sourceIds": []
+    }
+  ],
+  "sources": [
+    {
+      "id": "s1",
+      "repository": "socal",
+      "path": "README.md",
+      "sha256": "0bd848e1d958e63b2a1c6a28251e3bbfa043c2b4b3f00fec57eb7970ad6fee7b",
+      "lines": {
+        "start": 1,
+        "end": 49
+      }
+    },
+    {
+      "id": "s2",
+      "repository": "socal",
+      "path": "README.md",
+      "sha256": "0bd848e1d958e63b2a1c6a28251e3bbfa043c2b4b3f00fec57eb7970ad6fee7b",
+      "lines": {
+        "start": 123,
+        "end": 127
+      }
+    },
+    {
+      "id": "s3",
+      "repository": "socal",
+      "path": "force-app/main/default/classes/CrewChecklistController.cls",
+      "sha256": "978b73c5aec813528825f609a1764e5da6095712bb3c5323818d12cb099676a5",
+      "lines": {
+        "start": 106,
+        "end": 199
+      }
+    },
+    {
+      "id": "s4",
+      "repository": "socal",
+      "path": "force-app/main/default/classes/CrewChecklistController.cls",
+      "sha256": "978b73c5aec813528825f609a1764e5da6095712bb3c5323818d12cb099676a5",
+      "lines": {
+        "start": 243,
+        "end": 315
+      }
+    },
+    {
+      "id": "s5",
+      "repository": "socal",
+      "path": "force-app/main/default/classes/CrewChecklistController.cls",
+      "sha256": "978b73c5aec813528825f609a1764e5da6095712bb3c5323818d12cb099676a5",
+      "lines": {
+        "start": 318,
+        "end": 403
+      }
+    },
+    {
+      "id": "s6",
+      "repository": "socal",
+      "path": "force-app/main/default/classes/WorkOrderLineItemController.cls",
+      "sha256": "b2ad39f6f728472595f5f52dd5f2e35db4503f98fee49ed1becbbabeed4a6fbc",
+      "lines": {
+        "start": 75,
+        "end": 116
+      }
+    },
+    {
+      "id": "s7",
+      "repository": "aegis-flow",
+      "path": "docs/APPROVED_FLOW_RECOVERY.md",
+      "sha256": "0d96e93026a444d5db3119236cc8a8f57a496a3692e26ceb11199d559a09f84d",
+      "lines": {
+        "start": 19,
+        "end": 61
+      }
+    }
+  ]
+}

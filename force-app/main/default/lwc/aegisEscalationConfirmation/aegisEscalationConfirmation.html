@@ -1,1 +1,17 @@
-<template><article class="card"><h2>Escalation Confirmation</h2><p>Summarizes the diagnostic package and configured delivery route before sending evidence to a technical team.</p></article></template>
+<template>
+    <article class="card" aria-label="Confirm diagnostic escalation" aria-busy={isLoading}>
+        <h2>Escalation Confirmation</h2>
+        <lightning-input label="Diagnostic reference" value={correlationId} onchange={handleReference} disabled={isLoading}></lightning-input>
+        <lightning-button label="Refresh evidence" onclick={refresh} disabled={isLoading} class="slds-var-m-top_small"></lightning-button>
+        <template if:true={isLoading}><lightning-spinner size="small" alternative-text="Processing escalation request"></lightning-spinner></template>
+        <template if:true={error}><p class="slds-text-color_error slds-var-m-top_small" role="alert">{error}</p></template>
+        <template if:true={canEscalate}>
+            <p class="slds-var-m-top_medium">Reference: {correlationId}</p><p>Severity: {severity}</p><p class="slds-var-m-top_small">{summary}</p>
+            <p class="slds-var-m-top_medium">The diagnostic package will use the configured escalation route. Review the evidence before confirming delivery to the technical team.</p>
+            <lightning-input type="checkbox" label="I confirm sending this diagnostic evidence through the configured escalation route." checked={confirmed} onchange={handleConfirmation} disabled={isLoading} class="slds-var-m-top_medium"></lightning-input>
+            <lightning-button label="Confirm and send escalation" variant="brand" onclick={send} disabled={sendDisabled} class="slds-var-m-top_small"></lightning-button>
+        </template>
+        <template if:false={canEscalate}><p class="slds-var-m-top_medium">Enter a diagnostic reference with accessible retained evidence to prepare an escalation.</p></template>
+        <template if:true={result}><div role="status" class="slds-var-m-top_medium"><p>Escalation created: {resultReference}</p><p>Channel: {deliveryChannel}</p><p>Delivery status: {deliveryStatus}</p></div></template>
+    </article>
+</template>

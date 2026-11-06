@@ -7,6 +7,8 @@
     <isOmniPinnedViewEnabled>false</isOmniPinnedViewEnabled>
     <label>Aegis Flow Admin</label>
     <navType>Standard</navType>
+    <tabs>Aegis_Flow_Operations</tabs>
+    <tabs>Aegis_Flow_Setup</tabs>
     <tabs>standard-home</tabs>
     <tabs>Error_Log__c</tabs>
     <tabs>Diagnostic_Session__c</tabs>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Aegis Flow operations console and governed diagnostic workspace.</description>
+    <flexiPageRegions>
+        <itemInstances><componentInstance><componentName>adminErrorConsole</componentName><identifier>adminErrorConsole</identifier></componentInstance></itemInstances>
+        <itemInstances><componentInstance><componentName>aegisWorkspace</componentName><identifier>aegisWorkspace</identifier></componentInstance></itemInstances>
+        <name>main</name><type>Region</type>
+    </flexiPageRegions>
+    <masterLabel>Aegis Flow Operations</masterLabel>
+    <template><name>flexipage:defaultAppHomeTemplate</name></template>
+    <type>AppPage</type>
+</FlexiPage>

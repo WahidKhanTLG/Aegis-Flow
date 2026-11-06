@@ -1,0 +1,6 @@
+{
+  "packageDirectories": [{ "path": "force-app", "default": true }],
+  "name": "aegis-approved-flow-retry-qa-only",
+  "namespace": "",
+  "sourceApiVersion": "67.0"
+}

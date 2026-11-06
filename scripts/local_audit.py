@@ -7,6 +7,7 @@ root = Path(__file__).resolve().parents[1]
 default = root / 'force-app/main/default'
 errors = []
 warnings = []
+QA_FLOWS = {'Aegis_Test_Order_On_Closed_Won', 'Aegis_Test_Order_On_Closed_Won_With_Fault'}
 
 # Only project metadata is audited. node_modules and tooling caches contain vendor
 # template files that are intentionally not well-formed XML.
@@ -56,11 +57,47 @@ else:
         'CustomApplication': {p.name.replace('.app-meta.xml','') for p in (default/'applications').glob('*.app-meta.xml')},
         'CustomObject': {p.name for p in (default/'objects').iterdir() if p.is_dir() and (p / f'{p.name}.object-meta.xml').exists()},
         'CustomMetadata': {p.name.replace('.md-meta.xml','') for p in (default/'customMetadata').glob('*.md-meta.xml')},
+        'CustomPermission': {p.name.replace('.customPermission-meta.xml','') for p in (default/'customPermissions').glob('*.customPermission-meta.xml')},
+        'FlexiPage': {p.name.replace('.flexipage-meta.xml','') for p in (default/'flexipages').glob('*.flexipage-meta.xml')},
+        'Flow': {p.name.replace('.flow-meta.xml','') for p in (default/'flows').glob('*.flow-meta.xml')} - QA_FLOWS,
+        'PlatformEventSubscriberConfig': {p.name.replace('.platformEventSubscriberConfig-meta.xml','') for p in (default/'PlatformEventSubscriberConfigs').glob('*.platformEventSubscriberConfig-meta.xml')},
+        'QuickAction': {p.name.replace('.quickAction-meta.xml','') for p in (default/'quickActions').glob('*.quickAction-meta.xml')},
+        'Layout': {p.name.replace('.layout-meta.xml','') for p in (default/'layouts').glob('*.layout-meta.xml')},
     }
     for metadata_type, names in expected.items():
         missing = sorted(names - manifest_members.get(metadata_type, set()))
         if missing:
             errors.append(f'Manifest missing {metadata_type}: {", ".join(missing)}')
+
+    fixtures_in_release = QA_FLOWS & manifest_members.get('Flow', set())
+    if fixtures_in_release:
+        errors.append('Release manifest contains QA failure fixtures: ' + ', '.join(sorted(fixtures_in_release)))
+    ignored = set((root / '.forceignore').read_text().splitlines())
+    for name in QA_FLOWS:
+        if f'force-app/main/default/flows/{name}.flow-meta.xml' not in ignored:
+            errors.append(f'QA fixture must be excluded from source deployments: {name}')
+
+    for trigger in (default / 'triggers').glob('*.trigger'):
+        config = default/'PlatformEventSubscriberConfigs'/f'{trigger.stem}.platformEventSubscriberConfig-meta.xml'
+        if not config.exists():
+            errors.append(f'Missing bounded event subscriber configuration: {trigger.stem}')
+            continue
+        definition = ET.parse(config)
+        if definition.findtext('m:platformEventConsumer', namespaces=ns) != trigger.stem:
+            errors.append(f'Event subscriber configuration points at the wrong consumer: {trigger.stem}')
+        try:
+            batch_size = int(definition.findtext('m:batchSize', namespaces=ns))
+            if batch_size < 1 or batch_size > 200:
+                errors.append(f'Event subscriber batch exceeds validated limits: {trigger.stem}')
+        except (ValueError, TypeError):
+            errors.append(f'Invalid event subscriber batch size: {trigger.stem}')
+
+    consumer_roles = {'AEIR_End_User', 'AEIR_Developer_Viewer', 'AEIR_Support_Analyst', 'AEIR_Sample_Account_Remediation'}
+    for name in consumer_roles:
+        permissions = ET.parse(default/'permissionsets'/f'{name}.permissionset-meta.xml')
+        for permission in permissions.findall('m:objectPermissions', ns):
+            if permission.findtext('m:object', namespaces=ns) == 'Aegis_User_Alert__e' and permission.findtext('m:allowCreate', namespaces=ns) == 'true':
+                errors.append(f'{name} must not publish trusted user alerts.')
 
 sfdx = root / 'sfdx-project.json'
 try:
@@ -77,6 +114,16 @@ private_objects = {
     'Retry_Attempt__c','Delivery_Audit__c'
 }
 ns = {'m': 'http://soap.sforce.com/2006/04/metadata'}
+event_commit_contracts = {
+    'Error_Captured__e': 'PublishImmediately',
+    'Agent_Diagnosis_Requested__e': 'PublishAfterCommit',
+    'Aegis_User_Alert__e': 'PublishAfterCommit',
+}
+for name, expected in event_commit_contracts.items():
+    definition = ET.parse(default/'objects'/name/f'{name}.object-meta.xml')
+    actual = definition.findtext('m:publishBehavior', namespaces=ns)
+    if actual != expected:
+        errors.append(f'{name} publishBehavior must be {expected}, found {actual!r}')
 for name in sorted(private_objects):
     p = default/'objects'/name/f'{name}.object-meta.xml'
     if not p.exists():

@@ -8,6 +8,7 @@
  */
 public with sharing class AEIR_FeatureFlagService {
     public static final String AI_DIAGNOSIS = 'AI_DIAGNOSIS';
+    public static final String AUTO_DIAGNOSIS = 'AUTO_DIAGNOSIS';
     public static final String USER_NOTIFICATIONS = 'USER_NOTIFICATIONS';
     public static final String GOVERNED_REMEDIATION = 'GOVERNED_REMEDIATION';
     public static final String CONNECTOR_EXTENSIONS = 'CONNECTOR_EXTENSIONS';

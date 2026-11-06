@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customPermissions><enabled>true</enabled><name>AEIR_QA_Flow_Retry</name></customPermissions>
+    <description>Development QA fixture entitlement only. Also requires an approved retry/audit role; grants no business object access.</description>
+    <flowAccesses><enabled>true</enabled><flow>AEIR_QA_Approved_Recovery</flow></flowAccesses>
+    <label>Aegis QA Approved Flow Retry</label>
+</PermissionSet>

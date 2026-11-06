@@ -4,21 +4,94 @@
 hard way, and what still needs doing. Written so that if conversation context is lost, this
 file alone is enough to pick the work back up without re-deriving anything.
 
-**Last verified:** July 29, 2026 against org `Aegis Flow_WA_Dev` (`00DgL00000YDvsvUAD`)
+**Historical deployment verification:** July 29, 2026 against org `Aegis Flow_WA_Dev` (`00DgL00000YDvsvUAD`).
+**Current development acceptance:** November 3, 2026; see the dated verification artifact.
+
+---
+
+## Current deployed checkpoint — November 3, 2026
+
+The user authorized remaining development actions in the verified Aegis development org
+`SyncBridge-Product` (`00DgL00000YDvsvUAD`), excluded managed packaging, selected ABC/SoCal
+business knowledge for MCP and chose workspace Case saves while preserving Solutions.
+
+Actual product deployment `0AfgL00000cRx7mSAC` installed 551 components and passed 283 Apex
+tests. Telemetry masking patch `0AfgL00000cRxisSAC` passed all 284. The Contact Cancel fix
+`0AfgL00000cS8w3SAC` was deployed and verified in Salesforce after 90 LWC tests passed.
+The setup-health follow-up `0AfgL00000cRsJOSA0` passed all 286 Apex tests; final local checks
+passed 105 LWC and 30 MCP tests. Actual live read-only stdio acceptance passed. The added
+Feedback layout exposes its existing Comments field; final retrieval comparison covers
+689 release files with zero unexpected differences/missing files.
+
+The development overlay enables AUTO_DIAGNOSIS and GOVERNED_REMEDIATION. Five subscribers
+use the existing authorized Aegis operator, batch200. The user explicitly approved their
+brief suspension/resumption from earliest retained events; all five were restored Running.
+Fresh committed and rolled-back publisher tests proved durable capture, automatic diagnosis,
+correct affected-user ownership and canonical Diagnosed notices, without external providers.
+Health passed 10/10. Separate real QA Flow recovery passed write/dedup/idempotency/rejection,
+rolled back its rows and was then disabled/unassigned. The two original QA order Flows and
+Contact validation rule remain unchanged.
+
+The MCP corpus serves source-cited Aegis, ABC pick/ship and SoCal field-service knowledge;
+customer scope is opt-in. No customer org was accessed or business recovery registered.
+Optional external agent/connectors/Tooling body credentials remain unconfigured/disabled.
+Use [verification.json](../output/development/2026-11-03/verification.json) for cleanup,
+final UI results, hashes, exact scope and customer-acceptance limitations. Do not use the
+stale default alias, global most-recent deployment cache, or historical counts below to
+infer current state. Always pass the verified alias and exact deployment job ID.
+
+Cleanup removed four synthetic business records, 28 diagnostic rows and five exclusively
+synthetic incidents, with zero active residue. The temporary QA user is inactive and its
+non-profile test grant is removed. The existing smoke Account, original QA Flows, shared Files
+and Case Solutions were preserved. The remaining standard-user UI journey subsequently passed under the user-approved temporary
+Login As policy, restored to OFF afterward. Own diagnostics/help/dismissal and foreign-record
+privacy were verified in Salesforce. Monitor connection-status patch `0AfgL00000cTYurSAG`
+passed 105 LWC tests and live saved-refresh/automatic-arrival checks; unavailable optional
+Flow streaming is reported independently of successful actions. Password/profile unchanged.
+
+## Historical local application development — November 2, 2026
+
+
+The current user scope is sales, service, custom objects and integrations. Managed packaging
+is explicitly excluded. Local code has been expanded and hardened; it has not been deployed
+by this task. The historical org is now authorized under alias `SyncBridge-Product`, verified
+against the same org ID recorded below. The former default alias is stale; do not use it to
+infer a deployment target.
+
+The development covers secret masking, atomic remediation, bounded authorized retries,
+ordered capture results, input boundaries, canonical notification resolution, five functional
+UI surfaces, scoped REST operations, a local MCP bridge and optional external adapters.
+Customer-specific actions, agent/principal permissions, OAuth and actual endpoints remain
+configuration/acceptance responsibilities. Use the latest verification report rather than
+historical counts or statements that source and org are identical: local code is intentionally
+ahead until a separately authorized deployment.
+
+The QA Flows are still tracked under force-app but are now excluded from source-directory
+and manifest deployments. They were not deactivated or deleted in the development org.
+
+Final check-only validation `0AfgL00000cR8ZuSAK` succeeded: 529 components, 249 Apex tests,
+92.46% aggregate Aegis line coverage and no coverage warnings. Local validation passed 73
+LWC tests and 12 MCP tests. The dated report is
+`output/development/2026-11-02/verification.json`; all 691 frozen source/configuration files
+matched the validated snapshot. This is a local release candidate, not a deployment or
+evidence of real provider connectivity or customer acceptance.
 
 ---
 
 ## 1. ⚠️ Live test fixtures — read this first
 
-Two artifacts are **active in the org right now**. They are test fixtures, deliberately
-kept outside `force-app`, and they change org behaviour:
+The following are historical QA fixtures. The two Opportunity fixture Flows are now tracked
+inside `force-app` but excluded by `.forceignore` and the release manifest; the Contact rule
+remains outside the local package. Their actual org definitions were retrieved during the
+November review, and they change org behaviour:
 
 | Fixture | Effect | How to remove |
 |---|---|---|
-| `Aegis_Test_Order_On_Closed_Won` (Flow) | Creates an Order with `AccountId` unmapped, so it always fails. **Changed 2026-07-29: a fault path now catches it, so the Opportunity save SUCCEEDS** and the failure is captured in seconds with the record id. Needs ≥1 Opportunity line item to fire at all. | Setup → Flows → Deactivate. See §5 for the deactivation trap. |
-| `Aegis_Require_Lead_Source` (Contact validation rule) | Blocks Contact create/save without Lead Source. Also blocks **Lead Convert** when the Lead has no Lead Source. | Setup → Object Manager → Contact → Validation Rules → deactivate |
+| `Aegis_Test_Order_On_Closed_Won` (Flow) | Active after-save failure fixture for Closed Won Opportunities with line items whose name excludes `AEGIS_FAULT`; its uncaught missing-Account Order failure can roll back the save. | Only deactivate after explicit QA-owner authorization. |
+| `Aegis_Test_Order_On_Closed_Won_With_Fault` (Flow) | Active complementary fixture for names containing `AEGIS_FAULT`; catches the missing-Account Order failure through the Aegis fault subflow, so the save can succeed while evidence is recorded. | Only deactivate after explicit QA-owner authorization. |
+| `Aegis_Require_Lead_Source` (Contact validation rule) | Active org-only QA rule blocking a Contact save with blank Lead Source. | Only deactivate after explicit QA-owner authorization. |
 
-Neither is in the product package.
+All three are excluded from the default product deployment scope.
 
 **Decision, July 29, 2026: both fixtures STAY.** They are the QA harness for `docs/QA_TEST_PLAN.md`.
 This supersedes the earlier "remove before handover" instruction. Consequences to keep in mind:
@@ -27,7 +100,7 @@ emails a real inbox, and anyone else working in this org will hit both.
 
 ---
 
-## 2. Verified current state
+## 2. Historical verified state — July 2026
 
 | Metric | Value |
 |---|---|
@@ -45,7 +118,7 @@ emails a real inbox, and anyone else working in this org will hit both.
 | API version | 67.0 |
 | Docs | 15 markdown files |
 
-**Commands to re-verify all of the above:**
+**Historical commands (the former alias is stale; use an explicitly verified current target):**
 
 ```bash
 sf apex run test --test-level RunLocalTests --target-org "Aegis Flow_WA_Dev" --code-coverage --result-format human --wait 40

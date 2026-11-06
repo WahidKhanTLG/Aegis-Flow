@@ -1,0 +1,2 @@
+:host { display: block; }
+.log-body { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 32rem; overflow: auto; padding: 1rem; margin-top: .75rem; border: 1px solid var(--slds-g-color-border-base-1, #c9c9c9); background: var(--slds-g-color-neutral-base-95, #f3f3f3); }

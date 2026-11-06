@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "ownNoticeDismissedByActualQaUser": true,
+  "helpSessionCreatedAndOwnedByActualQaUser": true,
+  "helpContextMatchesOwnedFixtureContact": true,
+  "qaProfileHasModifyAllData": false,
+  "qaProfileHasManageUsers": false,
+  "policyRestoredOffMetadataVerified": true
+}

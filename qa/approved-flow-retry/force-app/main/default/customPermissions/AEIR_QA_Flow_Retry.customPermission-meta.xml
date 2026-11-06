@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomPermission xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Development acceptance only: recover owned, explicitly marked synthetic Error Feedback records. This does not authorize customer business recovery.</description>
+    <label>Aegis QA Flow Retry Fixture</label>
+</CustomPermission>

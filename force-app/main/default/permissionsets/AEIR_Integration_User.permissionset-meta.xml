@@ -118,6 +118,10 @@
     </classAccesses>
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
+        <name>Agent_Connection__mdt</name>
+    </customMetadataTypeAccesses>
+    <customMetadataTypeAccesses>
+        <enabled>true</enabled>
         <name>Context_Field_Setting__mdt</name>
     </customMetadataTypeAccesses>
     <customMetadataTypeAccesses>
@@ -166,7 +170,15 @@
     </customMetadataTypeAccesses>
     <customPermissions>
         <enabled>true</enabled>
+        <name>AEIR_Execute_Retry</name>
+    </customPermissions>
+    <customPermissions>
+        <enabled>true</enabled>
         <name>AEIR_Inbound_Diagnostic_Capture</name>
+    </customPermissions>
+    <customPermissions>
+        <enabled>true</enabled>
+        <name>AEIR_Process_Diagnostics</name>
     </customPermissions>
     <fieldPermissions>
         <editable>true</editable>
@@ -1003,7 +1015,7 @@
         <modifyAllRecords>false</modifyAllRecords>
         <object>AI_Diagnosis__c</object>
         <viewAllFields>false</viewAllFields>
-        <viewAllRecords>false</viewAllRecords>
+        <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
         <allowCreate>true</allowCreate>
@@ -1073,7 +1085,7 @@
         <modifyAllRecords>false</modifyAllRecords>
         <object>Diagnostic_Session__c</object>
         <viewAllFields>false</viewAllFields>
-        <viewAllRecords>false</viewAllRecords>
+        <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
         <allowCreate>true</allowCreate>
@@ -1123,7 +1135,7 @@
         <modifyAllRecords>false</modifyAllRecords>
         <object>Error_Log__c</object>
         <viewAllFields>false</viewAllFields>
-        <viewAllRecords>false</viewAllRecords>
+        <viewAllRecords>true</viewAllRecords>
     </objectPermissions>
     <objectPermissions>
         <allowCreate>true</allowCreate>

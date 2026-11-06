@@ -10,7 +10,7 @@ public with sharing class AEIR_UpdateMissingFieldAction {
 
     /** See AEIR_ExecuteRemediationAction.MAX_BATCH; kept in step with it deliberately. */
     @TestVisible
-    private static final Integer MAX_BATCH = 40;
+    private static final Integer MAX_BATCH = 20;
 
     public class Request {
         @InvocableVariable public String correlationId;

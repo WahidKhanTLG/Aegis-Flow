@@ -1,1 +1,20 @@
-<template><article class="card"><h2>Aegis Get Help</h2><p>Captures manual user context and links recent Aegis Flow evidence where available.</p></article></template>
+<template>
+    <article class="card" aria-label="Aegis Get Help" aria-busy={isLoading}>
+        <h2>Aegis Get Help</h2>
+        <p>Describe the issue to capture the current Salesforce context and request diagnostic assistance.</p>
+        <lightning-input label="Related diagnostic reference (optional)" value={correlationId} onchange={handleReference} disabled={isLoading}></lightning-input>
+        <lightning-textarea label="Describe the task or issue" value={description} onchange={handleDescription} disabled={isLoading} required></lightning-textarea>
+        <template if:false={sessionId}><lightning-button label="Create diagnostic session" variant="brand" onclick={start} disabled={startDisabled} class="slds-var-m-top_medium"></lightning-button></template>
+        <template if:true={isLoading}><lightning-spinner size="small" alternative-text="Processing diagnostic request"></lightning-spinner></template>
+        <template if:true={error}><p class="slds-text-color_error slds-var-m-top_small" role="alert">{error}</p></template>
+        <template if:true={message}><p role="status" class="slds-var-m-top_medium">{message}</p></template>
+        <template if:true={sessionId}>
+            <p class="slds-var-m-top_small">Session reference: {sessionReference}</p>
+            <template if:true={summary}><h3 class="slds-text-heading_small slds-var-m-top_medium">Diagnosis</h3><p>{summary}</p><p class="slds-var-m-top_small">Recommended action: {recommendation}</p></template>
+            <lightning-button label="Analyze captured context" onclick={diagnose} disabled={sessionActionsDisabled} class="slds-var-m-top_medium"></lightning-button>
+            <lightning-input type="checkbox" label="I confirm sending this diagnostic evidence to the configured technical team." checked={confirmed} onchange={handleConfirmation} disabled={isLoading} class="slds-var-m-top_medium"></lightning-input>
+            <lightning-button label="Send governed report" variant="brand" onclick={send} disabled={sendDisabled} class="slds-var-m-top_small"></lightning-button>
+            <lightning-button label="Start a new session" onclick={resetSession} disabled={isLoading} class="slds-var-m-left_x-small"></lightning-button>
+        </template>
+    </article>
+</template>

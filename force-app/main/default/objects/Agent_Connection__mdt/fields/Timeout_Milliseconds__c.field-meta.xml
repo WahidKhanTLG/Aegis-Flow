@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Timeout_Milliseconds__c</fullName>
+    <defaultValue>15000</defaultValue>
+    <description>Message timeout, bounded by Apex to 1000-20000 milliseconds. Session creation and cleanup use at most 5000 milliseconds.</description>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Timeout Milliseconds</label>
+    <precision>5</precision>
+    <scale>0</scale>
+    <type>Number</type>
+</CustomField>
