@@ -106,9 +106,11 @@ contracts, unsafe namespace bindings and staging transformations. `npm run test:
 exercises refusal, traversal/symlink, isolation and source-preservation behavior. Neither
 command creates a package, accesses a Salesforce org or proves namespaced compilation.
 
-Final Apex compilation/runtime, rendered browser/mobile, live load/concurrency, actual
-provider delivery, and customer pilot acceptance remain in the product tracker. Local
-LWC syntax checks and Jest do not replace those tests.
+Current unmanaged Apex compilation and regression pass the separately authorized
+571-component / 311-test check-only review. Actual namespaced build/install, rendered
+browser/mobile, live load/concurrency, provider delivery and customer pilot acceptance
+remain in the [product tracker](PRODUCT_PLAN_AND_TRACKER.md). Local LWC syntax checks
+and Jest do not replace those environment tests.
 
 ## Primary tool references
 

@@ -9,7 +9,7 @@ refer to retained private engineering records; the current public verification s
 | Inventory | Current state |
 | --- | --- |
 | Current product features | 55 implemented entries across ten areas |
-| Release tasks | 25 total; seven Done, nine Prepared, two In progress, six Pending, one Awaiting hosted run |
+| Release tasks | 25 total; eight Done, nine Prepared, one In progress, six Pending, one Awaiting hosted run |
 | Local packaging-development tasks | All seven complete; actual namespace/build/install work remains |
 | Optional integrations | Seven awaiting approved setup and live acceptance |
 | Commercial work | COM-01 prepared for team environment binding; six other decision-dependent items |
@@ -149,7 +149,15 @@ These eight fixes strengthen the features above; they are not eight additional p
 | FIX-07 | Long grouping keys losing distinguishing fields | Complete inputs hashed; runtime object distinction passed | Representative customer grouping |
 | FIX-08 | Duration reporting using modification time | Protected lifecycle timestamps and formulas; null/known/reopened cases passed | Final dashboard/rendered acceptance |
 
-Dependency tooling was a separate audit finding. The November 7 checkpoint left 12 low entries, and the REL-20 setup added six moderate entries. REL-21 clears all six moderate minimatch entries with a tested override; the current product audit reports **12 low and zero moderate/high/critical**. The 12 remaining package entries share one deepmerge advisory. Its three reproduced setter-based cases are contained in guarded test entry points, with four new regression tests; the library remains unpatched. The separate ESLint 9 support gap also remains open under REL-21. E20/E22 record the exact findings and closure conditions. REL-22 separately reviewed the unchanged global CLI: 16 root-advisory matches, including seven high. E29 clears all six high and seven moderate root advisories. E31 resolves the final two: the fresh isolated candidate reports zero findings across 844 instances and passes both audit gates. E33 completes CLI-01 local release-use qualification for the exact restricted nonproduction scope; actual target acceptance and authority remain separate. The candidate and global installation are unchanged by that review. Global, isolated CLI and product counts describe separate graphs and must not be combined. No risk exception has been accepted.
+The current project dependency review is **Done (REL-21/E43)**. Both the root and isolated
+lint dependency trees report zero findings at every severity. The earlier six moderate
+minimatch and 12 low deepmerge-chain entries are resolved by the tested override, owned
+source-backed deepmerge security replacement and maintained isolated lint runtime with
+qualified Salesforce rule ports. Historical E20/E22 findings remain in their dated evidence;
+they are not current open findings. The isolated CLI candidate separately reports zero
+findings across 844 instances and is qualified only for its recorded restricted scope.
+The global installation is unchanged and remains unqualified. These are separate graphs;
+no upstream-support claim, advisory suppression or production risk exception is made.
 
 
 ## Release execution backlog
@@ -164,7 +172,7 @@ This backlog covers the existing product, not all optional or proposed features.
 | REL-01 | Establish this master feature/release tracker | Done | Current, optional, commercial, and proposed scope separated; stable IDs, task counts, and evidence recorded | Engineering; this file |
 | REL-02 | Freeze and verify the local planning baseline | Done | 106 deployment fingerprints match; source census, HEAD, and dirty-tree inventory captured in E06 | Engineering |
 | REL-03 | Review the complete uncommitted diff and define the release file allowlist | Done | All 74 files reviewed/classified: 63 proposed Git inclusions, 11 local-only snapshots/QA exclusions. No new blocking regression identified; local manifest conversion includes ten new fields/trigger and excludes QA fixtures. HEAD/index/source hashes unchanged; E16/E17. Existing acceptance gates remain open. | Engineering; REL-02 |
-| REL-04 | Commit the reviewed development hardening | In progress | Concrete reviewed file set committed with preserved history; exact commit recorded; explicit commit instruction in scope | Engineering; REL-03 |
+| REL-04 | Commit the exact reviewed source | Done | 214 reviewed paths committed and pushed on release/aegis-flow-reviewed-2026-11-10; 12 local-only exclusions preserved. Main merge and hosted acceptance remain separate. | Engineering |
 | REL-05 | Publish the reviewed commit through the chosen Git review path | In progress | Explicit push/merge instruction; remote commit verified; local and remote delivery state recorded | Engineering/release owner; REL-04 |
 
 ### Workstream 2 — Final regression and user acceptance
