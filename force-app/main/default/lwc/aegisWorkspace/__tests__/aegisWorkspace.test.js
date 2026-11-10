@@ -5,6 +5,7 @@ import prepareProposal from '@salesforce/apex/AEIR_RemediationController.prepare
 import executeRemediation from '@salesforce/apex/AEIR_RemediationController.executeRemediation';
 import collectForError from '@salesforce/apex/AEIR_LogCollectorService.collectForError';
 import { CurrentPageReference } from 'lightning/navigation';
+jest.mock('@salesforce/customPermission/AEIR_Execute_Remediation',()=>({default:true}),{virtual:true});
 jest.mock('@salesforce/apex/AEIR_RemediationController.getAvailableActions',()=>({default:jest.fn()}),{virtual:true});
 jest.mock('@salesforce/apex/AEIR_RemediationController.prepareProposal',()=>({default:jest.fn()}),{virtual:true});
 jest.mock('@salesforce/apex/AEIR_RemediationController.executeRemediation',()=>({default:jest.fn()}),{virtual:true});

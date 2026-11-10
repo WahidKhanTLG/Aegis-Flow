@@ -50,4 +50,20 @@ describe('c-aegis-escalation-confirmation', () => {
         expect(element.shadowRoot.querySelector('[role="alert"]').textContent).toContain('Not authorized');
         expect(escalateAlert).not.toHaveBeenCalled();
     });
+    it('requires a new confirmation after the user types a different reference', async () => {
+        getAlertDetails.mockResolvedValue({ canEscalate: true, errorLog: { normalizedMessage: 'Authorized diagnostic' } });
+        const element = mount();
+        await flush();
+        const inputs = [...element.shadowRoot.querySelectorAll('lightning-input')];
+        const checkbox = inputs.find(input => input.type === 'checkbox');
+        checkbox.checked = true;
+        checkbox.dispatchEvent(new CustomEvent('change'));
+        await flush();
+        inputs.find(input => input.type !== 'checkbox').dispatchEvent(new CustomEvent('change', { detail: { value: '  ESC-NEW  ' } }));
+        await flush();
+        expect(getAlertDetails).toHaveBeenLastCalledWith({ correlationId: 'ESC-NEW' });
+        const send = [...element.shadowRoot.querySelectorAll('lightning-button')].find(item => item.label === 'Confirm and send escalation');
+        expect(send.disabled).toBe(true);
+        expect(escalateAlert).not.toHaveBeenCalled();
+    });
 });

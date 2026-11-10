@@ -2,10 +2,10 @@
 
 ## Development deployment
 
-The November 3 deployment targets the verified Aegis development org under
+The November 7 focused hardening deployment targets the verified Aegis development org under
 `SyncBridge-Product`. The release manifest excludes the two original QA Opportunity Flows;
 the separate `qa/approved-flow-retry` project is not a product dependency. See the
-[dated verification record](../output/development/2026-11-03/verification.json) for actual
+[deployment record](../output/development/2026-11-07/hardening-deployment/verification.json) for actual
 configuration and acceptance. Keep environment settings separate from portable defaults.
 
 Assign role-specific permission sets. Headless clients need `AEIR_Headless_User` plus an
@@ -30,6 +30,45 @@ probe do not by themselves establish committed event delivery.
 The development overlay enables AUTO_DIAGNOSIS and GOVERNED_REMEDIATION. The generic source
 keeps both disabled for deliberate installation. Apply the intended overlay after a release;
 do not assume deploying portable defaults preserves a customer's enabled feature settings.
+
+## Deployed development hardening
+
+The development P1/P2 patch was deployed with 211 passing Apex tests. It adds four cursor fields owned by the service on
+`Aegis_Org_Setting__c`, server-owned transition times and duration formulas on `Error_Log__c`,
+and a unique request key/delivery claim on `Developer_Escalation__c`. The release manifest
+includes these fields through their parent objects. It adds a record lifecycle trigger;
+that trigger is not a platform-event subscriber and needs no subscriber configuration.
+
+Keep the existing monitor schedules. Cursor progress is persisted per monitor and cleared
+only at the end of its sweep. Budget 200 interviews/100 completed failed jobs per scheduled
+run, and test backlog-drain time at the customer's actual cadence and failure volume.
+Existing onboarding/team settings are preserved. No schedules or running identities are
+changed by the development deployment.
+
+The End User permission set explicitly revokes Read/Create on
+`Diagnostic_Session_Requested__e`; review other profiles/permission sets for independently
+granted access during later rollout. The subscriber rejects missing publisher identity or
+an affected user different from `CreatedById`. A trusted publisher may omit `User_Id__c` to
+use its own identity. Ordinary users use Help Me, which binds the current user server-side.
+On-behalf-of integrations must use an explicitly authorized server adapter rather than
+spoofing an event's affected user.
+
+The deployed End User permission set no longer has an internal-session event grant. Six
+post-deployment methods verified the real committed roles under standard-user profiles,
+including Help Me and protected fields; no replacement role metadata was included. The
+existing administrator also retains multiple elevated roles, so its effective access is
+not representative of an ordinary End User. Review independent grants in each customer org.
+Help Me can create a manual session without error-log read access; optional recent-error
+matching is skipped and unreadable technical evidence is not associated.
+
+An escalation is reused for the same diagnostic source and resolved route. Drafts can be
+sent once; subsequent requests do not resend failed/uncertain deliveries. Existing delivery
+audits also suppress automatic replay of legacy attempts. Do not delete or rewrite request
+keys to force a resend. Reconcile the actual delivery and use a separately governed retry.
+
+Unknown legacy diagnosis/resolution times are excluded from averages; API consumers must
+handle null rather than interpreting it as zero minutes. The patch does not backfill
+business records or rewrite historical incident groups.
 
 ## Escalation routing
 

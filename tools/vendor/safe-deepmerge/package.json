@@ -1,0 +1,20 @@
+{
+  "name": "@aegis-flow/safe-deepmerge",
+  "version": "4.3.1",
+  "private": true,
+  "description": "Explicit security fork of deepmerge 4.3.1; blocks __proto__ on both operands",
+  "license": "MIT",
+  "main": "index.cjs",
+  "types": "index.d.ts",
+  "files": [
+    "index.cjs",
+    "index.d.ts",
+    "license.txt"
+  ],
+  "aegisSecurityFork": {
+    "upstream": "deepmerge@4.3.1",
+    "advisory": "GHSA-gcqx-w48m-w2h4",
+    "upstreamEntrySha256": "2e5160f84a1141bd927264afe4d15766f1e6cf07daef182b37ff53fea121de7d",
+    "patch": "Reject __proto__ before copying target keys and before merging source keys. No advisory threshold or ignore rule changed."
+  }
+}

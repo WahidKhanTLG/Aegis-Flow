@@ -174,8 +174,8 @@ private class AEIR_ConfigAndRoutingTest {
         System.assertEquals(1, m.affectedUsers, 'One distinct user was affected.');
         System.assert(m.recurringIncidents >= 1, 'Five occurrences exceed the recurrence threshold.');
         System.assert(m.unresolvedCriticalIncidents >= 1, 'The Critical incident must be reported as unresolved.');
-        System.assertNotEquals(null, m.meanMinutesToDiagnosis);
-        System.assertNotEquals(null, m.meanMinutesToResolution);
+        System.assertEquals(null, m.meanMinutesToDiagnosis, 'No diagnosed transitions means timing is unknown, not zero.');
+        System.assertEquals(null, m.meanMinutesToResolution, 'Unresolved rows provide no resolution timing.');
         System.assertNotEquals(null, m.retrySuccessRate);
         System.assertNotEquals(null, m.assistedResolutions);
         System.assertNotEquals(null, m.automaticallyResolved);

@@ -14,7 +14,8 @@ export default class AegisEscalationConfirmation extends LightningElement {
 
     @api
     get correlationId() { return this._correlationId; }
-    set correlationId(value) {
+    set correlationId(value) { this.updateReference(value); }
+    updateReference(value) {
         this._correlationId = value ? String(value).trim() : '';
         if (this.isConnected) this.refresh();
     }
@@ -27,7 +28,7 @@ export default class AegisEscalationConfirmation extends LightningElement {
     get deliveryStatus() { return this.result ? this.result.status || 'Pending' : ''; }
     get deliveryChannel() { return this.result ? this.result.channel || 'Configured route' : ''; }
     get resultReference() { return this.result ? this.result.subject || this.result.escalationId : ''; }
-    handleReference(event) { this.correlationId = event.detail.value; }
+    handleReference(event) { this.updateReference(event.detail.value); }
     handleConfirmation(event) { this.confirmed = event.target.checked; }
 
     @api

@@ -5,25 +5,27 @@
  * a record snapshot - so it hit the SOQL limit at 25 requests in a single Flow batch. All
  * four are now resolved for the whole batch up front.
  */
-public with sharing class AEIR_GetErrorContextAction {
+global with sharing class AEIR_GetErrorContextAction {
     private static final Integer MAX_REQUESTS = 200;
     private static final Integer MAX_SNAPSHOT_OBJECTS = 20;
 
-    public class Request {
-        @InvocableVariable(required=true) public String errorLogId;
-        public Request() {}
+    global class Request {
+        global Request() {}
+        @InvocableVariable(required=true) global String errorLogId;
+
     }
 
-    public class Response {
-        @InvocableVariable public String correlationId;
-        @InvocableVariable public String contextJson;
-        @InvocableVariable public String message;
-        public Response() {}
+    global class Response {
+        global Response() {}
+        @InvocableVariable global String correlationId;
+        @InvocableVariable global String contextJson;
+        @InvocableVariable global String message;
+
     }
 
-    @InvocableMethod(label='Aegis Flow: Get Error Context'
+    @InvocableMethod(category='Aegis Flow' label='Aegis Flow: Get Error Context'
         description='Returns a sanitized diagnostic payload for an approved Agentforce action.')
-    public static List<Response> run(List<Request> requests) {
+    global static List<Response> run(List<Request> requests) {
         List<Response> output = new List<Response>();
         if (requests == null || requests.isEmpty()) return output;
 

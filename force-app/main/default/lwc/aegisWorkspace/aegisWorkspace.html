@@ -27,6 +27,7 @@
                     <template if:true={hasContext}><c-aegis-ui-save-capture record-id={activeRecordId} object-api-name={activeObjectApiName}></c-aegis-ui-save-capture></template>
                     <template if:false={hasContext}><p>Select a record Id and object API name first.</p></template>
                 </lightning-tab>
+                <template if:true={canPrepareCorrections}>
                 <lightning-tab label="Prepare a correction">
                     <p>Choose an active registered field correction and supply the proposed value. Preparing reads the current value and makes no change. The confirmation step rechecks authorization, feature settings and the whitelist.</p>
                     <template if:true={hasActions}>
@@ -41,14 +42,15 @@
                     <template if:true={actionError}><p role="alert" class="slds-text-color_error slds-var-m-top_small">{actionError}</p></template>
                     <template if:true={proposal}><c-aegis-remediation-confirmation proposal={proposal} record-id={activeRecordId} correlation-id={correlationId} onexecutionstatechange={handleExecutionState}></c-aegis-remediation-confirmation></template>
                 </lightning-tab>
+                </template>
                 <lightning-tab label="Escalate and review">
                     <c-aegis-escalation-confirmation record-id={activeRecordId} correlation-id={correlationId}></c-aegis-escalation-confirmation>
-                    <lightning-record-picker label="Existing developer escalation package" object-api-name="Developer_Escalation__c" onchange={selectEscalation}></lightning-record-picker>
+                    <lightning-record-picker label="Existing developer escalation package" object-api-name={escalationObject} onchange={selectEscalation}></lightning-record-picker>
                     <template if:true={escalationRecordId}><c-developer-escalation-viewer record-id={escalationRecordId}></c-developer-escalation-viewer></template>
                 </lightning-tab>
                 <lightning-tab label="Authorized debug log">
                     <p>Choose a captured error to locate its linked debug log. Body retrieval requires sensitive-context access and an administrator-configured same-org connection. A linked reference alone does not mean the log body was retrieved.</p>
-                    <lightning-record-picker label="Captured error for debug-log evidence" object-api-name="Error_Log__c" onchange={selectError}></lightning-record-picker>
+                    <lightning-record-picker label="Captured error for debug-log evidence" object-api-name={errorLogObject} onchange={selectError}></lightning-record-picker>
                     <lightning-button label="Retrieve authorized log evidence" onclick={collectLog} disabled={collectDisabled} class="slds-var-m-top_small"></lightning-button>
                     <lightning-button label="Clear debug-log evidence" onclick={clearLogBody} class="slds-var-m-left_small"></lightning-button>
                     <template if:true={isCollecting}><lightning-spinner size="small" alternative-text="Retrieving authorized debug-log evidence"></lightning-spinner></template>

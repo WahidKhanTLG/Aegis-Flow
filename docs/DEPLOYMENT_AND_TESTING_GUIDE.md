@@ -1,5 +1,11 @@
 # Aegis Flow Deployment and Testing Guide
 
+**Current release preparation:** Start with the [acceptance plan](RELEASE_ACCEPTANCE_PLAN.md),
+[rollback runbook](ROLLBACK_RUNBOOK.md) and [CLI qualification gate](RELEASE_TOOLCHAIN_REVIEW.md).
+The generic authentication/deployment examples below are not a release authorization or
+evidence of current target identity. Use the exact reviewed artifact/manifest and qualified
+tool, preserve the target overlay, and select the action scope before any org operation.
+
 This guide describes the exact steps to deploy and test the Agentic Error Intelligence and Recovery package in a Salesforce sandbox or production org.
 
 ## 1. Prerequisites

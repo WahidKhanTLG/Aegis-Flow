@@ -1,5 +1,13 @@
 # Aegis Flow — QA Test Plan
 
+**November 9 preparation note:** This plan retains historical environment-specific cases.
+Its old flag states, recipients, live fixtures and timing assumptions are not a current
+environment snapshot or permission to send messages. Optional connectors now have code
+but require their own setup and acceptance. Use the current
+[release acceptance plan](RELEASE_ACCEPTANCE_PLAN.md) and its 17 bounded cases, target
+profile and evidence template before reusing any scenario below. No current org acceptance
+is claimed by this local preparation.
+
 **Org:** `Aegis Flow_WA_Dev` (`00DgL00000YDvsvUAD`)
 **Prepared:** 2026-07-29
 **Scope:** Lead, Contact, Opportunity, Order

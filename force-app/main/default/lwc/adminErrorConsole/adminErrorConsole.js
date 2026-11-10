@@ -1,3 +1,7 @@
+import STATUS_FIELD from '@salesforce/schema/Error_Log__c.Status__c';
+import SOURCE_FIELD from '@salesforce/schema/Error_Log__c.Source_Type__c';
+import CATEGORY_FIELD from '@salesforce/schema/Error_Log__c.Error_Category__c';
+import SEVERITY_FIELD from '@salesforce/schema/Error_Log__c.Severity__c';
 import { LightningElement, wire } from 'lwc';
 import { refreshApex } from '@salesforce/apex';
 import AEGIS_LOGO from '@salesforce/resourceUrl/AegisFlowLogo';
@@ -16,10 +20,10 @@ export default class AdminErrorConsole extends LightningElement {
     metricsError;
     columns = [
         { label: 'Reference', fieldName: 'recordUrl', type: 'url', typeAttributes: { label: { fieldName: 'Name' }, target: '_blank' }, initialWidth: 130 },
-        { label: 'Severity', fieldName: 'Severity__c', initialWidth: 105 },
-        { label: 'Category', fieldName: 'Error_Category__c' },
-        { label: 'Source', fieldName: 'Source_Type__c', initialWidth: 120 },
-        { label: 'Status', fieldName: 'Status__c', initialWidth: 135 },
+        { label: 'Severity', fieldName: SEVERITY_FIELD.fieldApiName, initialWidth: 105 },
+        { label: 'Category', fieldName: CATEGORY_FIELD.fieldApiName },
+        { label: 'Source', fieldName: SOURCE_FIELD.fieldApiName, initialWidth: 120 },
+        { label: 'Status', fieldName: STATUS_FIELD.fieldApiName, initialWidth: 135 },
         { label: 'Captured', fieldName: 'CreatedDate', type: 'date', typeAttributes: { year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit' }, initialWidth: 180 }
     ];
 

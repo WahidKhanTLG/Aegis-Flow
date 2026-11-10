@@ -17,6 +17,7 @@ public without sharing class AEIR_ErrorCaptureService {
     }
     public class CaptureResult {
         @AuraEnabled public Boolean success;
+        public Boolean retryable = false;
         @AuraEnabled public Id errorLogId;
         @AuraEnabled public String correlationId;
         @AuraEnabled public String status;
@@ -87,6 +88,7 @@ public without sharing class AEIR_ErrorCaptureService {
         List<PublishResult> output = new List<PublishResult>();
         if (inputs == null || inputs.isEmpty()) return output;
         List<Error_Captured__e> events = new List<Error_Captured__e>();
+        Map<String, String> correlationsByUuid = new Map<String, String>();
         List<Integer> positions = new List<Integer>();
         for (Integer i = 0; i < inputs.size(); i++) {
             ErrorInput input = inputs[i] == null ? new ErrorInput() : inputs[i];
@@ -97,27 +99,28 @@ public without sharing class AEIR_ErrorCaptureService {
                 String cid = normalizeCorrelationId(input.correlationId);
                 input.correlationId = cid;
                 result.correlationId = cid;
-                events.add(new Error_Captured__e(
-                    Correlation_Id__c = cid,
-                    Source_Type__c = String.isBlank(input.sourceType) ? 'Unknown' : input.sourceType,
-                    Source_Name__c = input.sourceName,
-                    Error_Message__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.originalMessage), 32000),
-                    Record_Id__c = input.recordId,
-                    Object_API_Name__c = input.objectApiName,
-                    User_Id__c = validUserId(input.userId) ? input.userId : UserInfo.getUserId(),
-                    Context_JSON__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.contextJson), 32000),
-                    Severity__c = input.severity,
-                    Stack_Trace__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.stackTrace), 32000),
-                    Action_Name__c = input.actionName,
-                    Page_URL__c = AEIR_SecuritySanitizerService.mask(input.pageUrl)
-                ));
+                Error_Captured__e event = (Error_Captured__e)Error_Captured__e.SObjectType.newSObject(null, true);
+                event.Correlation_Id__c = cid;
+                event.Source_Type__c = String.isBlank(input.sourceType) ? 'Unknown' : input.sourceType;
+                event.Source_Name__c = input.sourceName;
+                event.Error_Message__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.originalMessage), 32000);
+                event.Record_Id__c = input.recordId;
+                event.Object_API_Name__c = input.objectApiName;
+                event.User_Id__c = validUserId(input.userId) ? input.userId : UserInfo.getUserId();
+                event.Context_JSON__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.contextJson), 32000);
+                event.Severity__c = input.severity;
+                event.Stack_Trace__c = AEIR_SecuritySanitizerService.safeTruncate(AEIR_SecuritySanitizerService.mask(input.stackTrace), 32000);
+                event.Action_Name__c = input.actionName;
+                event.Page_URL__c = AEIR_SecuritySanitizerService.mask(input.pageUrl);
+                events.add(event);
+                correlationsByUuid.put(event.EventUuid, cid);
                 positions.add(i);
             } catch (Exception invalidInput) {
                 result.message = AEIR_SecuritySanitizerService.mask(invalidInput.getMessage());
             }
         }
         if (!events.isEmpty()) {
-            List<Database.SaveResult> saveResults = EventBus.publish(events);
+            List<Database.SaveResult> saveResults = EventBus.publish(events, new AEIR_CapturePublishCallback(correlationsByUuid));
             for (Integer i = 0; i < saveResults.size(); i++) {
                 PublishResult result = output[positions[i]];
                 result.success = saveResults[i].isSuccess();
@@ -209,6 +212,10 @@ public without sharing class AEIR_ErrorCaptureService {
                     result = resultFromLog(log, true, 'Diagnostic captured from platform event.');
                 } else {
                     result = failedCapture(input.correlationId, firstError(sr.getErrors()));
+                    for (Database.Error error : sr.getErrors()) {
+                        String code = String.valueOf(error.getStatusCode());
+                        if (code == 'UNABLE_TO_LOCK_ROW' || code == 'SERVER_UNAVAILABLE') result.retryable = true;
+                    }
                 }
                 resultByCorrelation.put(input.correlationId.toLowerCase(), result);
             }

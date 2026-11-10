@@ -84,8 +84,19 @@ export function validateInstance(instanceUrl) {
     return url.origin;
 }
 
+/** Empty is the unmanaged route. Namespace is explicit configuration, never an org alias. */
+export function validatePackageNamespace(value = '') {
+    if (typeof value !== 'string' || (value !== '' &&
+        (!/^[A-Za-z][A-Za-z0-9_]{0,14}$/.test(value) || value.includes('__')))) {
+        throw new DiagnosticError('Use a registered 1–15 character Salesforce package namespace, or leave it empty for unmanaged development.');
+    }
+    return value;
+}
+
 /** Tokens stay in process memory, never in MCP output or command arguments. */
 export function createSalesforceClient({ env = process.env, fetchImpl = fetch, execImpl = exec } = {}) {
+    const packageNamespace = validatePackageNamespace(env.AEGIS_PACKAGE_NAMESPACE);
+    const apiPrefix = `/services/apexrest/${packageNamespace ? packageNamespace + '/' : ''}aegis-flow/v1/operations/`;
     let cached;
     const cliMode = !env.AEGIS_ACCESS_TOKEN && !env.AEGIS_INSTANCE_URL;
     const validToken = token => typeof token === 'string' && token.length > 0 && token.length <= 8192
@@ -132,7 +143,7 @@ export function createSalesforceClient({ env = process.env, fetchImpl = fetch, e
         const attempts = method === 'GET' && cliMode ? 2 : 1;
         for (let attempt = 0; attempt < attempts; attempt++) {
             const auth = await connection();
-            const url = new URL(`/services/apexrest/aegis-flow/v1/operations/${resource}`, auth.instance);
+            const url = new URL(apiPrefix + resource, auth.instance);
             if (method === 'GET') for (const [key, value] of Object.entries(payload)) url.searchParams.set(key, String(value));
             let response;
             try {

@@ -1,5 +1,5 @@
 <template>
-    <section class="assistant-shell" aria-label="Aegis Flow diagnostic assistant">
+    <section class="assistant-shell" aria-label="Aegis Flow diagnostic assistant" aria-busy={isLoading}>
         <header class="assistant-header">
             <div class="brand">
                 <img src={logoUrl} alt="Aegis Flow logo" />
@@ -20,7 +20,7 @@
                 </div>
                 <div class="privacy-line"><lightning-icon icon-name="utility:shield" size="xx-small" alternative-text="Protected"></lightning-icon> Sensitive values are masked before diagnosis or escalation.</div>
                 <lightning-combobox name="issueType" label="Request type" value={issueType} options={issueTypeOptions} onchange={handleIssueType}></lightning-combobox>
-                <lightning-textarea label="Describe the task or issue" value={description} maxlength="4000" onchange={handleDescription} placeholder="Describe the action, record or process that did not complete." class="field-space"></lightning-textarea>
+                <lightning-textarea label="Describe the task or issue" value={description} maxlength="4000" onchange={handleDescription} disabled={isLoading} placeholder="Describe the action, record or process that did not complete." class="field-space"></lightning-textarea>
                 <button class="primary-action" onclick={startDiagnosis} disabled={isStartDisabled}>
                     <lightning-icon icon-name="utility:search" size="x-small" alternative-text="Start"></lightning-icon>
                     Start secure diagnosis
@@ -41,7 +41,7 @@
                 </div>
 
                 <template if:true={message}>
-                    <div class="notice"><lightning-icon icon-name="utility:info" size="x-small" alternative-text="Information"></lightning-icon><span>{message}</span></div>
+                    <div class="notice" role="status"><lightning-icon icon-name="utility:info" size="x-small" alternative-text="Information"></lightning-icon><span>{message}</span></div>
                 </template>
 
                 <template if:true={agentSummary}>
@@ -53,6 +53,7 @@
 
                 <div class="action-stack">
                     <button class="primary-action" onclick={askAgent} disabled={isLoading}><lightning-icon icon-name="utility:sparkles" size="x-small" alternative-text="Diagnose"></lightning-icon>{diagnoseButtonLabel}</button>
+                    <lightning-input type="checkbox" label="I confirm sending this diagnostic evidence to the configured technical team." checked={confirmed} onchange={handleConfirmation} disabled={confirmationDisabled}></lightning-input>
                     <button class="secondary-action" onclick={sendReport} disabled={isReportDisabled}><lightning-icon icon-name="utility:send" size="x-small" alternative-text="Escalate"></lightning-icon>Send governed report</button>
                     <button class="text-action" onclick={reset} disabled={isLoading}>Start a new session</button>
                 </div>

@@ -55,7 +55,11 @@ global with sharing class AEIR_Guard {
      */
     global static String capture(Exception ex, String sourceName, Id recordId, String objectApiName, String userAction) {
         try {
-            return AEIR_ErrorCaptureService.publish(buildInput(ex, sourceName, recordId, objectApiName, userAction)).correlationId;
+            AEIR_ErrorCaptureService.PublishResult result = AEIR_ErrorCaptureService.publish(
+                buildInput(ex, sourceName, recordId, objectApiName, userAction));
+            if (result != null && result.success == true) return result.correlationId;
+            System.debug(LoggingLevel.WARN, 'Aegis Flow: diagnostic publication was rejected.');
+            return null;
         } catch (Exception instrumentationFailure) {
             // Never let observability break the transaction it is observing.
             System.debug(LoggingLevel.WARN,

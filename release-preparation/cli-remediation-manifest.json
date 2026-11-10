@@ -1,0 +1,537 @@
+{
+  "schemaVersion": 1,
+  "preparedAtUtc": "2026-11-09T10:38:50.338954+00:00",
+  "cliVersion": "2.157.8",
+  "candidateKind": "Locally hardened isolated derivative with high and moderate dependency remediation; not an official Salesforce distribution",
+  "baseOfficialArtifact": {
+    "url": "https://registry.npmjs.org/@salesforce/cli/-/cli-2.157.8.tgz",
+    "integrity": "sha512-/JSOsOvNKAocC1G8VYdAADLcvnqX3/tkdepZXF8/wd3k+pV34/oQSkJyY3yu4Z8aL9qgg1UgFPLHkUoZiOC2fw==",
+    "sha256": "20cf5e179f363f84179c471073aa98915e38da888a137247cac7cb510c33596b",
+    "replayedFileEntries": 33975,
+    "bothExtractedInventoriesMatch": true,
+    "installedPackageManifestInstances": 841,
+    "allInstalledPackageManifestsMatchOfficialPayload": true
+  },
+  "overlayLayers": [
+    {
+      "kind": "Prior high remediation",
+      "packageOverlays": [
+        {
+          "path": "node_modules/brace-expansion",
+          "name": "brace-expansion",
+          "beforeVersion": "2.1.4",
+          "afterVersion": "2.1.7",
+          "url": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-2.1.7.tgz",
+          "integrity": "sha512-uZbew1NqdmPDTMJ8ah1y+b+9QEJrfkXFk3RcTQw3X0jW/xRUvFKsg1CfQdSYGdTbXZWExtU3J3ccxtnfw1Fi0g==",
+          "archiveSha256": "6f4d64fdab4cdc5096d48537f35a6bbb2b8b918abaa4bdb0833e92486f66befc",
+          "beforePackageSha256": "0242781e7c6ed4459649b4aca0903ec03690bde675d2e4636538a5956fc9c542",
+          "afterPackageSha256": "d217a00ed39214d81f5d9999c0c639f147bab438f94589f9a5b96debf57d6e61"
+        },
+        {
+          "path": "node_modules/minimatch/node_modules/brace-expansion",
+          "name": "brace-expansion",
+          "beforeVersion": "5.0.9",
+          "afterVersion": "5.0.12",
+          "url": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.12.tgz",
+          "integrity": "sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==",
+          "archiveSha256": "ef8448ec78f20b692f04fa6d01f39b5ab34c66404bea3429f5a39c6c9e0be8b4",
+          "beforePackageSha256": "f8a0e0d0a6cbb58106ce6832205e0939a00b9583637011bf8ef4167f4a52fbda",
+          "afterPackageSha256": "8af7dc0916002266f3b01459ef691d9f834d8ecdb0e021263280a50b913d85fa"
+        },
+        {
+          "path": "node_modules/protobufjs",
+          "name": "protobufjs",
+          "beforeVersion": "7.5.6",
+          "afterVersion": "7.6.6",
+          "url": "https://registry.npmjs.org/protobufjs/-/protobufjs-7.6.6.tgz",
+          "integrity": "sha512-dYDWdjSl5RNb7SgPxGQcRU+GtvP7s2fpkrY0r432PcOIaZ0/rBcxEZnQN67iJhFuQiVw754JDoPruPCNdGsbjg==",
+          "archiveSha256": "df0241b3046b505d27396da6eef107f14dffb108f77aa89cfd9611a928eb6dfe",
+          "beforePackageSha256": "1c3fcd3753d1a7df000e721326632985b7c9c943a3d754a0f2b67a96f3d2b808",
+          "afterPackageSha256": "0e56b70de03bffc143e74311b42ae22b557370a4a1f4b5066568fbc77857639a"
+        },
+        {
+          "path": "node_modules/npm/node_modules/undici",
+          "name": "undici",
+          "beforeVersion": "6.29.0",
+          "afterVersion": "6.29.1",
+          "url": "https://registry.npmjs.org/undici/-/undici-6.29.1.tgz",
+          "integrity": "sha512-EvRlUt/QqAEvXdQeRMYUfwOQsfzpDztykrG2owGEE/rBOBoYv9uF39ZzsNDh4lTFHhTr2XOZjKkYgueD12ZmGA==",
+          "archiveSha256": "29c4b8e0b2d86cb8795571c1959012ce057a14ecfd34858335f47c31e770a04f",
+          "beforePackageSha256": "0fedea32b64c5efbadeec2c6cacd1b6cbb2fab9535456ef5cde3e6192e078748",
+          "afterPackageSha256": "df5d9c505f8db601e62bf67eb835117985e549cfbbb61c4c1a84c55d57ab3532"
+        },
+        {
+          "path": "node_modules/npm/node_modules/ip-address",
+          "name": "ip-address",
+          "beforeVersion": "10.7.2",
+          "afterVersion": "10.7.6",
+          "url": "https://registry.npmjs.org/ip-address/-/ip-address-10.7.6.tgz",
+          "integrity": "sha512-00LYkM6byILa9eQIx6qoaXCM40xTLd56AZ4vyaPW3YTyb49VZYPo5xsiAq4tuQ54GH4R7gVdYScJ1B7B77PuTg==",
+          "archiveSha256": "d593a65a5ffa85e704ffd4b2c7220d2c5c3ff879264416f694b2a15d124be7ca",
+          "beforePackageSha256": "05ab5d8380317293b7a6eca2b454fb3e08efdb09a89a4f4970132e6adee1973a",
+          "afterPackageSha256": "85f3a7d24c93003623069aa264408cc0802de18b41bc6b311c3e0160b5a8031d"
+        }
+      ],
+      "embeddedBundleOverlay": {
+        "path": "node_modules/o11y/dist/modules/o11y/collectors/collectors.js",
+        "embeddedBeforeVersion": "7.5.6",
+        "embeddedAfterVersion": "7.6.6",
+        "upstreamBundle": "node_modules/protobufjs/dist/light/protobuf.min.js",
+        "oldWrapperReproducedExceptCompileTimestamp": true,
+        "oldUpstreamBundleSha256": "74b72697590743674a762329ccdf64d969f819bd94f5d2a6d63f4e8a1ed138f3",
+        "newUpstreamBundleSha256": "b4f1c5131528ae8bccb8487bd0e78b34e330d4d2222356b46abcf2e341f3df6c",
+        "beforeSha256": "9a8bf98fba54132c899d83d074378db193849a182758ca7e93f3765bb711ad51",
+        "afterSha256": "3abdb3a410d065d26aa0f7a8e1d0737a29f0ac3cd870ea8d7698fb2e0a118594",
+        "untouchedCollectorSuffixSha256": "76bcde35e1c342d6cbfa3b9c3c0e08ad062d9fe43607b25006e6705f2a1fc8e2",
+        "transformations": [
+          "Capture the bundle in the same private __protobufjs variable instead of global/AMD/CommonJS exports.",
+          "Keep the vendor browser-buffer setting: Buffer=null.",
+          "Preserve the complete upstream light-library body, license, and all collector code after the bundle."
+        ],
+        "globalOrAmdExportAdded": false,
+        "collectorImplementationChanged": false,
+        "vendorPackageManifestChanged": false
+      },
+      "vendorPinDeviation": {
+        "package": "protobufjs",
+        "consumer": "o11y@264.26.0",
+        "declaredPin": "7.5.6",
+        "replacement": "7.6.6",
+        "decision": "Isolated same-major pin override passed bounded security, schema/collector encoding, offline command, and conversion checks on both maintained runtimes; vendor support is not claimed.",
+        "vendorParentUpdateAvailable": false,
+        "officialVendorSupportClaimed": false,
+        "securityRiskExceptionAccepted": false,
+        "allOtherConsumerRangesSatisfied": true,
+        "all13ReplacementDependencyRequirementsSatisfied": true,
+        "compatibilityAndSecurityChecksPassed": true
+      },
+      "resolvedDependencyRequirements": {
+        "directConsumerRequirements": 6,
+        "satisfiedDirectConsumerRanges": 5,
+        "explicitlyOverriddenExactPins": 1,
+        "replacementDependencyRequirements": 13,
+        "allReplacementDependenciesSatisfiedWithoutAdditionalInstalls": true,
+        "fullVendorPeerGraphCertificationClaimed": false
+      },
+      "replay": {
+        "candidateFileEntries": 34037,
+        "candidateCanonicalInventorySha256": "0c9b31f87a246440c6146d0aff34b2a51a4042b914caf9cf00716002da5422ec",
+        "fileHashesLinksAndModesMatchReplay": true,
+        "changedAddedOrRemovedFileEntries": 125,
+        "allOtherFilesLinksAndModesUnchanged": true
+      }
+    },
+    {
+      "kind": "Coordinated minimatch/glob/path-scurry migration",
+      "baselineCanonicalInventorySha256": "0c9b31f87a246440c6146d0aff34b2a51a4042b914caf9cf00716002da5422ec",
+      "publishedPackagePayloads": [
+        {
+          "name": "minimatch",
+          "version": "11.0.5",
+          "url": "https://registry.npmjs.org/minimatch/-/minimatch-11.0.5.tgz",
+          "integrity": "sha512-snPlVppFcYWfLLFQGhDxUyBcHNtMlWmn3jtj7pEaO+DP8pqL0IvAzXhMYmn1z9ASNtgmwLBdFxSf4tMUB0OTKA==",
+          "archiveSha256": "13395bc4de3506f27bd162bf37213bb4b44b5c8dd0bd5d360652a8fb0a82febf",
+          "packageManifestSha256": "0b5a1fdcbd7aa6905e5c56d1c50de03d52fa1dbd1ed48d62d4c2eb0675b4d43b",
+          "dependencies": {
+            "@isaacs/nonrecursive-glob-match": "^1.1.0",
+            "brace-expansion": "^5.0.12"
+          },
+          "engines": {
+            "node": "20 || >=22"
+          }
+        },
+        {
+          "name": "glob",
+          "version": "14.0.4",
+          "url": "https://registry.npmjs.org/glob/-/glob-14.0.4.tgz",
+          "integrity": "sha512-mMiwNKoJZ4HAIRVJxotO6LsNRReA30gQwP9E2/p94tfLv+jygCNpKDjhhSL6OLY6LE371EZm5EAf7RpYuUqlsw==",
+          "archiveSha256": "22a4f77acd57890859cf16aaa5412790b4fc1282a727034a7c9274dc4cc5690c",
+          "packageManifestSha256": "bc2d9152d5f4721fe778b2e33570b06695081e973f78a7aba5a2eab2051e7bc0",
+          "dependencies": {
+            "minimatch": "^11.0.5",
+            "minipass": "^7.1.3",
+            "path-scurry": "^3.0.0"
+          },
+          "engines": {
+            "node": "18 || 20 || >=22"
+          }
+        },
+        {
+          "name": "path-scurry",
+          "version": "3.0.0",
+          "url": "https://registry.npmjs.org/path-scurry/-/path-scurry-3.0.0.tgz",
+          "integrity": "sha512-1pTbQqH1wIwMi/eleQ5leFTTCkzFsPcgXNjwOA8YGGW/W4/kHT3dssE7Z6NH+zuqNLOzOB0uaD61yl7cAcVhgg==",
+          "archiveSha256": "28d5862f70595973f00d63bb219083d6ed7a28488685a73a1c3340ba55688675",
+          "packageManifestSha256": "74862badb890fd4ce50af0048f17ffd5ce23f28e998a68134917cb1dce20f3cc",
+          "dependencies": {
+            "lru-cache": "^11.0.0",
+            "minipass": "^7.1.2"
+          },
+          "engines": {
+            "node": "18 || 20 || >=22"
+          }
+        },
+        {
+          "name": "@isaacs/nonrecursive-glob-match",
+          "version": "1.1.0",
+          "url": "https://registry.npmjs.org/@isaacs/nonrecursive-glob-match/-/nonrecursive-glob-match-1.1.0.tgz",
+          "integrity": "sha512-GPm/Dbvk5RLmhRnxXIa7nTpK0xtl4E0wj0MslsuNiJ1FIROU+2+9lgUC/dgF7Ey4QCWhfEsgxilMRMCdHPfDfw==",
+          "archiveSha256": "d8eab172188bcaa83b950160fcd7c0b9dc68f44f7c470660e5d7f4c8a437d658",
+          "packageManifestSha256": "8c5a050303b8ac93b506cbd1e67cc8e1a77b331b8fb16309581f4e4c97b20f60",
+          "dependencies": {},
+          "engines": {}
+        },
+        {
+          "name": "brace-expansion",
+          "version": "5.0.12",
+          "url": "https://registry.npmjs.org/brace-expansion/-/brace-expansion-5.0.12.tgz",
+          "integrity": "sha512-YovQ3rzhaLMIrDjNDMkNS01tea93qhEhG5xy8f6+R0l+dw3Ki+5sCoIoI942iuLZTHWogWktgwVDhU09iNEimQ==",
+          "archiveSha256": "ef8448ec78f20b692f04fa6d01f39b5ab34c66404bea3429f5a39c6c9e0be8b4",
+          "packageManifestSha256": "8af7dc0916002266f3b01459ef691d9f834d8ecdb0e021263280a50b913d85fa",
+          "dependencies": {
+            "balanced-match": "^4.0.2"
+          },
+          "engines": {
+            "node": "20 || >=22"
+          }
+        },
+        {
+          "name": "balanced-match",
+          "version": "4.0.4",
+          "url": "https://registry.npmjs.org/balanced-match/-/balanced-match-4.0.4.tgz",
+          "integrity": "sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==",
+          "archiveSha256": "9025508d9125eee531bbc49ce3ae560183975ad595f058c378bd56af4152fb16",
+          "packageManifestSha256": "c984e6ae5c41fac085a07a732b665b22e0a26f28b61c692ba18ff458a8ecc95a",
+          "dependencies": {},
+          "engines": {
+            "node": "18 || 20 || >=22"
+          }
+        }
+      ],
+      "overlays": [
+        {
+          "path": "node_modules/minimatch",
+          "package": "minimatch@11.0.5",
+          "beforeVersion": "10.2.6",
+          "beforePackageManifestSha256": "bb847ba240909c9a36d4eaeb4e0efdc3e31182aeef208c1611259a48f282ea75",
+          "afterVersion": "11.0.5",
+          "afterPackageManifestSha256": "0b5a1fdcbd7aa6905e5c56d1c50de03d52fa1dbd1ed48d62d4c2eb0675b4d43b"
+        },
+        {
+          "path": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch",
+          "package": "minimatch@11.0.5",
+          "beforeVersion": "9.0.9",
+          "beforePackageManifestSha256": "07347ae64d38f4cc1be3ffcc83322ec40d4609f5f3e9dc027ae91a4617239ac2",
+          "afterVersion": "11.0.5",
+          "afterPackageManifestSha256": "0b5a1fdcbd7aa6905e5c56d1c50de03d52fa1dbd1ed48d62d4c2eb0675b4d43b"
+        },
+        {
+          "path": "node_modules/npm/node_modules/minimatch",
+          "package": "minimatch@11.0.5",
+          "beforeVersion": "10.2.5",
+          "beforePackageManifestSha256": "4b3a08a7ad20dead8bbe4b4fe97a2746bded7c51d218ef3034eb4e330ad31f08",
+          "afterVersion": "11.0.5",
+          "afterPackageManifestSha256": "0b5a1fdcbd7aa6905e5c56d1c50de03d52fa1dbd1ed48d62d4c2eb0675b4d43b"
+        },
+        {
+          "path": "node_modules/@salesforce/plugin-agent/node_modules/glob",
+          "package": "glob@14.0.4",
+          "beforeVersion": "11.1.0",
+          "beforePackageManifestSha256": "0bab0664a8945f9dd8a123c978fc6369aff29fd218812f0191e54db10b18fa26",
+          "afterVersion": "14.0.4",
+          "afterPackageManifestSha256": "bc2d9152d5f4721fe778b2e33570b06695081e973f78a7aba5a2eab2051e7bc0"
+        },
+        {
+          "path": "node_modules/npm/node_modules/glob",
+          "package": "glob@14.0.4",
+          "beforeVersion": "13.0.6",
+          "beforePackageManifestSha256": "5a28ef9a1f5252feb47ffe288a6350fe99b18311462e6a9cdacbdd0bb4be6be9",
+          "afterVersion": "14.0.4",
+          "afterPackageManifestSha256": "bc2d9152d5f4721fe778b2e33570b06695081e973f78a7aba5a2eab2051e7bc0"
+        },
+        {
+          "path": "node_modules/path-scurry",
+          "package": "path-scurry@3.0.0",
+          "beforeVersion": "2.0.2",
+          "beforePackageManifestSha256": "fb54fe908dbe5f288bd1c5d7429f033c4f527f435c3d3a583ee0ce9e78992087",
+          "afterVersion": "3.0.0",
+          "afterPackageManifestSha256": "74862badb890fd4ce50af0048f17ffd5ce23f28e998a68134917cb1dce20f3cc"
+        },
+        {
+          "path": "node_modules/npm/node_modules/path-scurry",
+          "package": "path-scurry@3.0.0",
+          "beforeVersion": "2.0.2",
+          "beforePackageManifestSha256": "fb54fe908dbe5f288bd1c5d7429f033c4f527f435c3d3a583ee0ce9e78992087",
+          "afterVersion": "3.0.0",
+          "afterPackageManifestSha256": "74862badb890fd4ce50af0048f17ffd5ce23f28e998a68134917cb1dce20f3cc"
+        },
+        {
+          "path": "node_modules/@isaacs/nonrecursive-glob-match",
+          "package": "@isaacs/nonrecursive-glob-match@1.1.0",
+          "beforeVersion": null,
+          "beforePackageManifestSha256": null,
+          "afterVersion": "1.1.0",
+          "afterPackageManifestSha256": "8c5a050303b8ac93b506cbd1e67cc8e1a77b331b8fb16309581f4e4c97b20f60"
+        },
+        {
+          "path": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch/node_modules/brace-expansion",
+          "package": "brace-expansion@5.0.12",
+          "beforeVersion": null,
+          "beforePackageManifestSha256": null,
+          "afterVersion": "5.0.12",
+          "afterPackageManifestSha256": "8af7dc0916002266f3b01459ef691d9f834d8ecdb0e021263280a50b913d85fa"
+        },
+        {
+          "path": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch/node_modules/balanced-match",
+          "package": "balanced-match@4.0.4",
+          "beforeVersion": null,
+          "beforePackageManifestSha256": null,
+          "afterVersion": "4.0.4",
+          "afterPackageManifestSha256": "c984e6ae5c41fac085a07a732b665b22e0a26f28b61c692ba18ff458a8ecc95a"
+        }
+      ],
+      "packageReplacements": 7,
+      "additionalPackageInstances": 3,
+      "replacementDependencyRequirements": 17,
+      "allReplacementDependenciesSatisfied": true,
+      "declaredVendorConsumerRangeOverrides": [
+        {
+          "parent": "npm",
+          "parentVersion": "11.21.1",
+          "path": "node_modules/npm",
+          "dependency": "glob",
+          "declaredRange": "^13.0.6",
+          "baselineVersion": "13.0.6",
+          "candidateVersion": "14.0.4",
+          "resolvedPath": "node_modules/npm/node_modules/glob",
+          "fits": false
+        },
+        {
+          "parent": "npm",
+          "parentVersion": "11.21.1",
+          "path": "node_modules/npm",
+          "dependency": "minimatch",
+          "declaredRange": "^10.2.5",
+          "baselineVersion": "10.2.5",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/npm/node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "@oclif/core",
+          "parentVersion": "5.1.9",
+          "path": "node_modules/@oclif/core",
+          "dependency": "minimatch",
+          "declaredRange": "^10.2.5",
+          "baselineVersion": "10.2.6",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "@salesforce/plugin-agent",
+          "parentVersion": "2.2.3",
+          "path": "node_modules/@salesforce/plugin-agent",
+          "dependency": "glob",
+          "declaredRange": "^11.1.0",
+          "baselineVersion": "11.1.0",
+          "candidateVersion": "14.0.4",
+          "resolvedPath": "node_modules/@salesforce/plugin-agent/node_modules/glob",
+          "fits": false
+        },
+        {
+          "parent": "@salesforce/source-deploy-retrieve",
+          "parentVersion": "13.11.0",
+          "path": "node_modules/@salesforce/source-deploy-retrieve",
+          "dependency": "minimatch",
+          "declaredRange": "^9.0.9",
+          "baselineVersion": "9.0.9",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "cacache",
+          "parentVersion": "20.0.4",
+          "path": "node_modules/npm/node_modules/cacache",
+          "dependency": "glob",
+          "declaredRange": "^13.0.0",
+          "baselineVersion": "13.0.6",
+          "candidateVersion": "14.0.4",
+          "resolvedPath": "node_modules/npm/node_modules/glob",
+          "fits": false
+        },
+        {
+          "parent": "ignore-walk",
+          "parentVersion": "8.0.0",
+          "path": "node_modules/npm/node_modules/ignore-walk",
+          "dependency": "minimatch",
+          "declaredRange": "^10.0.3",
+          "baselineVersion": "10.2.5",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/npm/node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "libnpmdiff",
+          "parentVersion": "8.1.14",
+          "path": "node_modules/npm/node_modules/libnpmdiff",
+          "dependency": "minimatch",
+          "declaredRange": "^10.0.3",
+          "baselineVersion": "10.2.5",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/npm/node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "@npmcli/arborist",
+          "parentVersion": "9.9.3",
+          "path": "node_modules/npm/node_modules/@npmcli/arborist",
+          "dependency": "minimatch",
+          "declaredRange": "^10.0.3",
+          "baselineVersion": "10.2.5",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/npm/node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "@npmcli/map-workspaces",
+          "parentVersion": "5.0.3",
+          "path": "node_modules/npm/node_modules/@npmcli/map-workspaces",
+          "dependency": "glob",
+          "declaredRange": "^13.0.0",
+          "baselineVersion": "13.0.6",
+          "candidateVersion": "14.0.4",
+          "resolvedPath": "node_modules/npm/node_modules/glob",
+          "fits": false
+        },
+        {
+          "parent": "@npmcli/map-workspaces",
+          "parentVersion": "5.0.3",
+          "path": "node_modules/npm/node_modules/@npmcli/map-workspaces",
+          "dependency": "minimatch",
+          "declaredRange": "^10.0.3",
+          "baselineVersion": "10.2.5",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/npm/node_modules/minimatch",
+          "fits": false
+        },
+        {
+          "parent": "@npmcli/package-json",
+          "parentVersion": "7.0.5",
+          "path": "node_modules/npm/node_modules/@npmcli/package-json",
+          "dependency": "glob",
+          "declaredRange": "^13.0.0",
+          "baselineVersion": "13.0.6",
+          "candidateVersion": "14.0.4",
+          "resolvedPath": "node_modules/npm/node_modules/glob",
+          "fits": false
+        },
+        {
+          "parent": "@tufjs/models",
+          "parentVersion": "4.1.0",
+          "path": "node_modules/npm/node_modules/@tufjs/models",
+          "dependency": "minimatch",
+          "declaredRange": "^10.1.1",
+          "baselineVersion": "10.2.5",
+          "candidateVersion": "11.0.5",
+          "resolvedPath": "node_modules/npm/node_modules/minimatch",
+          "fits": false
+        }
+      ],
+      "allUnmodifiedVendorConsumerManifestsPreserved": true,
+      "removedMinimatchApis": [
+        {
+          "path": "node_modules/minimatch",
+          "removedModuleExports": [
+            "makeRe",
+            "AST"
+          ],
+          "removedMinimatchPrototypeMembers": [
+            "debug",
+            "levelTwoFileOptimize",
+            "partsMatch",
+            "matchOne",
+            "makeRe",
+            "slashSplit"
+          ]
+        },
+        {
+          "path": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch",
+          "removedModuleExports": [
+            "makeRe",
+            "AST"
+          ],
+          "removedMinimatchPrototypeMembers": [
+            "debug",
+            "levelTwoFileOptimize",
+            "partsMatch",
+            "matchOne",
+            "makeRe",
+            "slashSplit"
+          ]
+        },
+        {
+          "path": "node_modules/npm/node_modules/minimatch",
+          "removedModuleExports": [
+            "makeRe",
+            "AST"
+          ],
+          "removedMinimatchPrototypeMembers": [
+            "debug",
+            "levelTwoFileOptimize",
+            "partsMatch",
+            "matchOne",
+            "makeRe",
+            "slashSplit"
+          ]
+        }
+      ],
+      "removedApiReview": {
+        "affectedConsumerFilesReviewed": 10,
+        "legacyConsumerFilesReviewed": 1,
+        "confirmedRemovedApiCallsInReviewedAffectedConsumers": 0,
+        "generalOrAdditionalPluginCompatibilityClaimed": false
+      },
+      "replay": {
+        "candidateFileEntries": 34154,
+        "candidateCanonicalInventorySha256": "3f8998228b699c3ac48bdf9e279c0fdd0c380611ae8bfea1b0e1a06e59a2fdf5",
+        "allFileHashesLinksAndModesMatchFreshReplay": true,
+        "changedAddedOrRemovedEntriesFromHighRemediationBaseline": 328,
+        "allOtherBaselineFilesLinksAndModesPreserved": true
+      }
+    }
+  ],
+  "replay": {
+    "replayStartsFromOriginalOfficialCliArchive": true,
+    "officialBaseArchiveSha256": "20cf5e179f363f84179c471073aa98915e38da888a137247cac7cb510c33596b",
+    "highRemediationBaseReconstructedExactly": true,
+    "archivesReverified": {
+      "officialCli": 1,
+      "priorHighRemediation": 5,
+      "moderateRemediation": 6
+    },
+    "candidateFileEntries": 34154,
+    "candidateCanonicalInventorySha256": "3f8998228b699c3ac48bdf9e279c0fdd0c380611ae8bfea1b0e1a06e59a2fdf5",
+    "allFileHashesLinksAndModesMatchFreshReplay": true
+  },
+  "rebuildProcedure": [
+    "Verify and safely extract the exact official base CLI archive using its recorded SHA-512 and SHA-256.",
+    "Apply the five prior high-remediation package overlays in order, preserving nested node_modules and licenses. Reproduce the private embedded protobuf wrapper and verify its unchanged collector suffix.",
+    "Require the complete reconstructed high-remediation inventory to equal its recorded canonical hash.",
+    "Apply the ten moderate-remediation overlay locations in order: seven replacements and three new dependency instances. Preserve existing nested node_modules and parent manifests.",
+    "Require all 34,154 file hashes/links/modes to match the final canonical inventory. Audit the actual tree and run the security, consumer, offline command and conversion checks.",
+    "Do not run lifecycle scripts, change a global CLI, resolve a replacement vendor lock or treat this provenance file as credentialed release authorization."
+  ],
+  "vendorSupportClaimed": false,
+  "securityRiskExceptionAccepted": false,
+  "packageLifecycleScriptsExecuted": false,
+  "globalToolChanged": false,
+  "orgOperationsExecuted": false,
+  "eligibleForCredentialedRelease": true,
+  "constructionScope": "macOS arm64 local verification only; no global install or credentialed/org operation",
+  "eligibilityScope": "Restricted nonproduction validation/Apex-test technical eligibility only; execution authority remains separate",
+  "eligibleForProductionRelease": false,
+  "localReleaseUseReview": "cli-release-use-review.json",
+  "executionAuthorityGranted": false
+}

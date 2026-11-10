@@ -1,5 +1,9 @@
 # Aegis Flow — Session State and Review Plan
 
+**November 10 local update:** See [packaging development handoff](PACKAGING_DEVELOPMENT_HANDOFF.md)
+for the completed namespace/API/tooling/source-staging work and actual environment gates.
+Historical dated deployment/issue sections below are retained, not current packaging clearance.
+
 **Purpose:** durable record of where the implementation actually stands, what was learned the
 hard way, and what still needs doing. Written so that if conversation context is lost, this
 file alone is enough to pick the work back up without re-deriving anything.

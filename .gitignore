@@ -10,3 +10,5 @@ coverage/
 mcp.json
 __pycache__/
 *.py[cod]
+# Abandoned dependency experiment; active locks are root and tools/lint.
+intermediate-package-lock.json

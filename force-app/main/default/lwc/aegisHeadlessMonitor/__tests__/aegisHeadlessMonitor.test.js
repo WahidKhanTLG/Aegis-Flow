@@ -1,3 +1,6 @@
+import ERROR_LOG_OBJECT from '@salesforce/schema/Error_Log__c';
+import ROOT_CAUSE_FIELD from '@salesforce/schema/AI_Diagnosis__c.Root_Cause__c';
+import RECOMMENDED_ACTION_FIELD from '@salesforce/schema/AI_Diagnosis__c.Recommended_Action__c';
 import { createElement } from 'lwc';
 import AegisHeadlessMonitor from 'c/aegisHeadlessMonitor';
 import { __emit, __emitOn, __reset, subscribe, unsubscribe, onError } from 'lightning/empApi';
@@ -82,6 +85,9 @@ jest.mock(
     () => ({ default: jest.fn() }),
     { virtual: true }
 );
+jest.mock('@salesforce/schema/Error_Log__c', () => ({ default: { objectApiName: 'Error_Log__c' } }), { virtual: true });
+jest.mock('@salesforce/schema/AI_Diagnosis__c.Root_Cause__c', () => ({ default: { fieldApiName: 'Root_Cause__c' } }), { virtual: true });
+jest.mock('@salesforce/schema/AI_Diagnosis__c.Recommended_Action__c', () => ({ default: { fieldApiName: 'Recommended_Action__c' } }), { virtual: true });
 jest.mock('@salesforce/user/Id', () => ({ default: '005000000000001AAA' }), { virtual: true });
 
 function alertPayload(overrides = {}) {
@@ -112,6 +118,9 @@ describe('c-aegis-headless-monitor', () => {
 
     beforeEach(() => {
         __reset();
+        ERROR_LOG_OBJECT.objectApiName = 'Error_Log__c';
+        ROOT_CAUSE_FIELD.fieldApiName = 'Root_Cause__c';
+        RECOMMENDED_ACTION_FIELD.fieldApiName = 'Recommended_Action__c';
         getSurfaceSettings.mockResolvedValue({ utilityEnabled: true });
         getOpenAlerts.mockResolvedValue([]);
         resolveAlert.mockReset().mockImplementation(({ correlationId }) => Promise.resolve(canonicalAlert({ correlationId })));
@@ -236,7 +245,45 @@ describe('c-aegis-headless-monitor', () => {
         expect(element.shadowRoot.querySelector('.error')).toBeNull();
     });
 
+    it.each([null, '', '/event/Other__e'])('does not guess a custom alert channel when lookup returns %s', async channel => {
+        getAlertChannel.mockResolvedValueOnce(channel);
+        await mount();
+        expect(subscribe.mock.calls.map(call => call[0])).toEqual(['/event/FlowExecutionErrorEvent']);
+        expect(element.shadowRoot.textContent).toContain('Live alert updates are unavailable');
+        expect(getOpenAlerts).toHaveBeenCalled();
+    });
+
+    it('retains saved alerts when custom-channel lookup rejects', async () => {
+        getAlertChannel.mockRejectedValueOnce(new Error('PRIVATE CHANNEL FAILURE'));
+        await mount();
+        expect(subscribe.mock.calls.map(call => call[0])).toEqual(['/event/FlowExecutionErrorEvent']);
+        expect(element.shadowRoot.textContent).toContain('Live alert updates are unavailable');
+        expect(element.shadowRoot.textContent).not.toContain('PRIVATE CHANNEL FAILURE');
+        expect(getOpenAlerts).toHaveBeenCalled();
+    });
+
+    it('reads namespaced event fields and diagnoses while rejecting an unqualified or foreign wake-up', async () => {
+        ERROR_LOG_OBJECT.objectApiName = 'example__Error_Log__c';
+        ROOT_CAUSE_FIELD.fieldApiName = 'example__Root_Cause__c';
+        RECOMMENDED_ACTION_FIELD.fieldApiName = 'example__Recommended_Action__c';
+        getAlertChannel.mockResolvedValueOnce('/event/example__Aegis_User_Alert__e');
+        getAlertDetails.mockResolvedValue({ errorLog: { severity: 'High', normalizedMessage: 'Packaged evidence' },
+            diagnosis: { example__Root_Cause__c: 'Packaged cause', example__Recommended_Action__c: 'Packaged action' } });
+        await mount();
+        __emitOn('/event/example__Aegis_User_Alert__e', alertPayload());
+        __emitOn('/event/example__Aegis_User_Alert__e', { example__Target_User_Id__c: '005000000000002AAA', example__Correlation_Id__c: 'FOREIGN' });
+        await flushUtilityUpdates();
+        expect(resolveAlert).not.toHaveBeenCalled();
+        __emitOn('/event/example__Aegis_User_Alert__e', { example__Target_User_Id__c: USER_ID, example__Correlation_Id__c: 'PACKAGED' });
+        await flushUtilityUpdates();
+        expect(resolveAlert).toHaveBeenCalledWith({ correlationId: 'PACKAGED' });
+        await clickButton(element, 'View details');
+        expect(element.shadowRoot.textContent).toContain('Packaged cause');
+        expect(element.shadowRoot.textContent).toContain('Packaged action');
+    });
+
     it('ignores clearly unrelated structured channels but retains unknown transport warnings', async () => {
+        ERROR_LOG_OBJECT.objectApiName = 'example__Error_Log__c';
         getAlertChannel.mockResolvedValueOnce('/event/example__Aegis_User_Alert__e');
         await mount();
         const emitError = onError.mock.calls[0][0];

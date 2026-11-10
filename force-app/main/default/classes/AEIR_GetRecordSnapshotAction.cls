@@ -8,26 +8,28 @@
  * forEscalation is per-request and changes which fields are whitelisted, so the batch is
  * split on it: collapsing the flag would leak escalation-only fields into an agent snapshot.
  */
-public with sharing class AEIR_GetRecordSnapshotAction {
+global with sharing class AEIR_GetRecordSnapshotAction {
     private static final Integer MAX_REQUESTS = 200;
     private static final Integer MAX_OBJECTS = 20;
 
-    public class Request {
-        @InvocableVariable(required=true) public String objectApiName;
-        @InvocableVariable(required=true) public String recordId;
-        @InvocableVariable public Boolean forEscalation;
-        public Request() {}
+    global class Request {
+        global Request() {}
+        @InvocableVariable(required=true) global String objectApiName;
+        @InvocableVariable(required=true) global String recordId;
+        @InvocableVariable global Boolean forEscalation;
+
     }
 
-    public class Response {
-        @InvocableVariable public String snapshotJson;
-        @InvocableVariable public String message;
-        public Response() {}
+    global class Response {
+        global Response() {}
+        @InvocableVariable global String snapshotJson;
+        @InvocableVariable global String message;
+
     }
 
-    @InvocableMethod(label='Aegis Flow: Get Record Snapshot'
+    @InvocableMethod(category='Aegis Flow' label='Aegis Flow: Get Record Snapshot'
         description='Returns fields explicitly whitelisted in Context_Field_Setting__mdt.')
-    public static List<Response> run(List<Request> requests) {
+    global static List<Response> run(List<Request> requests) {
         List<Response> output = new List<Response>();
         if (requests == null || requests.isEmpty()) return output;
 

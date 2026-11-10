@@ -47,7 +47,7 @@ public with sharing class AEIR_EscalationService {
         String errorLogQuery = 'SELECT Id, Correlation_Id__c, Error_Category__c, Severity__c, Source_Type__c, Source_Name__c, '
             + 'Original_Error_Message__c, Normalized_Message__c, Stack_Trace__c, Object_API_Name__c, '
             + 'Record_Id__c, User__c, Page_URL__c, Action_Name__c, Debug_Log_Link__c '
-            + 'FROM Error_Log__c WHERE Id IN :errorLogIds';
+            + 'FROM Error_Log__c WHERE Id IN :errorLogIds FOR UPDATE';
         List<Error_Log__c> logs = Database.query(errorLogQuery, AccessLevel.SYSTEM_MODE);
         if (logs.isEmpty()) return out;
 
@@ -63,11 +63,11 @@ public with sharing class AEIR_EscalationService {
         Map<String, String> snapshots = AEIR_ContextSnapshotService.getSnapshots(idsByObject, true);
 
         List<Developer_Escalation__c> escalations = new List<Developer_Escalation__c>();
-        List<String> packages = new List<String>();
         for (Error_Log__c log : logs) {
             Escalation_Route__mdt route = findRoute(routeKey, log.Source_Type__c, log.Severity__c);
             String diagnosticPackage = buildPackage(log, null, snapshots.get(log.Record_Id__c));
             Developer_Escalation__c escalation = new Developer_Escalation__c(
+                Request_Key__c = requestKey(log.Id, route.Route_Key__c),
                 Correlation_Id__c = log.Correlation_Id__c,
                 Error_Log__c = log.Id,
                 Route_Key__c = route.Route_Key__c,
@@ -82,14 +82,16 @@ public with sharing class AEIR_EscalationService {
             );
             if (log.User__c != null) escalation.OwnerId = log.User__c;
             escalations.add(escalation);
-            packages.add(diagnosticPackage);
         }
 
-        Database.insert(escalations, true, AccessLevel.SYSTEM_MODE);
-        dispatchAll(escalations, packages, sendNow);
+        Set<Id> changedSources = new Set<Id>();
+        escalations = persistAndDispatch(escalations, sendNow, changedSources);
 
-        for (Error_Log__c log : logs) log.Status__c = 'Escalated';
-        Database.update(logs, true, AccessLevel.SYSTEM_MODE);
+        List<Error_Log__c> statusUpdates = new List<Error_Log__c>();
+        for (Error_Log__c log : logs) if (changedSources.contains(log.Id)) {
+            statusUpdates.add(new Error_Log__c(Id = log.Id, Status__c = 'Escalated'));
+        }
+        if (!statusUpdates.isEmpty()) Database.update(statusUpdates, true, AccessLevel.SYSTEM_MODE);
 
         for (Developer_Escalation__c escalation : escalations) out.add(result(escalation));
         return out;
@@ -113,7 +115,7 @@ public with sharing class AEIR_EscalationService {
         List<Diagnostic_Session__c> sessions = [
             SELECT Id, Correlation_Id__c, User_Description__c, Object_API_Name__c,
                    Context_Record_Id__c, Page_URL__c, User__c, Recent_Error_Log__c, Agent_Response__c
-            FROM Diagnostic_Session__c WHERE Id IN :sessionIds
+            FROM Diagnostic_Session__c WHERE Id IN :sessionIds FOR UPDATE
         ];
         if (sessions.isEmpty()) return out;
 
@@ -128,11 +130,11 @@ public with sharing class AEIR_EscalationService {
         if (manualOnly.isEmpty()) return out;
 
         List<Developer_Escalation__c> escalations = new List<Developer_Escalation__c>();
-        List<String> packages = new List<String>();
         for (Diagnostic_Session__c session : manualOnly) {
             Escalation_Route__mdt route = findRoute(routeKey, 'Manual', 'Medium');
             String diagnosticPackage = buildPackage(null, session, null);
             Developer_Escalation__c escalation = new Developer_Escalation__c(
+                Request_Key__c = requestKey(session.Id, route.Route_Key__c),
                 Correlation_Id__c = session.Correlation_Id__c,
                 Diagnostic_Session__c = session.Id,
                 Route_Key__c = route.Route_Key__c,
@@ -147,17 +149,89 @@ public with sharing class AEIR_EscalationService {
             );
             if (session.User__c != null) escalation.OwnerId = session.User__c;
             escalations.add(escalation);
-            packages.add(diagnosticPackage);
             session.Resolution_Status__c = 'Escalated';
             session.Needs_Escalation__c = true;
         }
 
-        Database.insert(escalations, true, AccessLevel.SYSTEM_MODE);
-        dispatchAll(escalations, packages, sendNow);
-        Database.update(manualOnly, true, AccessLevel.SYSTEM_MODE);
+        Set<Id> changedSources = new Set<Id>();
+        escalations = persistAndDispatch(escalations, sendNow, changedSources);
+        List<Diagnostic_Session__c> statusUpdates = new List<Diagnostic_Session__c>();
+        for (Diagnostic_Session__c session : manualOnly) if (changedSources.contains(session.Id)) {
+            statusUpdates.add(new Diagnostic_Session__c(Id = session.Id, Resolution_Status__c = 'Escalated', Needs_Escalation__c = true));
+        }
+        if (!statusUpdates.isEmpty()) Database.update(statusUpdates, true, AccessLevel.SYSTEM_MODE);
 
         for (Developer_Escalation__c escalation : escalations) out.add(result(escalation));
         return out;
+    }
+
+    /** One logical escalation per source and canonical route. No implicit resend. */
+    private static String requestKey(Id sourceId, String routeKey) {
+        return EncodingUtil.convertToHex(Crypto.generateDigest('SHA-256', Blob.valueOf(JSON.serialize(
+            new List<String>{String.valueOf(sourceId), String.isBlank(routeKey) ? '' : routeKey.trim().toLowerCase()}))));
+    }
+
+    private static List<Developer_Escalation__c> persistAndDispatch(
+        List<Developer_Escalation__c> candidates, Boolean sendNow, Set<Id> changedSources) {
+        Set<Id> sourceIds = new Set<Id>();
+        for (Developer_Escalation__c row : candidates) sourceIds.add(row.Error_Log__c == null ? row.Diagnostic_Session__c : row.Error_Log__c);
+        // Include legacy rows whose new request key is still null; never resend their
+        // completed/failed/pending delivery merely because metadata was upgraded.
+        List<Developer_Escalation__c> prior = Database.queryWithBinds(
+            'SELECT Id, Request_Key__c, Delivery_Requested_At__c, Error_Log__c, Diagnostic_Session__c, '
+            + 'Status__c, Subject__c, Recipient__c, Channel__c, Route_Key__c, Diagnostic_Package_JSON__c, '
+            + 'Summary__c, Severity__c, Correlation_Id__c, SLA_Due_At__c FROM Developer_Escalation__c '
+            + 'WHERE Error_Log__c IN :sourceIds OR Diagnostic_Session__c IN :sourceIds ORDER BY CreatedDate ASC, Id ASC',
+            new Map<String, Object>{'sourceIds' => sourceIds}, AccessLevel.SYSTEM_MODE);
+        Map<String, Developer_Escalation__c> existing = new Map<String, Developer_Escalation__c>();
+        Set<Id> legacyIds = new Set<Id>();
+        for (Developer_Escalation__c row : prior) {
+            String key = requestKey(row.Error_Log__c == null ? row.Diagnostic_Session__c : row.Error_Log__c, row.Route_Key__c);
+            Developer_Escalation__c chosen = existing.get(key);
+            if (chosen == null || (chosen.Request_Key__c == null && row.Request_Key__c != null)
+                || (chosen.Request_Key__c == null && row.Request_Key__c == null
+                    && chosen.Status__c == 'New' && row.Status__c != 'New')) existing.put(key, row);
+            if (row.Request_Key__c == null) legacyIds.add(row.Id);
+        }
+        Set<Id> previouslyAttempted = new Set<Id>();
+        if (!legacyIds.isEmpty()) for (Delivery_Audit__c audit : [SELECT Developer_Escalation__c
+            FROM Delivery_Audit__c WHERE Developer_Escalation__c IN :legacyIds]) previouslyAttempted.add(audit.Developer_Escalation__c);
+        Set<String> priorDeliveryKeys = new Set<String>();
+        for (Developer_Escalation__c row : prior) {
+            if (row.Status__c != 'New' || row.Delivery_Requested_At__c != null || previouslyAttempted.contains(row.Id)) {
+                priorDeliveryKeys.add(requestKey(row.Error_Log__c == null ? row.Diagnostic_Session__c : row.Error_Log__c, row.Route_Key__c));
+            }
+        }
+
+        List<Developer_Escalation__c> output = new List<Developer_Escalation__c>();
+        List<Developer_Escalation__c> inserts = new List<Developer_Escalation__c>();
+        List<Developer_Escalation__c> patches = new List<Developer_Escalation__c>();
+        List<Developer_Escalation__c> dispatch = new List<Developer_Escalation__c>();
+        List<String> packages = new List<String>();
+        for (Developer_Escalation__c candidate : candidates) {
+            Developer_Escalation__c row = existing.get(candidate.Request_Key__c);
+            Boolean fresh = row == null;
+            if (fresh) { row = candidate; inserts.add(row); existing.put(row.Request_Key__c, row); }
+            if (fresh) changedSources.add(row.Error_Log__c == null ? row.Diagnostic_Session__c : row.Error_Log__c);
+            Boolean changed = false;
+            if (row.Request_Key__c == null) { row.Request_Key__c = candidate.Request_Key__c; changed = true; }
+            if (sendNow == true && row.Status__c == 'New' && row.Delivery_Requested_At__c == null
+                && !priorDeliveryKeys.contains(candidate.Request_Key__c)) {
+                row.Delivery_Requested_At__c = Datetime.now();
+                changedSources.add(row.Error_Log__c == null ? row.Diagnostic_Session__c : row.Error_Log__c);
+                changed = true;
+                dispatch.add(row);
+                packages.add(row.Diagnostic_Package_JSON__c);
+            }
+            if (!fresh && changed) patches.add(row);
+            output.add(row);
+        }
+        if (!inserts.isEmpty()) Database.insert(inserts, true, AccessLevel.SYSTEM_MODE);
+        if (!patches.isEmpty()) Database.update(patches, true, AccessLevel.SYSTEM_MODE);
+        // The source row lock and durable claim remain held until commit. A second
+        // transaction observes the existing claim and can only return the prior result.
+        dispatchAll(dispatch, packages, sendNow);
+        return output;
     }
 
     // ---------- routing ----------

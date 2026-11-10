@@ -1,0 +1,560 @@
+{
+  "schemaVersion": 1,
+  "assessedAtUtc": "2026-11-09T12:55:55.079884+00:00",
+  "localAssessmentState": "Local CLI-01 release-use review complete; locally qualified for restricted nonproduction validation/Apex-test workflow",
+  "eligibleForCredentialedRelease": true,
+  "releaseGate": "Local tool/dependency/vendor/API review is complete. The execution profile remains unbound and all action authorities false. Future nonproduction use requires verified target, selected scope/owners and explicit authority; production, deployment and CLI-backed MCP are excluded.",
+  "cliVersion": "2.157.8",
+  "channelAtSelection": "latest",
+  "platform": "macOS arm64 only",
+  "artifact": {
+    "kind": "Locally hardened isolated derivative with high and moderate dependency remediation; not an official Salesforce distribution",
+    "baseOfficialArtifact": {
+      "url": "https://registry.npmjs.org/@salesforce/cli/-/cli-2.157.8.tgz",
+      "integrity": "sha512-/JSOsOvNKAocC1G8VYdAADLcvnqX3/tkdepZXF8/wd3k+pV34/oQSkJyY3yu4Z8aL9qgg1UgFPLHkUoZiOC2fw==",
+      "sha256": "20cf5e179f363f84179c471073aa98915e38da888a137247cac7cb510c33596b",
+      "replayedFileEntries": 33975,
+      "bothExtractedInventoriesMatch": true,
+      "installedPackageManifestInstances": 841,
+      "allInstalledPackageManifestsMatchOfficialPayload": true
+    },
+    "overlayRecipe": "cli-remediation-manifest.json",
+    "overlayLayers": 2,
+    "fileEntries": 34154,
+    "canonicalInventorySha256": "3f8998228b699c3ac48bdf9e279c0fdd0c380611ae8bfea1b0e1a06e59a2fdf5",
+    "fileHashesLinksAndModesMatchReplay": true,
+    "installedPackageManifestInstances": 844,
+    "allInstalledPackageManifestsMatchOfficialPayload": false,
+    "priorHighRemediationCandidatePreserved": true,
+    "overlayManifestSha256": "c251d20078080d26f970eb68de8512b7960a7cb0ba14f0b29fc781af3d321523"
+  },
+  "runtimes": [
+    {
+      "version": "v22.23.4",
+      "lts": "Jod",
+      "url": "https://nodejs.org/dist/v22.23.4/node-v22.23.4-darwin-arm64.tar.gz",
+      "archiveSha256": "c9e1dbc748b33ed2d14f42445191ecaf14c56259c7a9a26d0042c49ec2b66428",
+      "checksumSource": "https://nodejs.org/dist/v22.23.4/SHASUMS256.txt"
+    },
+    {
+      "version": "v24.22.2",
+      "lts": "Krypton",
+      "url": "https://nodejs.org/dist/v24.22.2/node-v24.22.2-darwin-arm64.tar.gz",
+      "archiveSha256": "aa9549349e47dffaa42dcf95d6e06ade8c4bdafc980979883b88767670df385a",
+      "checksumSource": "https://nodejs.org/dist/v24.22.2/SHASUMS256.txt"
+    }
+  ],
+  "offlineChecks": {
+    "salesforceVersionAndCommandHelpPassed": 16,
+    "bundledNpmVersionAndHelpPassed": 6,
+    "totalVersionAndHelpPassed": 22,
+    "manifestConversionsPassed": 2,
+    "manifestScopedSourceConversion": "Both runtimes produce all 389 file hashes identical to the original official candidate baseline",
+    "qaFixturesExcludedFromConversion": true,
+    "credentialCommandsExecuted": false,
+    "orgOperationsExecuted": false
+  },
+  "remediationChecks": {
+    "moderateBeforeAndAfterSecurityResults": 44,
+    "retainedHighBeforeAndAfterSecurityResults": 28,
+    "totalSecurityControlResults": 72,
+    "focusedConsumerCompatibilityTestsPassed": 24,
+    "retainedHighCompatibilityTestsPassed": 18,
+    "totalCompatibilityTestsPassed": 42,
+    "all17NewDependencyRequirementsSatisfied": true,
+    "newDeclaredVendorRangeOverrides": 13,
+    "priorProtobufExactPinOverride": {
+      "package": "protobufjs",
+      "consumer": "o11y@264.26.0",
+      "declaredPin": "7.5.6",
+      "replacement": "7.6.6",
+      "decision": "Isolated same-major pin override passed bounded security, schema/collector encoding, offline command, and conversion checks on both maintained runtimes; vendor support is not claimed.",
+      "vendorParentUpdateAvailable": false,
+      "officialVendorSupportClaimed": false,
+      "securityRiskExceptionAccepted": false,
+      "allOtherConsumerRangesSatisfied": true,
+      "all13ReplacementDependencyRequirementsSatisfied": true,
+      "compatibilityAndSecurityChecksPassed": true
+    },
+    "actualPublishedBundledAndRawGlobCancellationTested": true,
+    "actualSdrOclifWorkspacePacklistCacheAndDiffConsumersTested": true,
+    "defaultAndEsmExportsTestedWithinSelectedScope": true
+  },
+  "advisoryCounts": {
+    "npmPackageChainEntries": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "distinctAdvisories": 0,
+    "distinctAdvisorySeverities": {
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0
+    },
+    "highCriticalGateExitCode": 0,
+    "allSeverityGateExitCode": 0,
+    "method": "npm Arborist AuditReport on loadActual() physical tree, plus exact-version distinct advisory matching; no stale wrapper lockfile used.",
+    "refreshedAtUtc": "2026-11-09T12:47:32.384Z"
+  },
+  "baselineAssessment": {
+    "originalAssessedAtUtc": "2026-11-09T06:38:09.978109+00:00",
+    "priorWrapperAudit": {
+      "npmPackageChainEntries": {
+        "moderate": 69,
+        "high": 3,
+        "low": 0,
+        "critical": 0,
+        "total": 72
+      },
+      "distinctAdvisories": 15,
+      "distinctAdvisorySeverities": {
+        "moderate": 9,
+        "high": 6
+      },
+      "highCriticalGateExitCode": 1
+    },
+    "sameMethodActualTreeAudit": {
+      "npmPackageChainEntries": {
+        "info": 0,
+        "low": 0,
+        "moderate": 68,
+        "high": 3,
+        "critical": 0,
+        "total": 71
+      },
+      "distinctAdvisories": 15,
+      "distinctAdvisorySeverities": {
+        "high": 6,
+        "moderate": 9
+      }
+    },
+    "countExplanation": "The historical wrapper audit reports 72 propagated entries; the fresh physical-tree baseline reports 71. Both match the same 15 root advisories. Only compare before/after counts from the same physical-tree method."
+  },
+  "priorHighRemediationAssessment": {
+    "assessedAtUtc": "2026-11-09T07:33:21.127369+00:00",
+    "advisoryCounts": {
+      "npmPackageChainEntries": {
+        "info": 0,
+        "low": 0,
+        "moderate": 64,
+        "high": 0,
+        "critical": 0,
+        "total": 64
+      },
+      "distinctAdvisories": 2,
+      "distinctAdvisorySeverities": {
+        "moderate": 2,
+        "high": 0,
+        "critical": 0
+      },
+      "highCriticalGateExitCode": 0,
+      "method": "npm Arborist AuditReport on loadActual() physical tree, plus exact-version distinct advisory matching; no stale wrapper lockfile used."
+    },
+    "artifact": {
+      "kind": "Locally hardened derivative of the official Salesforce CLI; not an official replacement distribution",
+      "baseOfficialArtifact": {
+        "url": "https://registry.npmjs.org/@salesforce/cli/-/cli-2.157.8.tgz",
+        "integrity": "sha512-/JSOsOvNKAocC1G8VYdAADLcvnqX3/tkdepZXF8/wd3k+pV34/oQSkJyY3yu4Z8aL9qgg1UgFPLHkUoZiOC2fw==",
+        "sha256": "20cf5e179f363f84179c471073aa98915e38da888a137247cac7cb510c33596b",
+        "replayedFileEntries": 33975,
+        "bothExtractedInventoriesMatch": true,
+        "installedPackageManifestInstances": 841,
+        "allInstalledPackageManifestsMatchOfficialPayload": true
+      },
+      "overlayRecipe": "cli-remediation-manifest.json",
+      "fileEntries": 34037,
+      "canonicalInventorySha256": "0c9b31f87a246440c6146d0aff34b2a51a4042b914caf9cf00716002da5422ec",
+      "fileHashesLinksAndModesMatchReplay": true,
+      "installedPackageManifestInstances": 841,
+      "allInstalledPackageManifestsMatchOfficialPayload": false,
+      "changedPackageManifestInstances": 5,
+      "additionalEmbeddedBundlePath": "node_modules/o11y/dist/modules/o11y/collectors/collectors.js"
+    },
+    "localAssessmentState": "High dependency remediation and all moderate advisory reviews complete in an isolated derivative",
+    "moderateReview": {
+      "reviewed": 9,
+      "clearedByScopedUpdates": 7,
+      "remainingOpen": 2,
+      "findings": [
+        {
+          "package": "minimatch",
+          "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249",
+          "state": "Open; reviewed; no risk exception",
+          "installedVersions": [
+            "9.0.9",
+            "10.2.5",
+            "10.2.6"
+          ],
+          "patchedFrom": "11.0.1",
+          "reviewedPatchedVersion": "11.0.5",
+          "declaredRanges": {
+            "source-deploy-retrieve@13.11.0": "^9.0.9",
+            "@oclif/core@5.1.9": "^10.2.5",
+            "npm@11.21.1": "^10.2.5"
+          },
+          "review": "Patched release crosses declared major ranges. The two affected glob copies explicitly use optimizationLevel 2; the advisory is not dismissed as unreachable.",
+          "closure": "Select a compatible patched vendor parent, or separately test a scoped major upgrade across SDR/oclif, glob/path-scurry and bundled npm consumers before credentialed qualification."
+        },
+        {
+          "package": "glob",
+          "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4",
+          "state": "Open; reviewed; no risk exception",
+          "installedVersions": [
+            "11.1.0",
+            "13.0.6"
+          ],
+          "patchedFrom": "14.0.2",
+          "reviewedPatchedVersion": "14.0.4",
+          "declaredRanges": {
+            "@salesforce/plugin-agent@2.2.3": "^11.1.0",
+            "npm@11.21.1": "^13.0.6"
+          },
+          "review": "The patched major also requires minimatch ^11.0.5 and path-scurry ^3.0.0. Current glob 11/13 lines remain affected, including reviewed latest glob 13.0.7. Offline help does not prove cancellation behavior.",
+          "closure": "Use a patched vendor update or separately validate a coordinated major dependency migration, including abort/traversal behavior and plugin/npm operations."
+        }
+      ],
+      "securityRiskExceptionAccepted": false
+    }
+  },
+  "advisories": [],
+  "resolvedAdvisories": [
+    {
+      "package": "brace-expansion",
+      "severity": "high",
+      "url": "https://github.com/advisories/GHSA-qhr7-859c-m2p7"
+    },
+    {
+      "package": "brace-expansion",
+      "severity": "high",
+      "url": "https://github.com/advisories/GHSA-6j4f-fj2g-mc7p"
+    },
+    {
+      "package": "brace-expansion",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-q2hr-2g5m-vwhr"
+    },
+    {
+      "package": "ip-address",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-rxp7-6hxx-x8q5"
+    },
+    {
+      "package": "protobufjs",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-jggg-4jg4-v7c6"
+    },
+    {
+      "package": "protobufjs",
+      "severity": "high",
+      "url": "https://github.com/advisories/GHSA-wcpc-wj8m-hjx6"
+    },
+    {
+      "package": "protobufjs",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-f38q-mgvj-vph7"
+    },
+    {
+      "package": "protobufjs",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-j3f2-48v5-ccww"
+    },
+    {
+      "package": "undici",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-4qv8-2p9j-2685"
+    },
+    {
+      "package": "undici",
+      "severity": "high",
+      "url": "https://github.com/advisories/GHSA-xjj6-f33q-929c"
+    },
+    {
+      "package": "undici",
+      "severity": "high",
+      "url": "https://github.com/advisories/GHSA-2m5v-pch6-74hx"
+    },
+    {
+      "package": "undici",
+      "severity": "high",
+      "url": "https://github.com/advisories/GHSA-qrxm-fqhp-jwvm"
+    },
+    {
+      "package": "undici",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-9fm3-97px-rjf6"
+    },
+    {
+      "package": "minimatch",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249"
+    },
+    {
+      "package": "glob",
+      "severity": "moderate",
+      "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4"
+    }
+  ],
+  "moderateReview": {
+    "originalRootAdvisoriesReviewed": 9,
+    "clearedByPriorHighRemediation": 7,
+    "clearedByThisMigration": 2,
+    "remainingOpenDependencyAdvisories": 0,
+    "remediatedPackages": [
+      {
+        "package": "minimatch",
+        "instances": 3,
+        "version": "11.0.5",
+        "url": "https://github.com/advisories/GHSA-g3hv-75wg-m249"
+      },
+      {
+        "package": "glob",
+        "instances": 2,
+        "version": "14.0.4",
+        "url": "https://github.com/advisories/GHSA-3g3m-2fjr-6pw4"
+      }
+    ],
+    "securityRiskExceptionAccepted": false
+  },
+  "vendorContractReview": {
+    "declaredRangeOverrides": [
+      {
+        "parent": "npm",
+        "parentVersion": "11.21.1",
+        "path": "node_modules/npm",
+        "dependency": "glob",
+        "declaredRange": "^13.0.6",
+        "baselineVersion": "13.0.6",
+        "candidateVersion": "14.0.4",
+        "resolvedPath": "node_modules/npm/node_modules/glob",
+        "fits": false
+      },
+      {
+        "parent": "npm",
+        "parentVersion": "11.21.1",
+        "path": "node_modules/npm",
+        "dependency": "minimatch",
+        "declaredRange": "^10.2.5",
+        "baselineVersion": "10.2.5",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/npm/node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "@oclif/core",
+        "parentVersion": "5.1.9",
+        "path": "node_modules/@oclif/core",
+        "dependency": "minimatch",
+        "declaredRange": "^10.2.5",
+        "baselineVersion": "10.2.6",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "@salesforce/plugin-agent",
+        "parentVersion": "2.2.3",
+        "path": "node_modules/@salesforce/plugin-agent",
+        "dependency": "glob",
+        "declaredRange": "^11.1.0",
+        "baselineVersion": "11.1.0",
+        "candidateVersion": "14.0.4",
+        "resolvedPath": "node_modules/@salesforce/plugin-agent/node_modules/glob",
+        "fits": false
+      },
+      {
+        "parent": "@salesforce/source-deploy-retrieve",
+        "parentVersion": "13.11.0",
+        "path": "node_modules/@salesforce/source-deploy-retrieve",
+        "dependency": "minimatch",
+        "declaredRange": "^9.0.9",
+        "baselineVersion": "9.0.9",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "cacache",
+        "parentVersion": "20.0.4",
+        "path": "node_modules/npm/node_modules/cacache",
+        "dependency": "glob",
+        "declaredRange": "^13.0.0",
+        "baselineVersion": "13.0.6",
+        "candidateVersion": "14.0.4",
+        "resolvedPath": "node_modules/npm/node_modules/glob",
+        "fits": false
+      },
+      {
+        "parent": "ignore-walk",
+        "parentVersion": "8.0.0",
+        "path": "node_modules/npm/node_modules/ignore-walk",
+        "dependency": "minimatch",
+        "declaredRange": "^10.0.3",
+        "baselineVersion": "10.2.5",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/npm/node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "libnpmdiff",
+        "parentVersion": "8.1.14",
+        "path": "node_modules/npm/node_modules/libnpmdiff",
+        "dependency": "minimatch",
+        "declaredRange": "^10.0.3",
+        "baselineVersion": "10.2.5",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/npm/node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "@npmcli/arborist",
+        "parentVersion": "9.9.3",
+        "path": "node_modules/npm/node_modules/@npmcli/arborist",
+        "dependency": "minimatch",
+        "declaredRange": "^10.0.3",
+        "baselineVersion": "10.2.5",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/npm/node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "@npmcli/map-workspaces",
+        "parentVersion": "5.0.3",
+        "path": "node_modules/npm/node_modules/@npmcli/map-workspaces",
+        "dependency": "glob",
+        "declaredRange": "^13.0.0",
+        "baselineVersion": "13.0.6",
+        "candidateVersion": "14.0.4",
+        "resolvedPath": "node_modules/npm/node_modules/glob",
+        "fits": false
+      },
+      {
+        "parent": "@npmcli/map-workspaces",
+        "parentVersion": "5.0.3",
+        "path": "node_modules/npm/node_modules/@npmcli/map-workspaces",
+        "dependency": "minimatch",
+        "declaredRange": "^10.0.3",
+        "baselineVersion": "10.2.5",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/npm/node_modules/minimatch",
+        "fits": false
+      },
+      {
+        "parent": "@npmcli/package-json",
+        "parentVersion": "7.0.5",
+        "path": "node_modules/npm/node_modules/@npmcli/package-json",
+        "dependency": "glob",
+        "declaredRange": "^13.0.0",
+        "baselineVersion": "13.0.6",
+        "candidateVersion": "14.0.4",
+        "resolvedPath": "node_modules/npm/node_modules/glob",
+        "fits": false
+      },
+      {
+        "parent": "@tufjs/models",
+        "parentVersion": "4.1.0",
+        "path": "node_modules/npm/node_modules/@tufjs/models",
+        "dependency": "minimatch",
+        "declaredRange": "^10.1.1",
+        "baselineVersion": "10.2.5",
+        "candidateVersion": "11.0.5",
+        "resolvedPath": "node_modules/npm/node_modules/minimatch",
+        "fits": false
+      }
+    ],
+    "parentDeclarationsRewritten": false,
+    "removedMinimatchApis": [
+      {
+        "path": "node_modules/minimatch",
+        "removedModuleExports": [
+          "makeRe",
+          "AST"
+        ],
+        "removedMinimatchPrototypeMembers": [
+          "debug",
+          "levelTwoFileOptimize",
+          "partsMatch",
+          "matchOne",
+          "makeRe",
+          "slashSplit"
+        ]
+      },
+      {
+        "path": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch",
+        "removedModuleExports": [
+          "makeRe",
+          "AST"
+        ],
+        "removedMinimatchPrototypeMembers": [
+          "debug",
+          "levelTwoFileOptimize",
+          "partsMatch",
+          "matchOne",
+          "makeRe",
+          "slashSplit"
+        ]
+      },
+      {
+        "path": "node_modules/npm/node_modules/minimatch",
+        "removedModuleExports": [
+          "makeRe",
+          "AST"
+        ],
+        "removedMinimatchPrototypeMembers": [
+          "debug",
+          "levelTwoFileOptimize",
+          "partsMatch",
+          "matchOne",
+          "makeRe",
+          "slashSplit"
+        ]
+      }
+    ],
+    "reviewedAffectedConsumerFiles": 10,
+    "confirmedRemovedApiCallsInReviewedConsumers": 0,
+    "additionalOrDynamicPluginCompatibilityClaimed": false,
+    "vendorSupportClaimed": false,
+    "reviewState": "complete",
+    "scopedLocalDecision": "Accepted under cli-release-use-review.json scope; declarations remain unchanged",
+    "decisionRecord": "cli-release-use-review.json"
+  },
+  "limitations": [
+    "The recorded scope is conditional technical tool qualification, not current execution authority or vendor endorsement. Production, actual deployment, package/plugin changes, extra plugins and CLI-backed MCP are excluded.",
+    "Thirteen caller-range overrides and the protobuf exact-pin override are reviewed and accepted only within that scope. Removed/changed minimatch APIs and other selector paths are not generally qualified.",
+    "The known o11y native ESM path and standard wrapper-ci failure are dispositioned by scope exclusion and the verified replay construction route; they are not claimed fixed.",
+    "The legacy eligibleForCredentialedRelease boolean means this scoped local technical gate has passed. It does not bind a target, grant an action or satisfy the remaining execution-profile/owner/authority requirements.",
+    "No actual Salesforce API/authentication/compilation or target acceptance was performed. Other OS/runtimes and arbitrary/native/additional plugins remain outside scope."
+  ],
+  "remainingQualificationItems": [],
+  "globalCliChanged": false,
+  "gitDeliveryPerformed": false,
+  "eligibleForProductionRelease": false,
+  "eligibilityScope": "Technical eligibility only for cli-release-use-review.json scope; no current execution authority",
+  "localReleaseUseReview": {
+    "status": "complete",
+    "decisionRecord": "cli-release-use-review.json",
+    "decisionRecordSha256": "0165137ba7d7de1c3b4188819e75979155c643c91d10f1f1186b8e23ed55ec91",
+    "reviewedAtUtc": "2026-11-09T12:55:55.079884+00:00",
+    "closedVendorRangeAndPinDeviations": 14,
+    "openLocalToolReviewItems": [],
+    "executionAuthorityGranted": false
+  },
+  "currentExecutionAuthority": {
+    "orgOperations": false,
+    "credentialRetrieval": false,
+    "deployment": false,
+    "commit": false,
+    "push": false,
+    "globalCliChange": false,
+    "externalDelivery": false
+  },
+  "remainingExecutionPrerequisites": [
+    "Refresh public advisory matching and reverify sealed artifact/runtime/plugin/manifest identity.",
+    "Bind and independently verify the nonproduction target, owners, exact cases/actions, budgets and evidence storage.",
+    "Obtain explicit authority for each selected org action; validate the complete bound profile and execute only the selected cases."
+  ]
+}

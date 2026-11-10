@@ -1,0 +1,700 @@
+{
+  "schemaVersion": 1,
+  "productVersion": "1.2.0-reconciled",
+  "metadataApiVersion": "67.0",
+  "preparedAt": "2026-11-09",
+  "status": "Prepared locally; all execution Not run",
+  "globalPreconditions": [
+    "CLI-01 security qualification or separately recorded accepted disposition",
+    "exact reviewed artifact and source/configuration identity",
+    "verified nonproduction target and named owner",
+    "explicit action/record/delivery authority and finite capacity budget",
+    "sanitized evidence storage and reviewed run-owned cleanup"
+  ],
+  "cases": [
+    {
+      "id": "ACC-07-01",
+      "task": "REL-07",
+      "title": "Compile and run final Apex release baseline",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "commandInvocations": 1,
+        "syntheticSeedRecords": 0
+      },
+      "steps": [
+        "Bind the qualified CLI/runtime and the verified target identity to the exact reviewed release artifact.",
+        "Review native customer automation and the permitted test scope before choosing the final test command.",
+        "When separately authorized, validate the final manifest and run the selected full product release suite; record coverage and failures without changing test assertions."
+      ],
+      "expected": [
+        "No compilation failure, failed required test, or unexplained coverage issue.",
+        "Executed source and permission metadata correspond to the reviewed release artifact; all tests and target identifiers are recorded in controlled evidence."
+      ],
+      "evidence": [
+        "exact source/manifest and tool hashes",
+        "target identity and authorization reference",
+        "full test result/coverage and any failure report"
+      ],
+      "cleanup": [
+        "Use the platform test transaction cleanup; review any customer-specific side effects separately."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_CoreTest.cls",
+        "force-app/main/default/classes/AEIR_CrossBusinessScenarioTest.cls",
+        "manifest/package.xml"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-08-01",
+      "task": "REL-08",
+      "title": "Owned journey and foreign-record denial",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "actors": 2,
+        "diagnostics": 1,
+        "crossUserAttempts": 3
+      },
+      "steps": [
+        "Use approved ordinary users A and B with different diagnostic ownership and recorded effective permissions.",
+        "As A capture one supported synthetic failure, open its saved alert/details and analyze the permitted context.",
+        "As B attempt the same diagnostic/notification identifiers through supported UI and server endpoints; reload A and confirm consistent state."
+      ],
+      "expected": [
+        "A receives only authorized diagnostic data and permitted actions.",
+        "B receives no foreign evidence or notification details; server denial remains after reload.",
+        "No administrator identity is used as proof of End User access."
+      ],
+      "evidence": [
+        "sanitized role/effective-permission record",
+        "owned journey screenshots",
+        "negative request outcomes with identifiers redacted outside controlled evidence"
+      ],
+      "cleanup": [
+        "Remove only the run-owned synthetic diagnostic graph after evidence capture; retain audit evidence according to the approved policy."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls",
+        "force-app/main/default/classes/AEIR_NotificationBoundaryTest.cls",
+        "force-app/main/default/lwc/aegisDiagnosticPanel/__tests__/aegisDiagnosticPanel.test.js"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-08-02",
+      "task": "REL-08",
+      "title": "Manual Help without readable captured evidence",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "actors": 1,
+        "sessions": 2,
+        "externalMessages": 0
+      },
+      "steps": [
+        "As an approved End User create a diagnostic session with a synthetic task description and no diagnostic reference.",
+        "Analyze the session and verify guidance; repeat with a malformed/unreadable optional reference.",
+        "Review report confirmation controls without sending a message unless ACC-10 is separately authorized."
+      ],
+      "expected": [
+        "Manual Help works without Error Log read access and associates no unreadable evidence.",
+        "Malformed values fail safely and stale responses do not overwrite the current reference.",
+        "No report is sent without the intended confirmation."
+      ],
+      "evidence": [
+        "session and safe error outcomes",
+        "confirmation-state screenshots"
+      ],
+      "cleanup": [
+        "Delete only run-owned sessions after recording evidence, if cleanup is authorized."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_InputBoundaryTest.cls",
+        "force-app/main/default/lwc/aegisGetHelpPanel/__tests__/aegisGetHelpPanel.test.js"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-08-03",
+      "task": "REL-08",
+      "title": "Governed correction/retry decision boundary",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "explicit recovery-scope selection",
+        "reviewed active registration and permissions",
+        "approved synthetic business record"
+      ],
+      "caps": {
+        "registeredOperations": 1,
+        "requests": 6,
+        "successes": 1
+      },
+      "steps": [
+        "First record whether recovery is in scope; otherwise record an approved exclusion rather than a pass.",
+        "For one reviewed registered synthetic operation exercise missing permission, absent confirmation and invalid/foreign target cases.",
+        "For an authorized actor run the intended operation once, verify its real business postcondition, then exercise duplicate/failure rollback using its reviewed fixture."
+      ],
+      "expected": [
+        "Denied or unconfirmed operations make no business change.",
+        "Successful execution has the correct target, bounded side effects and durable audit.",
+        "Repeated effects are prevented by business idempotency; failed mutation is rolled back and audited."
+      ],
+      "evidence": [
+        "approved operation/object/field/postcondition and identity",
+        "before/after synthetic values and audits",
+        "denied/duplicate/failure outcomes"
+      ],
+      "cleanup": [
+        "Restore the run-owned business fixture to its recorded prior values using the reviewed operation; do not reset audit/request keys."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_CaptureRetryBulkTest.cls",
+        "force-app/main/default/classes/AEIR_ApprovedFlowRetryTest.cls",
+        "docs/APPROVED_FLOW_RECOVERY.md"
+      ],
+      "priorEvidenceLimit": "A diagnostics-only decision can exclude this case with owner/reason recorded; no enabled customer recovery registration is assumed."
+    },
+    {
+      "id": "ACC-08-04",
+      "task": "REL-08",
+      "title": "Saved notices, streaming limitations, dismissal and reload",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "actors": 2,
+        "notices": 2,
+        "manualRefreshes": 1,
+        "staleHints": 1
+      },
+      "steps": [
+        "Create two permitted synthetic notices and observe the live Aegis hint when the selected transport is available.",
+        "Exercise one disconnected/optional-stream failure and choose Refresh alerts once; observe stored results and independent channel status.",
+        "Dismiss one notice, reload, and replay one stale hint; separately inspect a Viewed/expired/foreign reference."
+      ],
+      "expected": [
+        "Only canonical, authorized, unexpired state resolves; hints expose no diagnostic text.",
+        "Saved refresh is bounded and does not replay a business write or claim streaming recovery.",
+        "Dismissal survives reload and stale hints do not restore dismissed state."
+      ],
+      "evidence": [
+        "transport/saved-result distinction",
+        "dismiss/reload record",
+        "canonical resolution outcomes"
+      ],
+      "cleanup": [
+        "Remove run-owned notices only after evidence; restore any deliberately changed test transport configuration."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_NotificationBoundaryTest.cls",
+        "force-app/main/default/lwc/aegisHeadlessMonitor/__tests__/aegisHeadlessMonitor.test.js"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-09-01",
+      "task": "REL-09",
+      "title": "Desktop keyboard and accessibility journey",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "actors": 1,
+        "viewports": 2,
+        "browsers": 2
+      },
+      "steps": [
+        "Record the selected desktop browser, viewport, assistive technology and role.",
+        "Navigate alert/details, Help, validation errors, confirmation, dismissal and close/reopen with keyboard only.",
+        "Check focus order/restoration, readable labels/status/errors, zoom and the selected assistive-technology announcement behavior."
+      ],
+      "expected": [
+        "Required actions are keyboard reachable with visible focus and appropriate focus restoration.",
+        "Labels, error/status announcements and zoom behavior are usable on the selected surface.",
+        "Any unsupported platform behavior is explicitly scoped and reviewed."
+      ],
+      "evidence": [
+        "platform/browser/assistive-technology versions",
+        "screenshots and keyboard/announcement observations",
+        "defects or accepted platform limits"
+      ],
+      "cleanup": [
+        "Close test sessions and remove only synthetic data created for this run."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/lwc/aegisNotificationCard/aegisNotificationCard.html",
+        "force-app/main/default/lwc/aegisGetHelpPanel/aegisGetHelpPanel.html"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-09-02",
+      "task": "REL-09",
+      "title": "Selected mobile/responsive surface",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "agreed mobile surface and available test device",
+        "approved synthetic-data scope"
+      ],
+      "caps": {
+        "actors": 1,
+        "devices": 2,
+        "viewports": 2
+      },
+      "steps": [
+        "Select the actual supported mobile surface with the product owner before execution.",
+        "Run the essential read/Help/confirmation/dismissal journey on that available surface at the selected small-screen size.",
+        "Record unavailable native features and agree exclusions; never assume desktop utility bars exist in the native mobile app."
+      ],
+      "expected": [
+        "Selected supported actions are readable and operable without clipped critical controls.",
+        "Platform limitations and excluded surfaces have an explicit owner decision; they are not reported as tested."
+      ],
+      "evidence": [
+        "agreed support matrix",
+        "device/OS/browser evidence",
+        "journey outcome or reasoned exclusion"
+      ],
+      "cleanup": [
+        "Remove run-owned synthetic data and restore test settings."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/lwc/aegisDiagnosticPanel/aegisDiagnosticPanel.html",
+        "force-app/main/default/lwc/aegisGetHelpPanel/aegisGetHelpPanel.html"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-10-01",
+      "task": "REL-10",
+      "title": "One real Email delivery and replay",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "explicit real-email test approval",
+        "approved recipient/sender/route and data bounds"
+      ],
+      "caps": {
+        "initialRequests": 1,
+        "sequentialReplays": 1,
+        "realEmailMessages": 1
+      },
+      "steps": [
+        "Record the approved test recipient, sender identity, route, deliverability and exact synthetic evidence.",
+        "Confirm and request one escalation; inspect durable escalation/delivery records and the recipient-side result.",
+        "Repeat the same source/route request once and inspect for suppression; reconcile any uncertain result before any further operation."
+      ],
+      "expected": [
+        "Exactly one intended email reaches the approved destination with permitted masked evidence.",
+        "The durable audit/claim is consistent with the destination-side outcome.",
+        "Replay reuses the request and produces no second message."
+      ],
+      "evidence": [
+        "recipient/sender approval stored in controlled evidence",
+        "sanitized destination-side receipt",
+        "claim/audit and replay result"
+      ],
+      "cleanup": [
+        "A sent email cannot be rolled back; manage its retention with the approved recipient. Remove test diagnostics only as approved."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls",
+        "force-app/main/default/classes/AEIR_EscalationBulkTest.cls"
+      ],
+      "priorEvidenceLimit": "Mocks and queued/sent labels alone do not prove receipt; this case performs a real external side effect only after selection."
+    },
+    {
+      "id": "ACC-10-02",
+      "task": "REL-10",
+      "title": "One intended Case delivery and replay",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "explicit Case-creation/automation approval",
+        "approved Case owner or queue"
+      ],
+      "caps": {
+        "initialRequests": 1,
+        "sequentialReplays": 1,
+        "createdCases": 1
+      },
+      "steps": [
+        "Record the approved Case owner/queue, native permissions, assignment/notification automation and synthetic subject.",
+        "Confirm one Case escalation and verify the created Case plus durable audit.",
+        "Repeat the same source/route request once and verify there is no second Case."
+      ],
+      "expected": [
+        "Exactly one intended Case is created with permitted masked evidence and expected ownership.",
+        "Configured Case automation produces no unapproved notifications/side effects.",
+        "Replay does not create another Case."
+      ],
+      "evidence": [
+        "Case route/automation approval",
+        "created Case and ownership evidence",
+        "audit/claim and duplicate check"
+      ],
+      "cleanup": [
+        "Close/delete only the run-owned Case as authorized; preserve required audit history and handle any emitted notification separately."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls",
+        "force-app/main/default/classes/AEIR_EscalationBulkTest.cls"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-11-01",
+      "task": "REL-11",
+      "title": "Flow backlog across a full page and late arrival",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "reviewed failure fixture and capacity budget",
+        "approved monitor principal and cadence"
+      ],
+      "caps": {
+        "initialFailedInterviews": 201,
+        "lateArrivals": 1,
+        "sweeps": 3
+      },
+      "steps": [
+        "Agree capacity and a reviewed fixture producing 201 distinct failed interviews or an explicitly approved equivalent; do not insert fake FlowInterview records into a live org.",
+        "Record the starting cursor and all fixture identities, including the 200 already-captured comparison rows where applicable.",
+        "Observe at most three bounded sweeps over the page boundary, including one approved late arrival after reset."
+      ],
+      "expected": [
+        "The cursor advances past already-captured rows and the next distinct failure is not hidden.",
+        "Each observed interview has the correct correlation/replay result, then the sweep resets.",
+        "Late-arrival behavior, drain latency and actual governor/automation cost are recorded."
+      ],
+      "evidence": [
+        "fixture identity/capacity decision and 201-row ledger",
+        "cursor before/after each page",
+        "latency, capture reconciliation and governor evidence"
+      ],
+      "cleanup": [
+        "Clean up only approved run-owned interviews/diagnostics through supported procedures; restore recorded cursor/schedule configuration only with administrator review."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_MonitorProgressTest.cls",
+        "force-app/main/default/classes/AEIR_FlowInterviewMonitor.cls",
+        "force-app/main/default/classes/AEIR_MonitorCursorService.cls"
+      ],
+      "priorEvidenceLimit": "The existing injected EvidenceSource test proves algorithm behavior, not 201 real failed interviews or target-org load."
+    },
+    {
+      "id": "ACC-11-02",
+      "task": "REL-11",
+      "title": "Async backlog across a full page and completion-time boundary",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "reviewed async fixture and daily capacity budget",
+        "approved monitor principal and cadence"
+      ],
+      "caps": {
+        "initialFailedJobs": 101,
+        "lateCompletions": 1,
+        "sweeps": 3
+      },
+      "steps": [
+        "Agree capacity and a reviewed fixture for 101 completed failed jobs plus at most one late completion.",
+        "Record job identities, created/completed times and starting async cursor; keep the Flow cursor observation separate.",
+        "Observe at most three bounded sweeps and reconcile captures/replays across the 100-job page boundary."
+      ],
+      "expected": [
+        "Selection follows completion-time/keyset progress, not only job creation time.",
+        "The 101st distinct failure is processed, duplicate captures are avoided and sweep reset handles the late completion.",
+        "The Flow cursor and unrelated setup fields are unchanged."
+      ],
+      "evidence": [
+        "job/capacity ledger",
+        "per-page async and Flow cursor observations",
+        "capture reconciliation and governor evidence"
+      ],
+      "cleanup": [
+        "Review retained platform job history and remove only authorized run-owned diagnostics; restore recorded schedule/cursor configuration if a change was authorized."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_MonitorProgressTest.cls",
+        "force-app/main/default/classes/AEIR_AsyncJobMonitorScheduler.cls"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-12-01",
+      "task": "REL-12",
+      "title": "Genuine concurrent escalation requests",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "approved delivery route/destination and side-effect budget",
+        "reviewed concurrent client fixture"
+      ],
+      "caps": {
+        "parallelCallers": 2,
+        "parallelRequests": 2,
+        "sequentialReplays": 1,
+        "intendedDeliveries": 1
+      },
+      "steps": [
+        "Choose one approved synthetic diagnostic, one route and two authorized clients with a common start barrier.",
+        "Issue exactly two simultaneous requests for the same source/route; save request timing and durable result identifiers.",
+        "After reconciliation issue one sequential replay and verify the destination-side count."
+      ],
+      "expected": [
+        "Two real concurrent callers yield one durable claim and one intended delivery.",
+        "A loser/replay cannot implicitly resend a failed, pending or historically attempted delivery.",
+        "Uncertain remote state is retained for reconciliation; it is never treated as proof of non-delivery."
+      ],
+      "evidence": [
+        "barrier/request timing and distinct clients",
+        "durable claim/request identities",
+        "destination count and replay/uncertainty result"
+      ],
+      "cleanup": [
+        "Retain delivery/claim evidence and perform only reviewed run-owned cleanup; external effects require destination-side handling."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls",
+        "force-app/main/default/classes/AEIR_EscalationService.cls"
+      ],
+      "priorEvidenceLimit": "Sequential calls or one Apex transaction do not establish genuine concurrent contention."
+    },
+    {
+      "id": "ACC-13-01",
+      "task": "REL-13",
+      "title": "Capture rejection, bounded retry and final publication failure",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "reviewed controlled failure-injection fixture",
+        "approved telemetry and cleanup scope"
+      ],
+      "caps": {
+        "fixtureVariants": 3,
+        "validSiblingItems": 1,
+        "diagnosticItems": 4
+      },
+      "steps": [
+        "Start with the existing Apex test seams; separately review any runtime failure-injection fixture before enabling it.",
+        "Exercise one permanent rejection, one bounded transient failure and one final publication failure without abandoning a valid item in the same controlled batch.",
+        "Record sanitized durable telemetry, attribution, retry budget and cleanup; verify a publish rejection returns no accepted reference."
+      ],
+      "expected": [
+        "Rejected/finally failed items are durably visible without exposing synthetic secret values.",
+        "Valid siblings are not silently lost and transient retries remain inside the platform/service budget.",
+        "Publication acceptance and actual persistence are reported separately."
+      ],
+      "evidence": [
+        "reviewed injection scope and per-item outcomes",
+        "durable sanitized rejection/final-failure records",
+        "attempt and publisher-attribution evidence"
+      ],
+      "cleanup": [
+        "Disable/remove only the reviewed test injection and its run-owned data; preserve required telemetry evidence."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls",
+        "force-app/main/default/classes/AEIR_CapturePublishCallback.cls"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-13-02",
+      "task": "REL-13",
+      "title": "Batch scope identity and event replay",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "batchJobs": 1,
+        "failedScopes": 2,
+        "replayedScopes": 1
+      },
+      "steps": [
+        "Use two approved failure scopes from one controlled Batch job with distinct event identities.",
+        "Observe both captures, then replay one scope identity through the reviewed fixture once.",
+        "Compare resulting correlation/diagnostic identities and counts."
+      ],
+      "expected": [
+        "Different failed scopes remain distinct.",
+        "Replaying the same scope identity creates no additional diagnostic."
+      ],
+      "evidence": [
+        "job/scope/event identities in controlled evidence",
+        "diagnostic count and deduplication outcome"
+      ],
+      "cleanup": [
+        "Remove only approved run-owned diagnostics; retain required platform job/audit history."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls",
+        "force-app/main/default/classes/AEIR_BatchApexErrorEventHandler.cls"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-14-01",
+      "task": "REL-14",
+      "title": "Privacy, affected-user evidence and outbound masking",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "actors": 2,
+        "diagnostics": 2,
+        "syntheticSensitiveMarkers": 3
+      },
+      "steps": [
+        "Use two approved ordinary actors and synthetic sensitive markers only; record the field/context allowlist.",
+        "Compare own and foreign UI/API/context reads and a privileged processor acting for the other affected user.",
+        "Where explicitly selected, compare storage and outbound evidence masking; optional debug-log/AI/connector checks require their separate setup."
+      ],
+      "expected": [
+        "Sharing/CRUD/FLS and sensitive-context boundaries hold for each selected role.",
+        "A processor does not build a fresh business snapshot under its own rights for a different affected user.",
+        "Synthetic sensitive markers are masked in the selected storage/outbound boundaries; no real credentials or customer data are used."
+      ],
+      "evidence": [
+        "role/allowlist decisions",
+        "sanitized storage and permitted outbound comparisons",
+        "foreign-read denial and affected-user omission marker"
+      ],
+      "cleanup": [
+        "Remove only approved synthetic data; retain sanitized evidence and do not copy unmasked content to reports."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_ReleaseSecurityTest.cls",
+        "force-app/main/default/classes/AEIR_DiagnosisPayloadTest.cls",
+        "force-app/main/default/classes/AEIR_SecurityBoundaryTest.cls"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-14-02",
+      "task": "REL-14",
+      "title": "Lifecycle durations, grouping and coverage reconciliation",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "verified nonproduction target",
+        "exact release artifact",
+        "approved actors and synthetic-data scope"
+      ],
+      "caps": {
+        "diagnostics": 2,
+        "groupingComparisons": 3,
+        "protectedWriteAttempts": 1
+      },
+      "steps": [
+        "Observe one legacy/unknown-timing synthetic diagnostic and one newly diagnosed/resolved/reopened record through supported services.",
+        "Attempt an unauthorized protected-field write and make one unrelated permitted update.",
+        "Compare stored transitions/formulas, long grouping keys with distinct object/time/source suffixes and exact observed-interview coverage."
+      ],
+      "expected": [
+        "Unknown timing stays null; unrelated edits do not rewrite lifecycle timestamps or durations.",
+        "Reopen/resolution transitions behave correctly and protected writes are denied.",
+        "Long keys preserve distinctions and historical Flow counts do not hide a new uncaptured interview."
+      ],
+      "evidence": [
+        "transition/formula and denial observations",
+        "group-key distinctions",
+        "observed-interview/capture reconciliation"
+      ],
+      "cleanup": [
+        "Remove only run-owned records as approved; never backfill historical timestamps or rewrite real incident groups for the test."
+      ],
+      "existingCoverage": [
+        "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls",
+        "force-app/main/default/classes/AEIR_MonitorProgressTest.cls",
+        "force-app/main/default/classes/AEIR_ObservabilityCoverageTest.cls"
+      ],
+      "priorEvidenceLimit": "Existing source/unit evidence does not establish the current target org or final rendered acceptance."
+    },
+    {
+      "id": "ACC-24-01",
+      "task": "REL-24",
+      "title": "Nonproduction rollback rehearsal for the chosen release model",
+      "status": "Not run",
+      "executionScope": "Future explicitly selected nonproduction acceptance",
+      "requires": [
+        "qualified release CLI",
+        "verified nonproduction target",
+        "fresh source/configuration and business-data recovery plan",
+        "explicit rehearsal/metadata-write authority"
+      ],
+      "caps": {
+        "rehearsals": 1,
+        "restoreStages": 3
+      },
+      "steps": [
+        "Bind a fresh pre-change target source/configuration snapshot, approved artifact and restoration/cleanup scope; verify their hashes.",
+        "Rehearse the selected source/configuration recovery in the authorized nonproduction target using the reviewed runbook.",
+        "Verify permission/configuration preservation, diagnostic capture and business-data invariants, then record recovery time and cleanup."
+      ],
+      "expected": [
+        "The agreed baseline is restored without erasing business edits, diagnostic history or audit/request keys.",
+        "Subscriber identities, schedules, feature overlays, routes, permissions and enabled Flow versions match the approved recovery target.",
+        "Sent email/external actions are reconciled separately; source rollback is not reported as reversing them."
+      ],
+      "evidence": [
+        "artifact and pre-change snapshot hashes",
+        "source/configuration comparison",
+        "business-data invariants, recovery timing and owner review"
+      ],
+      "cleanup": [
+        "Restore the agreed end state and remove only approved test artifacts; preserve recovery/evidence records."
+      ],
+      "existingCoverage": [
+        "docs/ROLLBACK_RUNBOOK.md",
+        "scripts/compare_org_snapshot.py",
+        "manifest/package.xml"
+      ],
+      "priorEvidenceLimit": "Local source archive extraction/hash restoration proves only file integrity; it is not an org, data or external-side-effect rollback rehearsal."
+    }
+  ]
+}

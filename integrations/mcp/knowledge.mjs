@@ -19,6 +19,7 @@ export class KnowledgeError extends Error {
 }
 const invalid = () => { throw new KnowledgeError('Curated knowledge is unavailable. Review the local allowlisted catalog.', -32603); };
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+// eslint-disable-next-line no-control-regex -- Deliberately reject unsafe control characters in curated text.
 const text = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max && !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/u.test(value);
 const slug = value => text(value, 80) && SLUG.test(value);
 function keys(value, required, optional = []) {

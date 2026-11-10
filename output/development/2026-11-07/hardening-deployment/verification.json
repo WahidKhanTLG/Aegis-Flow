@@ -1,0 +1,1118 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Karachi",
+  "verifiedAtUtc": "2026-11-07T06:45:04.945373+00:00",
+  "status": "PASS \u2014 deployed and verified in development",
+  "target": {
+    "alias": "SyncBridge-Product",
+    "orgId": "00DgL00000YDvsvUAD",
+    "edition": "Developer Edition",
+    "metadataApiVersion": "67.0"
+  },
+  "delivery": {
+    "deployed": true,
+    "productionDeployment": false,
+    "committed": false,
+    "pushed": false,
+    "published": false,
+    "gitHead": "eda715f3c05aeda9acacd2e6bf97384cf4968801",
+    "deployedCodeChangesAfterValidation": false
+  },
+  "deployment": {
+    "id": "0AfgL00000d4xe9SAA",
+    "checkOnly": false,
+    "status": "Succeeded",
+    "startedAtUtc": "2026-11-07T06:21:55.000Z",
+    "completedAtUtc": "2026-11-07T06:24:18.000Z",
+    "components": 61,
+    "componentErrors": 0,
+    "testsPassed": 211,
+    "testsFailed": 0,
+    "testLevel": "RunSpecifiedTests",
+    "testClasses": [
+      "AEIR_BulkEntryPointTest",
+      "AEIR_BulkSafetyTest",
+      "AEIR_CaptureHardeningTest",
+      "AEIR_CaptureOptionsTest",
+      "AEIR_CaptureRetryBulkTest",
+      "AEIR_ConfigAndRoutingTest",
+      "AEIR_ConnectorDeliveryTest",
+      "AEIR_CoreTest",
+      "AEIR_CoverageAndGuardTest",
+      "AEIR_CrossBusinessScenarioTest",
+      "AEIR_DeliveryLifecycleTest",
+      "AEIR_DiagnosisPayloadTest",
+      "AEIR_EndUserJourneyTest",
+      "AEIR_EscalationBulkTest",
+      "AEIR_EventBoundaryCoverageTest",
+      "AEIR_FlowInterviewMonitorTest",
+      "AEIR_IncidentAndSecurityTest",
+      "AEIR_InputBoundaryTest",
+      "AEIR_MonitorAndTelemetryTest",
+      "AEIR_MonitorProgressTest",
+      "AEIR_NotificationPolicyTest",
+      "AEIR_ObservabilityCoverageTest",
+      "AEIR_OrgSetupTest",
+      "AEIR_ReconciledFeaturesTest",
+      "AEIR_RetentionSchedulerTest",
+      "AEIR_SecurityBoundaryTest",
+      "AEIR_UiSaveErrorControllerTest"
+    ],
+    "coverageWarnings": [],
+    "selectedComponentCoverage": [
+      {
+        "name": "AEIR_DiagnosticSessionRequestHandler",
+        "executableLines": 49,
+        "uncoveredLines": 6,
+        "percent": 87.76
+      },
+      {
+        "name": "AEIR_DiagnosticSessionService",
+        "executableLines": 129,
+        "uncoveredLines": 17,
+        "percent": 86.82
+      },
+      {
+        "name": "AEIR_CapturePublishCallback",
+        "executableLines": 8,
+        "uncoveredLines": 0,
+        "percent": 100.0
+      },
+      {
+        "name": "AEIR_SubscriberTelemetry",
+        "executableLines": 24,
+        "uncoveredLines": 1,
+        "percent": 95.83
+      },
+      {
+        "name": "AEIR_ErrorCaptureService",
+        "executableLines": 231,
+        "uncoveredLines": 7,
+        "percent": 96.97
+      },
+      {
+        "name": "AEIR_ErrorLogLifecycleTrigger",
+        "executableLines": 1,
+        "uncoveredLines": 0,
+        "percent": 100.0
+      },
+      {
+        "name": "AEIR_ErrorLifecycleService",
+        "executableLines": 11,
+        "uncoveredLines": 0,
+        "percent": 100.0
+      },
+      {
+        "name": "AEIR_MonitorCursorService",
+        "executableLines": 24,
+        "uncoveredLines": 1,
+        "percent": 95.83
+      },
+      {
+        "name": "AEIR_AdminConsoleController",
+        "executableLines": 52,
+        "uncoveredLines": 0,
+        "percent": 100.0
+      },
+      {
+        "name": "AEIR_IncidentAggregationService",
+        "executableLines": 92,
+        "uncoveredLines": 2,
+        "percent": 97.83
+      },
+      {
+        "name": "AEIR_Guard",
+        "executableLines": 32,
+        "uncoveredLines": 4,
+        "percent": 87.5
+      },
+      {
+        "name": "AEIR_FlowCoverageService",
+        "executableLines": 119,
+        "uncoveredLines": 0,
+        "percent": 100.0
+      },
+      {
+        "name": "AEIR_FlowInterviewMonitor",
+        "executableLines": 71,
+        "uncoveredLines": 6,
+        "percent": 91.55
+      },
+      {
+        "name": "AEIR_BatchApexErrorEventHandler",
+        "executableLines": 31,
+        "uncoveredLines": 3,
+        "percent": 90.32
+      },
+      {
+        "name": "AEIR_AsyncJobMonitorScheduler",
+        "executableLines": 74,
+        "uncoveredLines": 3,
+        "percent": 95.95
+      },
+      {
+        "name": "AEIR_ErrorCapturedEventHandler",
+        "executableLines": 42,
+        "uncoveredLines": 2,
+        "percent": 95.24
+      },
+      {
+        "name": "AEIR_EscalationService",
+        "executableLines": 383,
+        "uncoveredLines": 29,
+        "percent": 92.43
+      }
+    ],
+    "manifest": "../org-hardening-validation-manifest.xml",
+    "priorValidationId": "0AfgL00000d4eWgSAI"
+  },
+  "permissionAcceptance": {
+    "id": "0AfgL00000d4QwkSAE",
+    "checkOnly": true,
+    "testsPassed": 6,
+    "testsFailed": 0,
+    "permissionMetadataIncludedInAcceptancePayload": false,
+    "temporaryClassPersisted": false,
+    "temporaryUsersPersisted": false,
+    "methods": [
+      "deployedAnalystCannotEditDeliveryClaims",
+      "deployedDeveloperViewerCannotEditDeliveryClaims",
+      "deployedEndUserLifecycleFieldsAreReadableAndNotEditable",
+      "deployedEndUserRoleDeniesInternalEventAndPreservesHelpMe",
+      "deployedProductAdminRoleCannotEditDeliveryClaims",
+      "existingAdministrativeProducerRemainsAuthorized"
+    ],
+    "effectiveRoleChecks": "Standard User test identities used the real committed End User, Developer Viewer, Support Analyst and Product Admin permission sets; no copied or reduced fixture role replaced them.",
+    "existingAssigneeContext": "The one existing End User assignee has a System Administrator profile and multiple elevated roles. Its broad access is expected and was preserved; ordinary role restrictions were verified with standard-profile test identities."
+  },
+  "configurationChecks": {
+    "flagsPreserved": true,
+    "routesPreserved": true,
+    "subscribersPreserved": true,
+    "schedulesPreserved": true,
+    "endUserInternalReadCreateRemoved": true,
+    "packagedProtectedFieldsNotEditable": true
+  },
+  "runtime": {
+    "runtime-publish": {
+      "spoofTargetDiffersFromPublisher": true,
+      "originatingTransactionRolledBack": true,
+      "sessionEventsQueued": 2,
+      "captureEventsQueued": 3,
+      "prefix": "AFDEV-20261107-0398e0f1",
+      "stage": "nativePublication"
+    },
+    "runtime-inspect": {
+      "draftCreatedWithoutDelivery": true,
+      "alertReadAndDismissed": true,
+      "nativePublisherAttributionEnforced": true,
+      "maskedEvidenceValidJson": true,
+      "durableRejections": 2,
+      "ownNotifications": 1,
+      "deterministicDiagnoses": 1,
+      "spoofedSessions": 0,
+      "genuineSessions": 1,
+      "rejectedCaptureLogs": 0,
+      "captureLogs": 1,
+      "ready": true,
+      "stage": "nativeInspection"
+    },
+    "runtime-rollback": {
+      "fixtureTransactionRolledBack": true,
+      "metricsReadable": true,
+      "reopenAndReresolve": true,
+      "unknownAndReopenedDurationsRemainNull": true,
+      "durationFormulaEvaluated": true,
+      "lifecycleTimestampsProtected": true,
+      "longKeysPreserveObjectDimension": true,
+      "bulkCaptureAndDedupe": true,
+      "stage": "rollbackProtectedRuntime"
+    },
+    "runtime-postcheck": {
+      "callouts": 0,
+      "emailInvocations": 0,
+      "deliveryAudits": 0,
+      "dismissalPersistedAcrossTransactions": true,
+      "resolvedStatusAndTimePreserved": true,
+      "crossTransactionDraftReplayReusedRecord": true,
+      "stage": "committedReplayAndDismissal"
+    },
+    "runtime-readonly": {
+      "callouts": 0,
+      "emailInvocations": 0,
+      "asyncPageRows": 0,
+      "flowPageRows": 0,
+      "nativeAsyncMonitorQuery": true,
+      "nativeFlowMonitorQuery": true,
+      "metricsReadable": true,
+      "coverageReadable": true,
+      "checks": [
+        {
+          "status": "PASS",
+          "name": "Onboarding"
+        },
+        {
+          "status": "PASS",
+          "name": "Permission sets"
+        },
+        {
+          "status": "PASS",
+          "name": "Escalation routing"
+        },
+        {
+          "status": "PASS",
+          "name": "Deterministic rule library"
+        },
+        {
+          "status": "PASS",
+          "name": "Notification policy"
+        },
+        {
+          "status": "PASS",
+          "name": "Feature flags"
+        },
+        {
+          "status": "PASS",
+          "name": "Monitored surfaces"
+        },
+        {
+          "status": "PASS",
+          "name": "Flow fault framework"
+        },
+        {
+          "status": "PASS",
+          "name": "Scheduled jobs"
+        },
+        {
+          "status": "PASS",
+          "name": "Governed remediation"
+        }
+      ],
+      "healthFailures": 0,
+      "healthWarnings": 0,
+      "healthPasses": 10,
+      "healthOverall": "PASS",
+      "stage": "readOnlyHealth",
+      "dmlStatements": 0
+    },
+    "runtime-cleanup": {
+      "removed": {
+        "incidents": 2,
+        "errorLogs": 1,
+        "sessions": 1,
+        "contexts": 1,
+        "diagnoses": 1,
+        "draftEscalations": 1,
+        "attemptTelemetry": 4,
+        "deliveryAudits": 0,
+        "notifications": 1
+      },
+      "remainingProbeRecords": 0,
+      "stage": "probeCleanup"
+    }
+  },
+  "telemetryReview": {
+    "delivered": 2,
+    "expectedRejected": 2,
+    "unexpectedFailures": 0,
+    "records": [
+      {
+        "correlation": "AFDEV-20261107-0398e0f1-SPOOF",
+        "key": "DiagnosticSessionRequested:AFDEV-20261107-0398e0f1-SPOOF",
+        "status": "Failed",
+        "reason": "DiagnosticSessionRequested :: AEIR_DiagnosticSessionRequestHandler.SessionCaptureException: A session request must identify its authenticated publisher."
+      },
+      {
+        "correlation": "AFDEV-20261107-0398e0f1-CAP",
+        "key": "AFDEV-20261107-0398e0f1-CAP:alert",
+        "status": "Delivered",
+        "reason": "Aegis user alert event published."
+      },
+      {
+        "correlation": "AFDEV-20261107-0398e0f1-BAD",
+        "key": "ErrorCaptured:AFDEV-20261107-0398e0f1-BAD",
+        "status": "Failed",
+        "reason": "ErrorCaptured :: AEIR_ErrorCapturedEventHandler.CaptureProcessingException: Source Type: bad value for restricted picklist field: Unregistered Source"
+      },
+      {
+        "correlation": "AFDEV-20261107-0398e0f1-CAP",
+        "key": "AFDEV-20261107-0398e0f1-CAP:diagnosed",
+        "status": "Delivered",
+        "reason": "Aegis diagnosis alert published."
+      }
+    ]
+  },
+  "sourceVerification": {
+    "beforeDeployment": {
+      "existingComponentsCompared": 43,
+      "unexpectedChanges": 0,
+      "validatedSourceHashMismatches": 0,
+      "files": [
+        {
+          "path": "force-app/main/default/classes/AEIR_AdminConsoleController.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_AsyncJobMonitorScheduler.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_BatchApexErrorEventHandler.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_BulkEntryPointTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_BulkSafetyTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CaptureOptionsTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CaptureRetryBulkTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ConfigAndRoutingTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ConnectorDeliveryTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CoreTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CoverageAndGuardTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CrossBusinessScenarioTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DiagnosisPayloadTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DiagnosticSessionRequestHandler.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DiagnosticSessionService.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EndUserJourneyTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ErrorCaptureService.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ErrorCapturedEventHandler.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EscalationBulkTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EscalationService.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EventBoundaryCoverageTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_FlowCoverageService.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_FlowInterviewMonitor.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_FlowInterviewMonitorTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_Guard.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_IncidentAggregationService.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_IncidentAndSecurityTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_InputBoundaryTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_MonitorAndTelemetryTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_NotificationPolicyTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ObservabilityCoverageTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_OrgSetupTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ReconciledFeaturesTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_RetentionSchedulerTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_SecurityBoundaryTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_SubscriberTelemetry.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_UiSaveErrorControllerTest.cls",
+          "matchesBaseline": true
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml",
+          "matchesBaseline": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_End_User.permissionset-meta.xml",
+          "matchesBaseline": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Integration_User.permissionset-meta.xml",
+          "matchesBaseline": true,
+          "normalizations": [
+            "permission-set-default-activation-false"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Product_Admin.permissionset-meta.xml",
+          "matchesBaseline": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml",
+          "matchesBaseline": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Support_Analyst.permissionset-meta.xml",
+          "matchesBaseline": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        }
+      ]
+    },
+    "afterDeployment": {
+      "compared": 61,
+      "codeFiles": 45,
+      "permissionSets": 6,
+      "fields": 10,
+      "unexpectedDifferences": 0,
+      "files": [
+        {
+          "path": "force-app/main/default/classes/AEIR_AdminConsoleController.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_AsyncJobMonitorScheduler.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_BatchApexErrorEventHandler.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_BulkEntryPointTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_BulkSafetyTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CaptureOptionsTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CapturePublishCallback.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CaptureRetryBulkTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ConfigAndRoutingTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ConnectorDeliveryTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CoreTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CoverageAndGuardTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_CrossBusinessScenarioTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DiagnosisPayloadTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DiagnosticSessionRequestHandler.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_DiagnosticSessionService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EndUserJourneyTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ErrorCaptureService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ErrorCapturedEventHandler.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ErrorLifecycleService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EscalationBulkTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EscalationService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EventBoundaryCoverageTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_EventTestData.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_FlowCoverageService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_FlowInterviewMonitor.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_FlowInterviewMonitorTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_Guard.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_IncidentAggregationService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_IncidentAndSecurityTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_InputBoundaryTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_MonitorAndTelemetryTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_MonitorCursorService.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_MonitorProgressTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_NotificationPolicyTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ObservabilityCoverageTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_OrgSetupTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_ReconciledFeaturesTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_RetentionSchedulerTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_SecurityBoundaryTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_SubscriberTelemetry.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/classes/AEIR_UiSaveErrorControllerTest.cls",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/triggers/AEIR_ErrorLogLifecycleTrigger.trigger",
+          "type": "code",
+          "matches": true
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml",
+          "type": "permissions",
+          "matches": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_End_User.permissionset-meta.xml",
+          "type": "permissions",
+          "matches": true,
+          "normalizations": [
+            "empty-object-grant-omitted-by-server",
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Integration_User.permissionset-meta.xml",
+          "type": "permissions",
+          "matches": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Product_Admin.permissionset-meta.xml",
+          "type": "permissions",
+          "matches": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml",
+          "type": "permissions",
+          "matches": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/permissionsets/AEIR_Support_Analyst.permissionset-meta.xml",
+          "type": "permissions",
+          "matches": true,
+          "normalizations": [
+            "permission-set-default-activation-false",
+            "permission-set-root-set-order"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Async_Monitor_At__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-required-false",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Async_Monitor_Id__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-externalId-false",
+            "custom-field-default-required-false",
+            "custom-field-default-unique-false",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Flow_Monitor_At__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-required-false",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Flow_Monitor_Id__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-externalId-false",
+            "custom-field-default-required-false",
+            "custom-field-default-unique-false",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Developer_Escalation__c/fields/Delivery_Requested_At__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-required-false",
+            "field-false-default-trackHistory",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Developer_Escalation__c/fields/Request_Key__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-required-false",
+            "field-false-default-caseSensitive",
+            "field-false-default-trackHistory",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Error_Log__c/fields/Diagnosis_Duration_Minutes__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-externalId-false",
+            "custom-field-default-required-false",
+            "custom-field-default-unique-false",
+            "field-false-default-trackHistory",
+            "field-false-default-trackTrending",
+            "formula-blank-handling-setting-omitted-on-retrieval; actual-null-and-known-duration-results-verified"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Error_Log__c/fields/First_Diagnosed_At__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-required-false",
+            "field-false-default-trackHistory",
+            "field-false-default-trackTrending"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Error_Log__c/fields/Resolution_Duration_Minutes__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-externalId-false",
+            "custom-field-default-required-false",
+            "custom-field-default-unique-false",
+            "field-false-default-trackHistory",
+            "field-false-default-trackTrending",
+            "formula-blank-handling-setting-omitted-on-retrieval; actual-null-and-known-duration-results-verified"
+          ]
+        },
+        {
+          "path": "force-app/main/default/objects/Error_Log__c/fields/Resolved_At__c.field-meta.xml",
+          "type": "field",
+          "matches": true,
+          "normalizations": [
+            "custom-field-default-required-false",
+            "field-false-default-trackHistory",
+            "field-false-default-trackTrending"
+          ]
+        }
+      ],
+      "formulaSerializationNotes": [
+        {
+          "field": "Diagnosis_Duration_Minutes__c",
+          "retrievalDifference": "Source declares formulaTreatBlanksAs=BlankAsBlank; metadata retrieval omits that optional element. Formula text, precision, scale and other properties match.",
+          "runtimeVerified": "Unknown diagnosis and unresolved/reopened resolution durations remain null; known duration agrees with stored timestamps."
+        },
+        {
+          "field": "Resolution_Duration_Minutes__c",
+          "retrievalDifference": "Source declares formulaTreatBlanksAs=BlankAsBlank; metadata retrieval omits that optional element. Formula text, precision, scale and other properties match.",
+          "runtimeVerified": "Unknown diagnosis and unresolved/reopened resolution durations remain null; known duration agrees with stored timestamps."
+        }
+      ]
+    },
+    "validatedSourceHashMismatches": 0,
+    "selectedLocalFileHashes": {
+      "force-app/main/default/permissionsets/AEIR_Product_Admin.permissionset-meta.xml": "b626e4d9a1e1d0d9549d50c169696c66c6283a4d78b351556eeb227278b383c5",
+      "force-app/main/default/permissionsets/AEIR_Support_Analyst.permissionset-meta.xml": "bb2534216af8c59c01a5709a7f56552b8df9743549e1c59c5561cdac6db1bf74",
+      "force-app/main/default/permissionsets/AEIR_End_User.permissionset-meta.xml": "83d4580ac575f4b7b2a047f27a763df7b44ab0c2bbbac0d04cd6761d08ab77b1",
+      "force-app/main/default/permissionsets/AEIR_Integration_User.permissionset-meta.xml": "b598e0674ce0b500182d850a5e1bbd182e5b04f42513d0ac905013deea9113df",
+      "force-app/main/default/permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml": "32bf144da12fbdbc30bb7c4734b4d214f3fcad1f6c2107aa39a2e0a743ddc0ae",
+      "force-app/main/default/permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml": "949649913dd5cf4dcbff6bdc58c7d8906b79eadf0d4924ed93f8555dbd157a2e",
+      "force-app/main/default/classes/AEIR_InputBoundaryTest.cls-meta.xml": "17e31f2473b0c9f7048b434edab7d12261a9b8a0b9ede833cb9c3141eeeccb7b",
+      "force-app/main/default/classes/AEIR_CrossBusinessScenarioTest.cls": "739358d64008413df693bad3b36e9dd3bd1cbf902924d6d4ed2848c638e77664",
+      "force-app/main/default/classes/AEIR_CrossBusinessScenarioTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_Guard.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ErrorCaptureService.cls": "e17e1f62e799ab598e4491002c66efa814dca5e0ab5c83ab94f187f411707666",
+      "force-app/main/default/classes/AEIR_AsyncJobMonitorScheduler.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_DiagnosisPayloadTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_OrgSetupTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_BulkSafetyTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_RetentionSchedulerTest.cls": "854036620d2ef4ff15cc82c78185acc4756d95c4f4771a81360686d44b3d6fda",
+      "force-app/main/default/classes/AEIR_RetentionSchedulerTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_SecurityBoundaryTest.cls": "7996a3ccca510bfbf5374194364f638a852c39d4d75533bb6f9e9bc301564582",
+      "force-app/main/default/classes/AEIR_BatchApexErrorEventHandler.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_CaptureOptionsTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ErrorLifecycleService.cls": "ad607c42dedfc96aed3ba9f80730f0bd31005757ec925c6d1237daadd2cdf365",
+      "force-app/main/default/classes/AEIR_Guard.cls": "45f5caf8ac0e6bc377f2d14755c59239ad6d1494526ed13bdf8debed39593094",
+      "force-app/main/default/classes/AEIR_AdminConsoleController.cls": "dab4d76892989481466be796115af165d2e3e99a9d20d69049e7159a0bf2ee7e",
+      "force-app/main/default/classes/AEIR_MonitorAndTelemetryTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_FlowInterviewMonitorTest.cls": "44a92e2397011c57a0e9057dc66f4d2bcc00e4d158d43ac457a54be113efb44b",
+      "force-app/main/default/classes/AEIR_ReconciledFeaturesTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_FlowInterviewMonitorTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_EscalationService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_CapturePublishCallback.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_IncidentAndSecurityTest.cls": "bacb136fbe9909949bb99422bab00f8ee98a1a3a04fed2849afd38fbf3a4d107",
+      "force-app/main/default/classes/AEIR_BulkSafetyTest.cls": "d83ebcb7c26515b8e71f325a87a90ecbfce8aad623ed3a0d50c9ef755bc6b157",
+      "force-app/main/default/classes/AEIR_DiagnosticSessionRequestHandler.cls": "f1a33655fc4dd06e6143a15e80c30c46054d15dd26b22ad2ce4e92804d52ed73",
+      "force-app/main/default/classes/AEIR_EventBoundaryCoverageTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_DiagnosticSessionService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_CoreTest.cls": "93334133bc94827b80904e46afd7ab963540396c8bbba5a09bba5f6f975c3ec0",
+      "force-app/main/default/classes/AEIR_FlowInterviewMonitor.cls": "b7f372a7a8a7a5dab59e043860c24a77b818c30779505335ce2c21ad767e213b",
+      "force-app/main/default/classes/AEIR_MonitorAndTelemetryTest.cls": "ab776eae3716519282148671ea462a94df550415a037948993679eb7b858d1d2",
+      "force-app/main/default/classes/AEIR_UiSaveErrorControllerTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_DiagnosticSessionRequestHandler.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_AdminConsoleController.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ConfigAndRoutingTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_OrgSetupTest.cls": "193e2a8fa9ef2e5bb94ba47cd5c020ae3401c66fc3ec5d080df4111a38900b1f",
+      "force-app/main/default/classes/AEIR_ErrorCapturedEventHandler.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_EventBoundaryCoverageTest.cls": "5df0190404a00cd6540cf9640473f8305faf674629b8aa76998e9eb2c8755ee6",
+      "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls": "1ac1f4d9ca027cd7b568e5a17d2f8f6f4eff8689a7eb0dde3f18f30143f9befb",
+      "force-app/main/default/classes/AEIR_ConnectorDeliveryTest.cls": "7dbf6e63ee0c18249f4db6c2b2ea8f7ce1a2517da7e04fb4f744947d38b3ef80",
+      "force-app/main/default/classes/AEIR_CoverageAndGuardTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_BulkEntryPointTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_SecurityBoundaryTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_CaptureOptionsTest.cls": "d49ad4cbac4d3d460f4f724dcd8cb9ab40a12a703eb84ce433da4b51fdefb458",
+      "force-app/main/default/classes/AEIR_EscalationBulkTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_MonitorCursorService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_UiSaveErrorControllerTest.cls": "ea77622b83f8fc6f4a9c43bc771c790fd437449bdd5a9f0563dc65470cda7f7e",
+      "force-app/main/default/classes/AEIR_EndUserJourneyTest.cls": "b1cf4d3a0e1f7f73c2f359a9c7495b9d49fbc63fd9d0cbbd2149bc050e92e0e2",
+      "force-app/main/default/classes/AEIR_IncidentAndSecurityTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_MonitorCursorService.cls": "b4f0a2165161c2421ab8125e38a1f9c9ec2c5b11c974c05208897f865e570098",
+      "force-app/main/default/classes/AEIR_MonitorProgressTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_FlowCoverageService.cls": "d13caf73e141b6cebef1f1160e74c26f8855ba86348825b8a63dd310edefdfae",
+      "force-app/main/default/classes/AEIR_ReconciledFeaturesTest.cls": "cbd78074ac843e0bed25a46198bb3b4588c1b2ed5224e7c93531beffc94e1d29",
+      "force-app/main/default/classes/AEIR_BulkEntryPointTest.cls": "712622f17d0d0a7131d513d4ce06f77c793415f9be93f865e5ed83f8b1ea96d4",
+      "force-app/main/default/classes/AEIR_EndUserJourneyTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ErrorCapturedEventHandler.cls": "2030fb0fa223a7c583793b015c3b902f21bff97092bea11e228d86ccc0303830",
+      "force-app/main/default/classes/AEIR_ErrorCaptureService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ErrorLifecycleService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_BatchApexErrorEventHandler.cls": "3f4de99db274c2bdfb3f754443e0eafafa5f658ce70a251f1445703fd59aea98",
+      "force-app/main/default/classes/AEIR_EventTestData.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ObservabilityCoverageTest.cls": "2fc21957f9165454f869ce57c6fe79e78da41e5c191a83fd6311b3860f88ec42",
+      "force-app/main/default/classes/AEIR_DiagnosisPayloadTest.cls": "17b8cb66e8b5d67647b5bda0114e2cd0afdeb55223e05da242638b4b5a8d19c2",
+      "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_AsyncJobMonitorScheduler.cls": "f208d2644affeeba40fe2201390fb08d269a4423482677b3ea3a71fdc592c119",
+      "force-app/main/default/classes/AEIR_SubscriberTelemetry.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_EscalationBulkTest.cls": "cd7f7f2aef114bb6abba2a883f32fcc88428598a34b378609fdc530bbd5f0879",
+      "force-app/main/default/classes/AEIR_EventTestData.cls": "4c7fd6d5fa470a9379c7e99e21f3406e448f9b71e6de21938a66ca01c0e3b042",
+      "force-app/main/default/classes/AEIR_CoreTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ConnectorDeliveryTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_MonitorProgressTest.cls": "cc90dc7010ef671c12fbfc9d8257f9c351445b0be64591eadaa1a8387f467e4b",
+      "force-app/main/default/classes/AEIR_ObservabilityCoverageTest.cls-meta.xml": "17e31f2473b0c9f7048b434edab7d12261a9b8a0b9ede833cb9c3141eeeccb7b",
+      "force-app/main/default/classes/AEIR_FlowInterviewMonitor.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_EscalationService.cls": "e43b8732713259f3e5baaf686ac953103a44581afd070c8e578dd6e40964b088",
+      "force-app/main/default/classes/AEIR_CoverageAndGuardTest.cls": "921b444787ee18213adbbcc566cc08bd6f8dbbd702a60fdb22f6f3e0eeabecd5",
+      "force-app/main/default/classes/AEIR_CaptureRetryBulkTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_NotificationPolicyTest.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls": "9a1a806da285d280de932efbb55a6f241a5a6d22ff27802a6ed35229b2ccb464",
+      "force-app/main/default/classes/AEIR_CapturePublishCallback.cls": "2bdd153593792bddc0bb427768c613937680f4eef4f2b480823901ce5cfdb684",
+      "force-app/main/default/classes/AEIR_IncidentAggregationService.cls": "5359d1261b998d759c4cf467f59b9cbdebb578f51c5b1d357644f320dea434d8",
+      "force-app/main/default/classes/AEIR_CaptureRetryBulkTest.cls": "953bedac98407d50451f87d815d1daa2148916cc19aa4cf61c5676acfffdbeb5",
+      "force-app/main/default/classes/AEIR_SubscriberTelemetry.cls": "8d2be343ba2b0bbdc5060f545145b22575cdc2ea214c315f4b7bbbee9893c9ef",
+      "force-app/main/default/classes/AEIR_NotificationPolicyTest.cls": "b41be2cfc643cc69b3806950bc2c8b2117882067fe52f77f25f6b5711c7d10c6",
+      "force-app/main/default/classes/AEIR_InputBoundaryTest.cls": "3dd05361cd6a4c243cf55df94ff007d5f22a9b3edfedcbc33ce3c368fb528c79",
+      "force-app/main/default/classes/AEIR_IncidentAggregationService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_FlowCoverageService.cls-meta.xml": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "force-app/main/default/classes/AEIR_ConfigAndRoutingTest.cls": "e02c4ce1ad7fb393fc3bbfa7061cb983324c23d55c2fc37a9ed8fbc5924f798d",
+      "force-app/main/default/classes/AEIR_DiagnosticSessionService.cls": "6fca000164ec28f4fb03c8a9caad4acf21abe86befe11d481c387caa0a7a6f1c",
+      "force-app/main/default/triggers/AEIR_ErrorLogLifecycleTrigger.trigger-meta.xml": "18a9f7cd9d86eb4e7a191f499acd3b8e2f9aadacf869085fe85472913c6d0748",
+      "force-app/main/default/triggers/AEIR_ErrorLogLifecycleTrigger.trigger": "44a73491a736176a75b7ae42a4773d3e17d29e8111389c9551739215a185bc72",
+      "force-app/main/default/objects/Error_Log__c/fields/First_Diagnosed_At__c.field-meta.xml": "487f75b616466fb6cb0f02e5e2cd8bda0628aa0e528e9a1af45cefe539d0d82b",
+      "force-app/main/default/objects/Error_Log__c/fields/Diagnosis_Duration_Minutes__c.field-meta.xml": "b39476adfc2b192ce515345452248b550ccd628b9be81aaaf6cb0aaa2679b841",
+      "force-app/main/default/objects/Error_Log__c/fields/Resolution_Duration_Minutes__c.field-meta.xml": "2a92e9403e65073e8a8e36ad9bdcafedd2baaa8f3cafe5b8953eeb4d2cd9b11a",
+      "force-app/main/default/objects/Error_Log__c/fields/Resolved_At__c.field-meta.xml": "315617a0b79f64a04865fcc243f71502b275c93dc1aff5514d1c3d0e970beb9c",
+      "force-app/main/default/objects/Developer_Escalation__c/fields/Delivery_Requested_At__c.field-meta.xml": "befcb193ac3a95b8619a42af075022b9102e87128e599d14e356bb8a14c0aa75",
+      "force-app/main/default/objects/Developer_Escalation__c/fields/Request_Key__c.field-meta.xml": "db7a942867f74fe24745f719efe5282400ac322d70d9cd0c8ca8bfa44e28e78b",
+      "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Async_Monitor_Id__c.field-meta.xml": "94dc3bbb66d7ba9d96e8105f3e7d2639d601ad89a7cb47bbdef1d6f1195ec473",
+      "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Flow_Monitor_At__c.field-meta.xml": "f7314b05d669aa77d78a1230dc80886bcf7c3674d349083600ca4892f9903794",
+      "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Flow_Monitor_Id__c.field-meta.xml": "b4c7016de48abf4df4bc4826f6fbb84ef257be9fbb753eda9ab59201c87b5801",
+      "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Async_Monitor_At__c.field-meta.xml": "eed94b722ada22c5568a1413ba1d4961b7831cc98beb2f0c8dc86aff33632513"
+    }
+  },
+  "cleanup": {
+    "activeSyntheticDiagnosticsRemaining": 0,
+    "recordsRemoved": 12,
+    "removedByType": {
+      "incidents": 2,
+      "errorLogs": 1,
+      "sessions": 1,
+      "contexts": 1,
+      "diagnoses": 1,
+      "draftEscalations": 1,
+      "attemptTelemetry": 4,
+      "deliveryAudits": 0,
+      "notifications": 1
+    },
+    "rollbackProtectedProbeCommitted": false,
+    "businessRecordsCreatedOrRepaired": false,
+    "outboundEmailSent": false,
+    "externalProviderCallouts": false,
+    "postDeploymentPresence": {
+      "temporaryAcceptanceClass": {
+        "count": 0
+      },
+      "temporaryAcceptanceUsers": {
+        "count": 0
+      },
+      "deployedNewClasses": {
+        "count": 7
+      }
+    }
+  },
+  "rollback": {
+    "predeploymentMetadataSnapshot": "predeploy-snapshot.zip",
+    "snapshotSha256": "8633985d7bf1ff1d582b9b235fc543a9e244ca3697e27bfeea9fd54723c72ba0",
+    "automaticallyRestored": false
+  },
+  "limits": [
+    "Live Flow and async monitor queries succeeded with empty pages; high-volume backlog drainage and true concurrent contention remain covered by regression fixtures rather than live load tests.",
+    "Browser-rendered acceptance, mobile behavior and customer-specific automation recovery were not rerun.",
+    "No live email, Case delivery or external provider test was requested; escalation was verified as an unsent draft and cross-transaction replay.",
+    "Two duration formula blank-handling declarations are omitted by metadata retrieval; formula text/precision/scale match and known/unknown/reopened duration behavior was verified directly."
+  ],
+  "localChecks": {
+    "verify": "PASS",
+    "metadataAudit": "PASS",
+    "apexSyntaxFiles": 104,
+    "syntaxErrors": 0,
+    "lwcSuitesPassed": 12,
+    "lwcTestsPassed": 105,
+    "mcpTestsPassed": 30,
+    "gitDiffCheck": "PASS",
+    "gitHeadUnchanged": true
+  }
+}

@@ -1,0 +1,843 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-11-09T12:55:55.079884+00:00",
+  "status": "complete",
+  "decision": "Locally qualified for the recorded restricted nonproduction validation/Apex-test workflow",
+  "localToolQualificationComplete": true,
+  "openLocalToolReviewItems": [],
+  "eligibleForCredentialedRelease": true,
+  "eligibilityMeaning": "Technical tool eligibility under the scope below, conditional on later target binding and explicit authority; not permission to execute now.",
+  "eligibleForProductionRelease": false,
+  "executionAuthorityGranted": false,
+  "currentAuthority": {
+    "orgOperations": false,
+    "credentialRetrieval": false,
+    "deployment": false,
+    "commit": false,
+    "push": false,
+    "globalCliChange": false,
+    "externalDelivery": false
+  },
+  "artifact": {
+    "cliVersion": "2.157.8",
+    "packageInstances": 844,
+    "candidateFileEntries": 34154,
+    "candidateCanonicalInventorySha256": "3f8998228b699c3ac48bdf9e279c0fdd0c380611ae8bfea1b0e1a06e59a2fdf5",
+    "overlayManifest": "cli-remediation-manifest.json",
+    "overlayManifestSha256": "c251d20078080d26f970eb68de8512b7960a7cb0ba14f0b29fc781af3d321523",
+    "candidateModifiedByReview": false
+  },
+  "scope": {
+    "name": "Pinned nonproduction validation and Apex-test workflow",
+    "platform": "macOS arm64",
+    "cliVersion": "2.157.8",
+    "apiVersion": "67.0",
+    "candidateCanonicalInventorySha256": "3f8998228b699c3ac48bdf9e279c0fdd0c380611ae8bfea1b0e1a06e59a2fdf5",
+    "candidateEntryPoint": "bin/run.js",
+    "candidateEntryPointSha256": "fa2dfe2a89e652be067a06cfa2c766d52d3340342d6a19c255a8b9b917befb6e",
+    "runtimes": [
+      {
+        "version": "v22.23.4",
+        "binarySha256": "2cc28a1880d0774616959f2210ee739bffa6ac695c887e8988a496a21271f6c0"
+      },
+      {
+        "version": "v24.22.2",
+        "binarySha256": "b6fb419f0f43bb2fbca273700294dd2f3b685a64b60e8417c295f47646a70e4a"
+      }
+    ],
+    "sourceManifest": {
+      "path": "manifest/package.xml",
+      "sha256": "a6dfda9d3b1effeb1e3231961d5d96113b70e4cdce301e0bf1f8a63a2ecb41e6"
+    },
+    "bundledPluginCount": 29,
+    "invocationRequirements": [
+      "Use an explicitly bound absolute Node binary and candidate bin/run.js path; verify their recorded hashes and the full candidate inventory before use.",
+      "Use isolated controlled SF_DATA_DIR/SF_CONFIG_DIR and XDG state directories, with no user/linked plugins. Use NODE_ENV=production; no development or JIT plugin discovery and no pluginAdditions.",
+      "Unset NODE_OPTIONS, NODE_PATH, OCLIF override variables and implicit default-org variables. Set telemetry/update/version-refresh controls exactly as recorded.",
+      "Use only the exact command IDs and constrained arguments below. No abbreviated aliases, flag-file imports, additional selectors, destructive manifests or ignore-error/warning bypasses.",
+      "Before any future org action, bind a freshly verified nonproduction identity, approved owners/actions, exact source artifact, controlled evidence directory and bounded run budget.",
+      "This is a technical qualification record. It neither supplies execution authority nor automatically enforces command arguments; the operator must satisfy scope and authorization separately."
+    ],
+    "environment": {
+      "NODE_ENV": "production",
+      "SF_DISABLE_TELEMETRY": "true",
+      "SFDX_DISABLE_TELEMETRY": "true",
+      "SF_AUTOUPDATE_DISABLE": "true",
+      "SF_DISABLE_AUTOUPDATE": "true",
+      "SF_SKIP_NEW_VERSION_CHECK": "true",
+      "SF_FORCE_VERSION_CACHE_UPDATE": "false",
+      "SF_HIDE_RELEASE_NOTES": "true",
+      "SF_HIDE_RELEASE_NOTES_FOOTER": "true"
+    },
+    "commands": [
+      {
+        "id": "project:convert:source",
+        "provider": "@salesforce/plugin-deploy-retrieve@4.3.2",
+        "mode": "offline",
+        "required": [
+          "--manifest manifest/package.xml",
+          "--api-version 67.0",
+          "--output-dir <controlled-new-directory>",
+          "--json"
+        ],
+        "selection": "Exact reviewed manifest hash only; no --metadata, --source-dir or alternate manifest selection."
+      },
+      {
+        "id": "project:deploy:start",
+        "provider": "@salesforce/plugin-deploy-retrieve@4.3.2",
+        "mode": "future-separately-authorized-nonproduction-only",
+        "required": [
+          "--dry-run",
+          "--manifest manifest/package.xml",
+          "--target-org <freshly-verified-explicit-alias>",
+          "--api-version 67.0",
+          "--test-level RunLocalTests",
+          "--wait 60",
+          "--json"
+        ],
+        "selection": "Check-only validation. Absence of --dry-run, production, destructive changes and bypass flags are outside this qualification."
+      },
+      {
+        "id": "project:deploy:report",
+        "provider": "@salesforce/plugin-deploy-retrieve@4.3.2",
+        "mode": "future-separately-authorized-nonproduction-only",
+        "required": [
+          "--target-org <same-verified-explicit-alias>",
+          "--job-id <owned-dry-run-id>",
+          "--wait 60",
+          "--json"
+        ],
+        "selection": "Only the recorded run-owned validation job; no --use-most-recent."
+      },
+      {
+        "id": "apex:run:test",
+        "provider": "@salesforce/plugin-apex@4.4.4",
+        "mode": "future-separately-authorized-nonproduction-only",
+        "required": [
+          "--target-org <freshly-verified-explicit-alias>",
+          "--api-version 67.0",
+          "--test-level RunLocalTests",
+          "--code-coverage",
+          "--wait 60",
+          "--result-format json"
+        ],
+        "selection": "Selected bounded acceptance window and exact source baseline; no anonymous Apex, arbitrary test selectors or synchronous mutation scripts."
+      },
+      {
+        "id": "apex:get:test",
+        "provider": "@salesforce/plugin-apex@4.4.4",
+        "mode": "future-separately-authorized-nonproduction-only",
+        "required": [
+          "--target-org <same-verified-explicit-alias>",
+          "--test-run-id <owned-test-run-id>",
+          "--api-version 67.0",
+          "--result-format json"
+        ],
+        "selection": "Only the recorded run-owned Apex test job."
+      }
+    ],
+    "excluded": [
+      "Production use",
+      "Actual metadata deployment/quick deploy/destructive changes",
+      "Anonymous Apex or business-data operations",
+      "Agentforce command execution or external providers",
+      "npm/package/plugin install, update, trust or lifecycle-script operations",
+      "User/linked/development/JIT/additional plugins",
+      "CLI-backed MCP launch or credential-output commands",
+      "Bare sf/sfdx or existing npm/shell wrappers that resolve the unqualified shared CLI",
+      "Alternate SDK selection paths or arbitrary wildcard/exclusion recipes",
+      "Native ESM o11y/orchestrator and telemetry-uploader paths",
+      "Other OS/runtimes or changed artifact/plugin/manifest identities"
+    ]
+  },
+  "runtimeArtifacts": [
+    {
+      "version": "v22.23.4",
+      "lts": "Jod",
+      "url": "https://nodejs.org/dist/v22.23.4/node-v22.23.4-darwin-arm64.tar.gz",
+      "archiveSha256": "c9e1dbc748b33ed2d14f42445191ecaf14c56259c7a9a26d0042c49ec2b66428",
+      "checksumSource": "https://nodejs.org/dist/v22.23.4/SHASUMS256.txt",
+      "binarySha256": "2cc28a1880d0774616959f2210ee739bffa6ac695c887e8988a496a21271f6c0"
+    },
+    {
+      "version": "v24.22.2",
+      "lts": "Krypton",
+      "url": "https://nodejs.org/dist/v24.22.2/node-v24.22.2-darwin-arm64.tar.gz",
+      "archiveSha256": "aa9549349e47dffaa42dcf95d6e06ade8c4bdafc980979883b88767670df385a",
+      "checksumSource": "https://nodejs.org/dist/v24.22.2/SHASUMS256.txt",
+      "binarySha256": "b6fb419f0f43bb2fbca273700294dd2f3b685a64b60e8417c295f47646a70e4a"
+    }
+  ],
+  "sealedPlugins": [
+    {
+      "name": "@salesforce/cli",
+      "version": "2.157.8",
+      "path": "",
+      "packageManifestSha256": "757fa4d74e2d275ee2c35d19d9c13d0904c8ea2ad9e64cbaac2dcad3193353a6",
+      "commandManifestSha256": "c0595fddd36f4f482595e31c6f1897284f512caa9597758d6b39e2d001d7eb69",
+      "hooks": {
+        "command_incomplete": [
+          {
+            "identifier": "default",
+            "target": "./dist/hooks/incomplete"
+          }
+        ],
+        "plugins:preinstall": [
+          {
+            "identifier": "default",
+            "target": "./dist/hooks/pluginsPreinstall.js"
+          }
+        ],
+        "update": [
+          {
+            "identifier": "default",
+            "target": "./dist/hooks/display-release-notes.js"
+          }
+        ],
+        "prerun": [
+          {
+            "identifier": "default",
+            "target": "./dist/hooks/prerun"
+          }
+        ],
+        "preparse": [
+          {
+            "identifier": "default",
+            "target": "/dist/hooks/preparse"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@oclif/plugin-autocomplete",
+      "version": "4.0.6",
+      "path": "node_modules/@oclif/plugin-autocomplete",
+      "packageManifestSha256": "e18eba61b7b60c9eb3fbc1d15394541abd37d5a057955430c4d40244f6457b18",
+      "commandManifestSha256": "c7db4c46163428fe2d8bf2ffcc31078dabb19f4a0e4cd435368ff56834449988",
+      "hooks": {
+        "plugins:postinstall": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/refresh-cache.js"
+          }
+        ],
+        "plugins:postuninstall": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/refresh-cache.js"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@oclif/plugin-help",
+      "version": "7.0.6",
+      "path": "node_modules/@oclif/plugin-help",
+      "packageManifestSha256": "28d06882a9e558b79bba98fc6e7d828597ed2857c89d0d6ab0044611d6b44acc",
+      "commandManifestSha256": "ba0d22c3c7e4f7cae3e7ddccbc66d9e2122129899db05d020583f622f83d289f",
+      "hooks": {}
+    },
+    {
+      "name": "@oclif/plugin-not-found",
+      "version": "4.0.7",
+      "path": "node_modules/@oclif/plugin-not-found",
+      "packageManifestSha256": "05d182d979c1be4e5f28050f3cce966abc5396bf90fa425d44470a6c61746230",
+      "commandManifestSha256": "983f0596dfb0bb0b563e7214a7461912498aecd2474fc1f4131b7a97dfb20c41",
+      "hooks": {
+        "command_not_found": [
+          {
+            "identifier": "default",
+            "target": "./lib"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@oclif/plugin-commands",
+      "version": "5.0.6",
+      "path": "node_modules/@oclif/plugin-commands",
+      "packageManifestSha256": "9a8c3759f4db7719c7d3208657d18fac14007ec07a45954a1d919d84209a8ff0",
+      "commandManifestSha256": "0c0e44cee38f2f3ca98c79398b643dbb0ee010b74bafda743d6d10ac0dc1bc6d",
+      "hooks": {}
+    },
+    {
+      "name": "@oclif/plugin-plugins",
+      "version": "7.0.13",
+      "path": "node_modules/@oclif/plugin-plugins",
+      "packageManifestSha256": "07ec4287c8d048e24c41a69ebdbc838273293166d0ff25373230fc810f242cb9",
+      "commandManifestSha256": "8dbbedb92c53e68a237ab2e694845fcb8bcb068a92d48b0c4e543cbee3016249",
+      "hooks": {
+        "update": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/update.js"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@oclif/plugin-update",
+      "version": "5.0.10",
+      "path": "node_modules/@oclif/plugin-update",
+      "packageManifestSha256": "5a82c10b24ea558aa32f38c26fdf23956a403e964bc8819bd6a3316b3d9b47b2",
+      "commandManifestSha256": "e807cb9cc130c582c2576f2b780a93817bebfdd96cf88944553dda006bfa967d",
+      "hooks": {
+        "init": [
+          {
+            "identifier": "default",
+            "target": "./dist/hooks/init.js"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@oclif/plugin-version",
+      "version": "3.0.7",
+      "path": "node_modules/@oclif/plugin-version",
+      "packageManifestSha256": "7c89768b99684f1c3c9a8bb50f3d84e2cb8240e3d41756cfa44b01f85a304c6b",
+      "commandManifestSha256": "19bee2d91ce4f19823f153d47fa4896888d6c1795309c8144057a99989e00206",
+      "hooks": {}
+    },
+    {
+      "name": "@oclif/plugin-search",
+      "version": "2.0.9",
+      "path": "node_modules/@oclif/plugin-search",
+      "packageManifestSha256": "f80988de34db4b0f09fdfbfd9337dcc4fd6dbb2640d74bc79c9057b7358f3221",
+      "commandManifestSha256": "5a978187838b6e4c5100495a5e03386c6eff48125e518445a53ede694110c1d1",
+      "hooks": {}
+    },
+    {
+      "name": "@oclif/plugin-warn-if-update-available",
+      "version": "4.0.5",
+      "path": "node_modules/@oclif/plugin-warn-if-update-available",
+      "packageManifestSha256": "b23aef9c50a14d402233aa801aa88087d8032bc9019898e926c52182536c99e2",
+      "commandManifestSha256": "27f5551727d2892529906fe6086c996f8690b0d99cede85092b19fbf801b6a8a",
+      "hooks": {
+        "init": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/init/check-update"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@salesforce/plugin-apex",
+      "version": "4.4.4",
+      "path": "node_modules/@salesforce/plugin-apex",
+      "packageManifestSha256": "3d6814444b46e1da94ea2f9b844b96bb21900a12aa7e7c0d1309976ae179d986",
+      "commandManifestSha256": "dd8fa1785d569b5aa109775a3f40a80b9b5be51afeab7bb233b10640e079f17e",
+      "hooks": {}
+    },
+    {
+      "name": "@oclif/plugin-which",
+      "version": "4.0.6",
+      "path": "node_modules/@oclif/plugin-which",
+      "packageManifestSha256": "f48b4ebac5fed269cdb508aa1029703ed7cdcf3e0539b57eb252c4fcb93edee3",
+      "commandManifestSha256": "291f32e9072ad19b564159c1be4c65af5c529ccedf5e7318a0083e8e0080e2a5",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-auth",
+      "version": "6.0.0",
+      "path": "node_modules/@salesforce/plugin-auth",
+      "packageManifestSha256": "3ff0f2584cdbb4f139113c8082eafed9b0fa5ad610358353f6b0201ab857d378",
+      "commandManifestSha256": "33f4d50192fdb992bae9b8313698ed0e1fca502ab6b53bb61e3b14a8a71a5864",
+      "hooks": {
+        "sf-doctor-@salesforce/plugin-auth": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/diagnostics"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@salesforce/plugin-api",
+      "version": "2.0.24",
+      "path": "node_modules/@salesforce/plugin-api",
+      "packageManifestSha256": "9a5411f00d1d9663ca9804424cf438f2839a510c2538b567ec52828b9aee3120",
+      "commandManifestSha256": "44ba72dae2026e213b5594359c1f99d228c2071b8d425ad5b6bbe3ea6ed4c5f8",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-agent",
+      "version": "2.2.3",
+      "path": "node_modules/@salesforce/plugin-agent",
+      "packageManifestSha256": "1280e1a50ccc10e91657951482881681bc3ca8c65072e6253bf69ce7ba644b50",
+      "commandManifestSha256": "940590a704aa790b3f00d0335d0c40fdef5d9e30e020468675ae04609e809ab9",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-data",
+      "version": "5.1.24",
+      "path": "node_modules/@salesforce/plugin-data",
+      "packageManifestSha256": "9d3fe0b54d49a4be1ab25ff033e4ba6cd1042da306da4fe826965bfbfa0f5660",
+      "commandManifestSha256": "d4a94efe1d71a88356f3869f2e73941c89b8a5939b89876ed8f2697c6f9c3395",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-deploy-retrieve",
+      "version": "4.3.2",
+      "path": "node_modules/@salesforce/plugin-deploy-retrieve",
+      "packageManifestSha256": "5f5fbc8639f88d5935d9836220902f7776cbc95cb1419967f84c1a5596566373",
+      "commandManifestSha256": "7240ec03ae903e6d8e55cdef096720fef17f2f4f717a6c22f843b537c7c705fc",
+      "hooks": {
+        "sf-doctor-@salesforce/plugin-deploy-retrieve": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/diagnostics"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@salesforce/plugin-info",
+      "version": "4.0.22",
+      "path": "node_modules/@salesforce/plugin-info",
+      "packageManifestSha256": "346d987fbfa81ac4737dccbf51c790e0f92ff447ae2db7e0b7cdb1aa39f22aa1",
+      "commandManifestSha256": "c221b8dbbc3eca8fec5ecade7f1de16f4db07df71906c6a20a9a594b83982346",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-marketplace",
+      "version": "2.0.23",
+      "path": "node_modules/@salesforce/plugin-marketplace",
+      "packageManifestSha256": "ca1666c1984c3c89b321fabf932ae4b8fa80a7dfbcfb7542f4dd3bf74797b81a",
+      "commandManifestSha256": "28d4200274f6b1b8d3e4f0f8b30e8fa214c4684538167f570fae4a2a14da9444",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-limits",
+      "version": "4.0.6",
+      "path": "node_modules/@salesforce/plugin-limits",
+      "packageManifestSha256": "f9f7dd4948bd7e093121d56828136b97838bcac184cdfd5f0fa0ce771da330c9",
+      "commandManifestSha256": "21ff628363d777918b50b30c73217495cf7056e37c4008996705b088da98f4cc",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-schema",
+      "version": "4.0.16",
+      "path": "node_modules/@salesforce/plugin-schema",
+      "packageManifestSha256": "6a18af7c8bf67079390c7daedb29c694fb1933d97433082673d117fffb849c81",
+      "commandManifestSha256": "3f136a1e266079437d2d06d6f24de904fba7857aa37956212aeb42f4484230eb",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-org",
+      "version": "7.0.10",
+      "path": "node_modules/@salesforce/plugin-org",
+      "packageManifestSha256": "e75a923aa9e7dce289efc539967178324ccfdf9b1fe953db46a02516783e0748",
+      "commandManifestSha256": "eac46bec6b328aa2f28f955aef3e8fc3b940903ed2920e58e78d702dc82358fe",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-settings",
+      "version": "3.0.22",
+      "path": "node_modules/@salesforce/plugin-settings",
+      "packageManifestSha256": "19ceb12ee889307ca5f368e054e0c098ad505b0abf275821a5b781f63c79bba2",
+      "commandManifestSha256": "85d1b677c8094b6a3eabc95346ec7365c41831bd7e115de6284e8b361c83b68b",
+      "hooks": {
+        "init": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/init/load_config_meta"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@salesforce/plugin-sobject",
+      "version": "2.0.20",
+      "path": "node_modules/@salesforce/plugin-sobject",
+      "packageManifestSha256": "7db83b4095aa543cf4a50caf8ca0bb355087b5c615ce4da50e307446a0a68bf9",
+      "commandManifestSha256": "41d0d6881cb71afd4fa7ee389754c337ba45daa8d51713b5cfc9fcb3f6d40a5e",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-telemetry",
+      "version": "4.2.4",
+      "path": "node_modules/@salesforce/plugin-telemetry",
+      "packageManifestSha256": "51d963d0abfcdf741e22bf79a0f768ec2d8627c52fcd98ee3d2d3d9f7a6787ab",
+      "commandManifestSha256": "8392ad160a8dd6d8a7e757b852d5e4e97192b7c2e683fdfb5bdda53077f6a45f",
+      "hooks": {
+        "prerun": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/telemetryPrerun"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@salesforce/plugin-trust",
+      "version": "4.0.28",
+      "path": "node_modules/@salesforce/plugin-trust",
+      "packageManifestSha256": "3bf9cd8c1cbf1704a2b0be742e87442a2849de72174798d58253bb2c38b3dc42",
+      "commandManifestSha256": "7725a3dc7d01200becd09ea63d50d07b22648f48e34d2cf2a6a043a623a35f7e",
+      "hooks": {
+        "sf-doctor-@salesforce/plugin-trust": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/diagnostics"
+          }
+        ],
+        "plugins:preinstall:verify:signature": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/verifyInstallSignature"
+          }
+        ],
+        "jit_plugin_not_installed": [
+          {
+            "identifier": "default",
+            "target": "./lib/hooks/jitPluginInstall"
+          }
+        ]
+      }
+    },
+    {
+      "name": "@salesforce/plugin-user",
+      "version": "6.0.6",
+      "path": "node_modules/@salesforce/plugin-user",
+      "packageManifestSha256": "5051806e15eaa5487249137baebcc55fb5c299021868b792487210efa830a2bb",
+      "commandManifestSha256": "379f7d01db6107f9d5dec6837918d8beb105e3e7f2070caa2289f7379c8087e2",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-templates",
+      "version": "57.5.0",
+      "path": "node_modules/@salesforce/plugin-templates",
+      "packageManifestSha256": "35f67f408912de7ae7ae4b21e6aa30353f511eda54656c75dcbb93c00b135251",
+      "commandManifestSha256": "34a8ad6604c6f1a9a1bf9817183c1a7b7062b44ff98aa79ed37fdf9aae6f8e13",
+      "hooks": {}
+    },
+    {
+      "name": "@salesforce/plugin-packaging",
+      "version": "3.0.17",
+      "path": "node_modules/@salesforce/plugin-packaging",
+      "packageManifestSha256": "dfe0adfeaa7462aae7312594d85f3553c3b52c61a817f244a046d27baea2c502",
+      "commandManifestSha256": "6b2f057dce83702c2dc5703454ed304d8138d6657ff54cef195fdfd0c5e929e1",
+      "hooks": {}
+    }
+  ],
+  "overrideDispositions": [
+    {
+      "parent": "npm",
+      "parentVersion": "11.21.1",
+      "path": "node_modules/npm",
+      "dependency": "glob",
+      "declaredRange": "^13.0.6",
+      "baselineVersion": "13.0.6",
+      "candidateVersion": "14.0.4",
+      "resolvedPath": "node_modules/npm/node_modules/glob",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "npm",
+      "parentVersion": "11.21.1",
+      "path": "node_modules/npm",
+      "dependency": "minimatch",
+      "declaredRange": "^10.2.5",
+      "baselineVersion": "10.2.5",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/npm/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@oclif/core",
+      "parentVersion": "5.1.9",
+      "path": "node_modules/@oclif/core",
+      "dependency": "minimatch",
+      "declaredRange": "^10.2.5",
+      "baselineVersion": "10.2.6",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Selected command dispatch and bundled plugin matching",
+      "basis": "Actual plugin-loader matching, all 29 sealed plugin identities, five native command-class loads and controlled entry-point checks pass; selected callers do not use removed APIs.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@salesforce/plugin-agent",
+      "parentVersion": "2.2.3",
+      "path": "node_modules/@salesforce/plugin-agent",
+      "dependency": "glob",
+      "declaredRange": "^11.1.0",
+      "baselineVersion": "11.1.0",
+      "candidateVersion": "14.0.4",
+      "resolvedPath": "node_modules/@salesforce/plugin-agent/node_modules/glob",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Bundled registration only; Agentforce execution excluded",
+      "basis": "No selected Agentforce command runs. Patched glob APIs, cancellation and plugin registration are tested; this is not Agentforce runtime acceptance.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@salesforce/source-deploy-retrieve",
+      "parentVersion": "13.11.0",
+      "path": "node_modules/@salesforce/source-deploy-retrieve",
+      "dependency": "minimatch",
+      "declaredRange": "^9.0.9",
+      "baselineVersion": "9.0.9",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/@salesforce/source-deploy-retrieve/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Selected explicit-manifest resolution/conversion and check-only preparation",
+      "basis": "Existing 389-file conversion equality on both runtimes, sourcepath/metadata fixture and direct minimatch callers pass. Qualification requires the exact manifest; alternate selector/exclusion behavior is excluded.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "cacache",
+      "parentVersion": "20.0.4",
+      "path": "node_modules/npm/node_modules/cacache",
+      "dependency": "glob",
+      "declaredRange": "^13.0.0",
+      "baselineVersion": "13.0.6",
+      "candidateVersion": "14.0.4",
+      "resolvedPath": "node_modules/npm/node_modules/glob",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "ignore-walk",
+      "parentVersion": "8.0.0",
+      "path": "node_modules/npm/node_modules/ignore-walk",
+      "dependency": "minimatch",
+      "declaredRange": "^10.0.3",
+      "baselineVersion": "10.2.5",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/npm/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "libnpmdiff",
+      "parentVersion": "8.1.14",
+      "path": "node_modules/npm/node_modules/libnpmdiff",
+      "dependency": "minimatch",
+      "declaredRange": "^10.0.3",
+      "baselineVersion": "10.2.5",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/npm/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@npmcli/arborist",
+      "parentVersion": "9.9.3",
+      "path": "node_modules/npm/node_modules/@npmcli/arborist",
+      "dependency": "minimatch",
+      "declaredRange": "^10.0.3",
+      "baselineVersion": "10.2.5",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/npm/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@npmcli/map-workspaces",
+      "parentVersion": "5.0.3",
+      "path": "node_modules/npm/node_modules/@npmcli/map-workspaces",
+      "dependency": "glob",
+      "declaredRange": "^13.0.0",
+      "baselineVersion": "13.0.6",
+      "candidateVersion": "14.0.4",
+      "resolvedPath": "node_modules/npm/node_modules/glob",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@npmcli/map-workspaces",
+      "parentVersion": "5.0.3",
+      "path": "node_modules/npm/node_modules/@npmcli/map-workspaces",
+      "dependency": "minimatch",
+      "declaredRange": "^10.0.3",
+      "baselineVersion": "10.2.5",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/npm/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@npmcli/package-json",
+      "parentVersion": "7.0.5",
+      "path": "node_modules/npm/node_modules/@npmcli/package-json",
+      "dependency": "glob",
+      "declaredRange": "^13.0.0",
+      "baselineVersion": "13.0.6",
+      "candidateVersion": "14.0.4",
+      "resolvedPath": "node_modules/npm/node_modules/glob",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "@tufjs/models",
+      "parentVersion": "4.1.0",
+      "path": "node_modules/npm/node_modules/@tufjs/models",
+      "dependency": "minimatch",
+      "declaredRange": "^10.1.1",
+      "baselineVersion": "10.2.5",
+      "candidateVersion": "11.0.5",
+      "resolvedPath": "node_modules/npm/node_modules/minimatch",
+      "fits": false,
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Supporting installed npm subtree; install/update/package-management execution excluded",
+      "basis": "Existing workspace/packlist/cache/diff tests plus actual delegated-role, release-age and package-json helper checks support retained APIs. They do not authorize package installation or general npm use.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    },
+    {
+      "parent": "o11y@264.26.0",
+      "dependency": "protobufjs",
+      "declaredRange": "7.5.6",
+      "candidateVersion": "7.6.6",
+      "reviewState": "complete",
+      "disposition": "Accepted within the recorded restricted local scope",
+      "selectedRole": "Retained telemetry serializer with telemetry disabled",
+      "basis": "Resolved and embedded depth-limit controls, int64/map/bytes round trips and six actual telemetry schema/collector encodings pass. The real reporter imports client/collectors/simple_collector and does not import the excluded orchestrator/uploader.",
+      "vendorRangeRewritten": false,
+      "vendorSupportClaimed": false
+    }
+  ],
+  "apiChangeDisposition": {
+    "status": "complete",
+    "reviewedChanges": [
+      "Removed makeRe/AST and prototype members, regexp representation and maxExtglobRecursion/debug options",
+      "Minimatch.set Matcher representation, bounded optimization rejection, partial/dot/globstar and large numeric-range changes",
+      "Glob 14 bundled default versus raw entrypoints and path-scurry 3 requirements",
+      "Protobuf 7.6 serializer/depth changes and private embedded-wrapper adaptation"
+    ],
+    "decision": "Accepted for the actual consumed APIs and exact-manifest workflow; other interfaces, selectors and operations are excluded.",
+    "removedApiShimAdded": false,
+    "additionalPluginCompatibilityClaimed": false
+  },
+  "retainedLimitDispositions": [
+    {
+      "item": "Native ESM o11y/orchestrator import failure",
+      "state": "Closed by scope exclusion",
+      "basis": "Pre-existing in official baseline; selected real reporter imports client/collectors/simple_collector and telemetry stays disabled."
+    },
+    {
+      "item": "Standard npm wrapper ci peer-lock failure",
+      "state": "Closed by selecting verified archive/overlay replay",
+      "basis": "Do not use the failing wrapper installer. Existing complete original-archive/two-layer replay matches all file hashes/links/modes."
+    },
+    {
+      "item": "SDR alternate metadata-only exclusion behavior",
+      "state": "Closed by exact-manifest selection requirement",
+      "basis": "The selected manifest conversion is identical; arbitrary metadata/source-dir selection and alternate exclusion recipes are not in scope."
+    },
+    {
+      "item": "MCP adapter and shell wrappers invoke bare sf",
+      "state": "Excluded from qualified invocation scope",
+      "basis": "No product integration code is changed. REL-19 must bind a separately reviewed launcher/runtime before CLI-backed auth; existing wrappers cannot inherit this review."
+    },
+    {
+      "item": "Unverified real org and customer behavior",
+      "state": "Separate execution prerequisites",
+      "basis": "No target or execution authority is assigned. Actual compile/API/role/browser/load/delivery/rollback results remain required in the prepared acceptance work."
+    }
+  ],
+  "evidence": {
+    "priorCheckpoint": "E31",
+    "priorSecurityControlResults": 72,
+    "priorCompatibilityTests": 42,
+    "priorOfflineCliNpmChecks": 22,
+    "priorIdenticalConversionFilesPerRuntime": 389,
+    "priorCompleteReplayEntries": 34154,
+    "additionalLocalContractTests": 14,
+    "additionalGuardedEntryPointChecks": 8,
+    "bundledPluginsLoadedPerRuntime": 29,
+    "actualCommandClassesLoadedPerRuntime": 5,
+    "commandRunMethodsInvoked": 0,
+    "outboundNetworkAttemptsInGuardedChecks": 0,
+    "inlineWasmDataUriLoadsAreLocal": true,
+    "freshAuditFindings": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "freshAuditAtUtc": "2026-11-09T12:47:32.384Z",
+    "orgOperationsExecuted": false
+  },
+  "reReviewTriggers": [
+    "Any candidate/runtime/plugin/manifest hash or version change",
+    "Any additional/linked/JIT plugin or changed hook/provider",
+    "Any command/selector/API/OS/use case outside the recorded scope",
+    "A new applicable advisory or failure in target acceptance"
+  ],
+  "beforeLaterUse": [
+    "Refresh public advisory matching and reverify sealed artifact/runtime/plugin/manifest identity.",
+    "Bind and independently verify the nonproduction target, owners, exact cases/actions, budgets and evidence storage.",
+    "Obtain explicit authority for each selected org action; validate the complete bound profile and execute only the selected cases."
+  ],
+  "vendorSupportClaimed": false,
+  "complianceCertificationClaimed": false,
+  "securityRiskExceptionAccepted": false,
+  "primaryReferences": [
+    "https://developer.salesforce.com/docs/platform/salesforce-cli-reference/guide/cli_reference_project_deploy_validate.html",
+    "https://developer.salesforce.com/docs/platform/sfdx-setup/guide/sfdx-setup-update-cli.html",
+    "https://github.com/isaacs/minimatch/blob/main/changelog.md",
+    "https://github.com/protobufjs/protobuf.js/releases/tag/protobufjs-v7.6.6"
+  ]
+}

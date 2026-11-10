@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Request_Key__c</fullName>
+    <description>Server-generated unique source and route key; prevents duplicate escalation creation across deliveries.</description>
+    <externalId>true</externalId>
+    <label>Escalation Request Key</label>
+    <length>80</length>
+    <required>false</required>
+    <type>Text</type>
+    <unique>true</unique>
+</CustomField>

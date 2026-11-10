@@ -8,24 +8,26 @@
  * Responses are matched back to requests by source record id, not by list position:
  * createForErrors() returns results in SOQL order, which is not the order the ids went in.
  */
-public with sharing class AEIR_CreateEscalationAction {
+global with sharing class AEIR_CreateEscalationAction {
 
-    public class Request {
-        @InvocableVariable public Id errorLogId;
-        @InvocableVariable public Id diagnosticSessionId;
-        @InvocableVariable public String routeKey;
-        @InvocableVariable public Boolean sendEmailNow;
+    global class Request {
+        global Request() {}
+        @InvocableVariable global Id errorLogId;
+        @InvocableVariable global Id diagnosticSessionId;
+        @InvocableVariable global String routeKey;
+        @InvocableVariable global Boolean sendEmailNow;
     }
 
-    public class Response {
-        @InvocableVariable public Id escalationId;
-        @InvocableVariable public String status;
-        @InvocableVariable public String subject;
+    global class Response {
+        global Response() {}
+        @InvocableVariable global Id escalationId;
+        @InvocableVariable global String status;
+        @InvocableVariable global String subject;
     }
 
-    @InvocableMethod(label='AEIR Create Developer Escalation'
+    @InvocableMethod(category='Aegis Flow' label='AEIR Create Developer Escalation'
         description='Creates a developer escalation package and optionally sends configured email.')
-    public static List<Response> createEscalation(List<Request> requests) {
+    global static List<Response> createEscalation(List<Request> requests) {
         List<Response> out = new List<Response>();
         if (requests == null || requests.isEmpty()) return out;
 

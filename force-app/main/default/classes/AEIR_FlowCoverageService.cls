@@ -45,12 +45,18 @@ public with sharing class AEIR_FlowCoverageService {
         @AuraEnabled public String riskTier;
         @AuraEnabled public Integer failuresObserved;
         @AuraEnabled public Integer failuresCaptured;
+        @AuraEnabled public Integer historicalCaptures;
         @AuraEnabled public Integer captureGap;
         @AuraEnabled public Datetime lastFailureAt;
         @AuraEnabled public String sampleError;
         @AuraEnabled public String failingElement;
         @AuraEnabled public String status;          // Healthy | Captured | Capture gap | Unreadable
         @AuraEnabled public String recommendation;
+        public FlowCoverage() {
+            failuresObserved = 0;
+            failuresCaptured = 0;
+            historicalCaptures = 0;
+        }
     }
 
     public class CoverageReport {
@@ -58,6 +64,7 @@ public with sharing class AEIR_FlowCoverageService {
         @AuraEnabled public Integer flowsWithFailures;
         @AuraEnabled public Integer totalFailuresObserved;
         @AuraEnabled public Integer totalFailuresCaptured;
+        @AuraEnabled public Integer historicalCaptureCount;
         @AuraEnabled public Integer uncapturedFailures;
         @AuraEnabled public Integer silentRiskFlows;
         @AuraEnabled public Boolean interviewDataReadable;
@@ -72,10 +79,11 @@ public with sharing class AEIR_FlowCoverageService {
 
         // 1. Ground truth: what has actually failed.
         Map<String, FlowCoverage> byFlow = new Map<String, FlowCoverage>();
+        Map<String, String> observedByCorrelation = new Map<String, String>();
         try {
             Set<String> seenInterviews = new Set<String>();
             for (FlowInterview interview : evidenceSource.failedInterviews()) {
-                if (!String.isBlank(interview.Guid) && !seenInterviews.add(interview.Guid)) continue;
+                if (!String.isBlank(interview.Guid) && !seenInterviews.add(interview.Guid.toLowerCase())) continue;
                 String flowName = flowNameFrom(interview.InterviewLabel);
                 FlowCoverage row = byFlow.get(flowName);
                 if (row == null) {
@@ -92,13 +100,25 @@ public with sharing class AEIR_FlowCoverageService {
                     byFlow.put(flowName, row);
                 }
                 row.failuresObserved++;
+                if (!String.isBlank(interview.Guid)) observedByCorrelation.put(
+                    ('FLOWINT-' + interview.Guid).toLowerCase(), flowName);
             }
         } catch (Exception noAccess) {
             // Reading FlowInterview needs elevated access; degrade to a usable report.
             report.interviewDataReadable = false;
         }
 
-        // 2. What Aegis actually captured, so the gap is visible.
+        // Exact matches, not unrelated older captures from the same Flow.
+        if (!observedByCorrelation.isEmpty()) {
+            Set<String> observedCorrelations = observedByCorrelation.keySet();
+            for (Error_Log__c log : [SELECT Correlation_Id__c FROM Error_Log__c
+                WHERE Source_Type__c = 'Flow' AND Correlation_Id__c IN :observedCorrelations]) {
+                String observedFlow = observedByCorrelation.get(log.Correlation_Id__c.toLowerCase());
+                if (observedFlow != null) byFlow.get(observedFlow).failuresCaptured++;
+            }
+        }
+
+        // History is displayed separately and never reduces a current interview gap.
         for (AggregateResult ar : [
             SELECT Source_Name__c name, COUNT(Id) total
             FROM Error_Log__c
@@ -117,7 +137,7 @@ public with sharing class AEIR_FlowCoverageService {
                 row.failuresCaptured = 0;
                 byFlow.put(flowName, row);
             }
-            row.failuresCaptured += (Integer) ar.get('total');
+            row.historicalCaptures += (Integer) ar.get('total');
         }
 
         // 3. Overlay the active Flow inventory for type and risk context.
@@ -130,7 +150,7 @@ public with sharing class AEIR_FlowCoverageService {
             if (String.isNotBlank(view.Label)) activeByLabel.put(view.Label, view);
         }
 
-        Integer observed = 0, captured = 0, gapFlows = 0, uncaptured = 0;
+        Integer observed = 0, captured = 0, history = 0, gapFlows = 0, uncaptured = 0;
         for (FlowCoverage row : byFlow.values()) {
             FlowDefinitionView view = activeByLabel.get(row.label);
             if (view != null) {
@@ -145,10 +165,11 @@ public with sharing class AEIR_FlowCoverageService {
             uncaptured += row.captureGap;
             observed += row.failuresObserved;
             captured += row.failuresCaptured;
+            history += row.historicalCaptures == null ? 0 : row.historicalCaptures;
 
-            if (row.failuresObserved == 0 && row.failuresCaptured > 0) {
+            if (row.failuresObserved == 0 && row.historicalCaptures > 0) {
                 row.status = 'Captured';
-                row.recommendation = 'Captured by Aegis Flow. The interview record has since been purged by Salesforce.';
+                row.recommendation = 'Capture history exists; no matching failed interview is in the observed window.';
             } else if (row.captureGap > 0) {
                 gapFlows++;
                 row.status = 'Capture gap';
@@ -170,6 +191,7 @@ public with sharing class AEIR_FlowCoverageService {
         report.flowsWithFailures = flows.size();
         report.totalFailuresObserved = observed;
         report.totalFailuresCaptured = captured;
+        report.historicalCaptureCount = history;
         // Captured history from another Flow must not cancel this Flow's real gap.
         report.uncapturedFailures = uncaptured;
 
@@ -182,7 +204,7 @@ public with sharing class AEIR_FlowCoverageService {
         } else if (observed == 0) {
             // Salesforce purges errored interviews, so history can outlive the raw evidence.
             report.summary = 'No Flow failures in the current interview window. '
-                + captured + ' previously captured failure(s) across ' + flows.size() + ' Flow(s) remain on record.';
+                + history + ' previously captured failure(s) across ' + flows.size() + ' Flow(s) remain on record.';
         } else if (report.uncapturedFailures == 0) {
             report.summary = 'All ' + observed + ' recorded Flow failure(s) across '
                 + flows.size() + ' Flow(s) were captured by Aegis Flow.';

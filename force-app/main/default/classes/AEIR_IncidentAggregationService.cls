@@ -139,7 +139,10 @@ public without sharing class AEIR_IncidentAggregationService {
             String.valueOf(bucket)
         };
         String key = String.join(parts, '|');
-        return key.length() > 255 ? key.substring(0, 255) : key;
+        // Preserve existing short keys, but never discard the object/category/bucket
+        // from a long source name. JSON preserves field boundaries before hashing.
+        return key.length() <= 255 ? key : 'sha256:' + EncodingUtil.convertToHex(
+            Crypto.generateDigest('SHA-256', Blob.valueOf(JSON.serialize(parts))));
     }
 
     private static void addTo(Map<String, Set<String>> target, String key, String value) {

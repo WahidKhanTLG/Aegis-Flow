@@ -1,3 +1,5 @@
+import ROOT_CAUSE_FIELD from '@salesforce/schema/AI_Diagnosis__c.Root_Cause__c';
+import RECOMMENDED_ACTION_FIELD from '@salesforce/schema/AI_Diagnosis__c.Recommended_Action__c';
 import { LightningElement, api } from 'lwc';
 import getAlertDetails from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.getAlertDetails';
 
@@ -11,7 +13,8 @@ export default class AegisDiagnosticPanel extends LightningElement {
 
     @api
     get correlationId() { return this._correlationId; }
-    set correlationId(value) {
+    set correlationId(value) { this.updateReference(value); }
+    updateReference(value) {
         this._correlationId = value ? String(value).trim() : '';
         if (this.isConnected) this.refresh();
     }
@@ -25,9 +28,9 @@ export default class AegisDiagnosticPanel extends LightningElement {
     get summary() { return this.errorLog ? this.errorLog.normalizedMessage : this.detail && this.detail.alert ? this.detail.alert.shortMessage : ''; }
     get source() { return this.errorLog ? this.errorLog.sourceName || this.errorLog.sourceType : ''; }
     get diagnosis() { return this.detail && this.detail.diagnosis; }
-    get rootCause() { return this.diagnosis ? this.diagnosis.Root_Cause__c : ''; }
-    get recommendedAction() { return this.diagnosis ? this.diagnosis.Recommended_Action__c : ''; }
-    handleReference(event) { this.correlationId = event.detail.value; }
+    get rootCause() { return this.diagnosis ? this.diagnosis[ROOT_CAUSE_FIELD.fieldApiName] : ''; }
+    get recommendedAction() { return this.diagnosis ? this.diagnosis[RECOMMENDED_ACTION_FIELD.fieldApiName] : ''; }
+    handleReference(event) { this.updateReference(event.detail.value); }
 
     @api
     refresh() {

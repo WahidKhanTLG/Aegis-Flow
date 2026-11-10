@@ -5,25 +5,27 @@
  * roughly six operations each. Error logs are now diagnosed in one bulk call and matched back
  * to requests by id.
  */
-public with sharing class AEIR_InvokeDiagnosisAction {
+global with sharing class AEIR_InvokeDiagnosisAction {
 
-    public class Request {
-        @InvocableVariable public Id errorLogId;
-        @InvocableVariable public Id diagnosticSessionId;
+    global class Request {
+        global Request() {}
+        @InvocableVariable global Id errorLogId;
+        @InvocableVariable global Id diagnosticSessionId;
     }
 
-    public class Response {
-        @InvocableVariable public Id diagnosisId;
-        @InvocableVariable public String summary;
-        @InvocableVariable public String fixability;
-        @InvocableVariable public Boolean escalationRequired;
-        @InvocableVariable public String recommendedAction;
-        @InvocableVariable public String safeRemediationActionKey;
+    global class Response {
+        global Response() {}
+        @InvocableVariable global Id diagnosisId;
+        @InvocableVariable global String summary;
+        @InvocableVariable global String fixability;
+        @InvocableVariable global Boolean escalationRequired;
+        @InvocableVariable global String recommendedAction;
+        @InvocableVariable global String safeRemediationActionKey;
     }
 
-    @InvocableMethod(label='AEIR Invoke Diagnosis'
+    @InvocableMethod(category='Aegis Flow' label='AEIR Invoke Diagnosis'
         description='Runs deterministic/agentic diagnosis for an Error Log or Diagnostic Session.')
-    public static List<Response> invokeDiagnosis(List<Request> requests) {
+    global static List<Response> invokeDiagnosis(List<Request> requests) {
         List<Response> out = new List<Response>();
         if (requests == null || requests.isEmpty()) return out;
 

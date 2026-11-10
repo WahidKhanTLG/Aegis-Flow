@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "reviewedAtUtc": "2026-11-10T11:50:53.380161+00:00",
+  "baselineCommit": "eda715f3c05aeda9acacd2e6bf97384cf4968801",
+  "scope": "Aegis Flow source changes since the published baseline; optional integrations and commercial work remain separate",
+  "sourcePreservation": {
+    "missingBaselineMetadataFiles": 0,
+    "reviewedBaselineApexFiles": 91,
+    "baselinePublicOrProtectedApexContracts": 613,
+    "removedOrNarrowedApexContracts": 0,
+    "reviewedLwcBundles": 14,
+    "baselineLwcPublicApis": 26,
+    "removedLwcPublicApis": 0
+  },
+  "salesforce": {
+    "case": "PUB-APEX-01",
+    "checkOnly": true,
+    "actualDeployment": false,
+    "jobId": "0AfgL00000dOLKzSAO",
+    "status": "Succeeded",
+    "components": 571,
+    "componentErrors": 0,
+    "testClassCount": 38,
+    "testsPassed": 311,
+    "testsFailed": 0,
+    "coverageWarnings": 0,
+    "returnedAegisExecutableClasses": 64,
+    "returnedWeightedCoveragePercent": 93.14,
+    "namespace": null,
+    "scopeLimitation": "Unmanaged development org; does not prove namespaced package build/install or ordinary-user browser acceptance"
+  },
+  "liveMcp": {
+    "passed": true,
+    "liveReadOperations": [
+      "get_capabilities",
+      "find_recent_errors",
+      "list_incidents",
+      "list_notifications"
+    ],
+    "outboundApiCalls": 4,
+    "writesEnabled": false,
+    "mutationRejectedBeforeDispatch": true,
+    "credentialPersisted": false,
+    "identityScope": "Connected administrator; not ordinary-user A/B acceptance"
+  },
+  "localRegression": {
+    "nodeVersions": [
+      "22.23.4",
+      "24.22.2"
+    ],
+    "lwcTests": 124,
+    "mcpTests": 33,
+    "dependencySecurityTests": 12,
+    "managedSourceTests": 8,
+    "xmlFiles": 581,
+    "apexGrammarInputs": 105,
+    "lwcBundles": 14,
+    "rootAuditFindings": 0,
+    "lintAuditFindings": 0
+  },
+  "orgComparison": {
+    "scopedLogicalFiles": 717,
+    "exactMatches": 536,
+    "normalizedMatches": 134,
+    "expectedOrgConfigurationFiles": 7,
+    "differencesBeforeDeployment": 38,
+    "missingFilesBeforeDeployment": 2,
+    "scopeLimitation": "Manifest-scoped retrieved snapshot, not whole-org parity",
+    "retainedOrgConfiguration": "Two enabled development feature flags and five event running users must not be overwritten by portable defaults"
+  },
+  "publication": {
+    "state": "Review branch prepared; hosted CI and merge still pending",
+    "hostedNodeMatrix": [
+      22,
+      24
+    ]
+  },
+  "boundaries": {
+    "globalCliChanged": false,
+    "salesforcePackageCreated": false,
+    "businessWritesOrExternalDelivery": false,
+    "historicalAcc0701": "Failed result retained; no rewrite or waiver",
+    "otherPreparedAcceptanceCases": "16 Not run"
+  },
+  "releaseExclusion": "Unused intermediate-package-lock.json retained locally; only root and tools/lint locks are install inputs"
+}

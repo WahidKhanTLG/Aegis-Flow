@@ -112,7 +112,8 @@ private class AEIR_CoverageAndGuardTest {
         for (AEIR_FlowCoverageService.FlowCoverage f : report.flows) {
             if (f.label == 'Coverage Probe Flow') {
                 found = true;
-                System.assertEquals(1, f.failuresCaptured);
+                System.assertEquals(1, f.historicalCaptures);
+                System.assertEquals(0, f.failuresCaptured);
                 System.assertEquals(0, f.captureGap, 'A captured failure is not a gap.');
                 System.assertEquals('Captured', f.status);
             }

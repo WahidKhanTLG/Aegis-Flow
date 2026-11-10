@@ -174,6 +174,10 @@ private class AEIR_ObservabilityCoverageTest {
             Severity__c = 'Medium', Status__c = 'New'));
         insert logs;
     }
+    private static void captureMatch(String source, String guid) {
+        insert new Error_Log__c(Correlation_Id__c = 'FLOWINT-' + guid, User__c = UserInfo.getUserId(),
+            Source_Type__c = 'Flow', Source_Name__c = source, Severity__c = 'Medium', Status__c = 'New');
+    }
     private static Map<String, AEIR_FlowCoverageService.FlowCoverage> byLabel(AEIR_FlowCoverageService.CoverageReport report) {
         Map<String, AEIR_FlowCoverageService.FlowCoverage> rows = new Map<String, AEIR_FlowCoverageService.FlowCoverage>();
         for (AEIR_FlowCoverageService.FlowCoverage row : report.flows) rows.put(row.label, row);
@@ -197,14 +201,15 @@ private class AEIR_ObservabilityCoverageTest {
             flow('Unnamed', null, 'Workflow', null)
         };
         AEIR_FlowCoverageService.evidenceSource = source;
-        capture('Gap Flow / Update_Records', 1);
-        capture('Matched Flow / First_Element', 1);
-        capture('Matched Flow / Second_Element', 1);
+        captureMatch('Gap Flow / Update_Records', 'gap-1');
+        captureMatch('Matched Flow / First_Element', 'matched-1');
+        captureMatch('Matched Flow / Second_Element', 'matched-2');
         capture('Purged Flow / Update_Records', 5);
         AEIR_FlowCoverageService.CoverageReport report = AEIR_FlowCoverageService.scan();
         Map<String, AEIR_FlowCoverageService.FlowCoverage> rows = byLabel(report);
         System.assertEquals(7, report.totalFailuresObserved, 'Repeated delivery of the same interview must not inflate observations.');
-        System.assertEquals(8, report.totalFailuresCaptured);
+        System.assertEquals(3, report.totalFailuresCaptured);
+        System.assertEquals(8, report.historicalCaptureCount);
         System.assertEquals(4, report.uncapturedFailures, 'Purged history from another Flow must not hide current capture gaps.');
         System.assertEquals(4, report.totalActiveFlows, 'The capture subflow is infrastructure, not a customer Flow.');
         System.assertEquals(3, report.silentRiskFlows);
@@ -217,7 +222,7 @@ private class AEIR_ObservabilityCoverageTest {
         System.assertEquals(2, rows.get('Matched Flow').failuresObserved);
         System.assertEquals(2, rows.get('Matched Flow').failuresCaptured, 'Element suffixes must fold into one Flow.');
         System.assertEquals('Captured', rows.get('Matched Flow').status);
-        System.assert(rows.get('Purged Flow').recommendation.contains('purged'));
+        System.assert(rows.get('Purged Flow').recommendation.contains('observed window'));
         System.assertEquals('Gap Flow', report.flows[0].label, 'Triage places the largest real gap first.');
         System.assert(!rows.get('Gap Flow').sampleError.contains('FLOW_SAMPLE_PRIVATE'));
         System.assert(report.summary.startsWith('4 of 7'));
@@ -229,7 +234,7 @@ private class AEIR_ObservabilityCoverageTest {
         source.interviews.add(interview('all-matched', 'All Matched 1/2/2026, 10:00 AM'));
         source.inventory.add(flow('All_Matched', 'All Matched', 'Flow', null));
         AEIR_FlowCoverageService.evidenceSource = source;
-        capture('All Matched / Update_Records', 1);
+        captureMatch('All Matched / Update_Records', 'all-matched');
         AEIR_FlowCoverageService.CoverageReport report = AEIR_FlowCoverageService.scan();
         System.assertEquals(0, report.uncapturedFailures);
         System.assertEquals('Captured', report.flows[0].status);
@@ -248,7 +253,8 @@ private class AEIR_ObservabilityCoverageTest {
         capture('Historical Flow / Update_Records', 2);
         AEIR_FlowCoverageService.CoverageReport historical = AEIR_FlowCoverageService.scan();
         System.assertEquals(0, historical.totalFailuresObserved);
-        System.assertEquals(2, historical.totalFailuresCaptured);
+        System.assertEquals(0, historical.totalFailuresCaptured);
+        System.assertEquals(2, historical.historicalCaptureCount);
         System.assertEquals('Captured', historical.flows[0].status);
         System.assert(historical.summary.contains('previously captured'));
         System.assertEquals('Unknown Flow', AEIR_FlowCoverageService.flowNameFrom(' 1/2/2026, 10:00 AM'));
@@ -262,7 +268,8 @@ private class AEIR_ObservabilityCoverageTest {
         capture('Captured Despite Unreadable Interviews / Update_Records', 1);
         AEIR_FlowCoverageService.CoverageReport report = AEIR_FlowCoverageService.scan();
         System.assertEquals(false, report.interviewDataReadable);
-        System.assertEquals(1, report.totalFailuresCaptured);
+        System.assertEquals(0, report.totalFailuresCaptured);
+        System.assertEquals(1, report.historicalCaptureCount);
         System.assertEquals(0, report.totalFailuresObserved);
         System.assert(report.summary.contains('could not be read'));
         System.assert(!report.summary.startsWith('All'), 'Unavailable evidence must not be represented as complete coverage.');

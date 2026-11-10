@@ -259,11 +259,11 @@ private class AEIR_InputBoundaryTest {
     static void subscriberPersistsValidSessionsAndRecordsRejectedInputTelemetry() {
         Account accountRecord = new Account(Name = 'Subscriber invalid user');
         insert accountRecord;
-        AEIR_DiagnosticSessionRequestHandler.handle(new List<Diagnostic_Session_Requested__e>{
+        AEIR_DiagnosticSessionRequestHandler.handle(AEIR_EventTestData.sessions(new List<Diagnostic_Session_Requested__e>{
             null,
             new Diagnostic_Session_Requested__e(Correlation_Id__c = 'BOUNDARY-REJECTED', User_Id__c = accountRecord.Id),
             new Diagnostic_Session_Requested__e(Correlation_Id__c = 'BOUNDARY-ACCEPTED', User_Id__c = UserInfo.getUserId())
-        });
+        }, UserInfo.getUserId()));
         System.assertEquals(1, [SELECT count() FROM Diagnostic_Session__c WHERE Correlation_Id__c = 'BOUNDARY-ACCEPTED']);
         System.assertEquals(1, [SELECT count() FROM Delivery_Attempt__c WHERE Correlation_Id__c = 'BOUNDARY-REJECTED' AND Status__c = 'Failed']);
     }

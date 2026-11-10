@@ -412,6 +412,16 @@
         <field>User_Notification__c.Viewed_At__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Developer_Escalation__c.Request_Key__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>Developer_Escalation__c.Delivery_Requested_At__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
     <hasActivationRequired>false</hasActivationRequired>
     <label>AEIR Sample Account Remediation</label>
     <objectPermissions>

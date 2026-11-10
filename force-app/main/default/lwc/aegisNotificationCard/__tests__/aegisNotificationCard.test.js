@@ -45,4 +45,18 @@ describe('c-aegis-notification-card', () => {
         expect(element.shadowRoot.querySelector('[role="alert"]')).not.toBeNull();
         expect(element.shadowRoot.textContent).toContain('Try refreshing');
     });
+    it('resolves a typed reference and never renders the previous response', async () => {
+        let finishOld;
+        resolveAlert.mockImplementationOnce(() => new Promise(resolve => { finishOld = resolve; }));
+        const element = mount();
+        resolveAlert.mockResolvedValueOnce({ ...notice(), correlationId: 'NOTICE-NEW', headline: 'Current notification' });
+        element.shadowRoot.querySelector('lightning-input').dispatchEvent(new CustomEvent('change', { detail: { value: '  NOTICE-NEW  ' } }));
+        await flush();
+        finishOld({ ...notice(), headline: 'STALE NOTIFICATION' });
+        await flush();
+        expect(resolveAlert).toHaveBeenLastCalledWith({ correlationId: 'NOTICE-NEW' });
+        expect(element.shadowRoot.textContent).toContain('Current notification');
+        expect(element.shadowRoot.textContent).not.toContain('STALE NOTIFICATION');
+        expect(dismissAlert).not.toHaveBeenCalled();
+    });
 });

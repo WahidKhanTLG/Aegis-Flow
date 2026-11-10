@@ -46,4 +46,17 @@ describe('c-aegis-diagnostic-panel', () => {
         expect(element.shadowRoot.textContent).toContain('Retained summary');
         expect(element.shadowRoot.textContent).toContain('no longer available');
     });
+    it('normalizes a typed reference and refuses the previous request response', async () => {
+        let finishOld;
+        getAlertDetails.mockImplementationOnce(() => new Promise(resolve => { finishOld = resolve; }));
+        const element = mount('OLD');
+        getAlertDetails.mockResolvedValueOnce({ errorLog: { normalizedMessage: 'Current diagnostic' } });
+        element.shadowRoot.querySelector('lightning-input').dispatchEvent(new CustomEvent('change', { detail: { value: '  CURRENT  ' } }));
+        await flush();
+        finishOld({ errorLog: { normalizedMessage: 'STALE DIAGNOSTIC' } });
+        await flush();
+        expect(getAlertDetails).toHaveBeenLastCalledWith({ correlationId: 'CURRENT' });
+        expect(element.shadowRoot.textContent).toContain('Current diagnostic');
+        expect(element.shadowRoot.textContent).not.toContain('STALE DIAGNOSTIC');
+    });
 });
