@@ -23,6 +23,11 @@ Salesforce check-only compilation: 571 components and 311/311 Aegis tests, with 
 coverage warnings. Four live MCP read operations pass with writes disabled. These results
 do not replace namespaced build/install or ordinary-user/browser acceptance.
 
+The subsequent [actual development deployment](DEVELOPMENT_DEPLOYMENT_VERIFICATION.md)
+passes 27 components / 311 tests plus a focused nine-test lifecycle follow-up. Final 717-file
+scoped parity passes; the two enabled flags and five event-running users are preserved.
+This unmanaged evidence does not replace namespaced build/install or customer acceptance.
+
 ## Package boundary
 
 One core package includes current product metadata and dormant optional adapters. Agentforce,
@@ -85,6 +90,6 @@ remain logical identifiers. See [namespace standard](NAMESPACE_READINESS.md),
    uninstall retention, hosted CI and commercial/security-review requirements.
 
 Those environment gates have not been passed or waived by local tests. Global CLI changes,
-namespace/Dev Hub setup, actual deployment, package creation and external messages
+namespace/Dev Hub setup, production/packaging deployment, package creation and external messages
 remain for separately authorized team work. Git publication is now authorized and tracked in the
 [product tracker](PRODUCT_PLAN_AND_TRACKER.md).

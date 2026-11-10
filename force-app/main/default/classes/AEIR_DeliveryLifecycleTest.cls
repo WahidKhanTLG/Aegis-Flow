@@ -111,4 +111,50 @@ private class AEIR_DeliveryLifecycleTest {
         error.Status__c = 'Resolved'; update error;
         System.assertEquals(first.addMinutes(20), [SELECT Resolved_At__c FROM Error_Log__c WHERE Id = :error.Id].Resolved_At__c);
     }
+    @IsTest static void durationFormulasPreserveUnknownZeroAndKnownTimes() {
+        Datetime created = Datetime.now().addHours(-2);
+        Error_Log__c unknown = log('FORMULA-UNKNOWN');
+        Error_Log__c zero = log('FORMULA-ZERO');
+        Error_Log__c elapsed = log('FORMULA-ELAPSED');
+        Error_Log__c invalid = log('FORMULA-INVALID');
+        Test.setCreatedDate(unknown.Id, created);
+        Test.setCreatedDate(zero.Id, created);
+        Test.setCreatedDate(elapsed.Id, created);
+        Test.setCreatedDate(invalid.Id, created);
+
+        AEIR_ErrorLifecycleService.clockOverride = created;
+        zero.Status__c = 'Diagnosed'; update zero;
+        zero.Status__c = 'Resolved'; update zero;
+        AEIR_ErrorLifecycleService.clockOverride = created.addMinutes(10);
+        elapsed.Status__c = 'Diagnosed'; update elapsed;
+        AEIR_ErrorLifecycleService.clockOverride = created.addMinutes(60);
+        elapsed.Status__c = 'Resolved'; update elapsed;
+        AEIR_ErrorLifecycleService.clockOverride = created.addMinutes(-1);
+        invalid.Status__c = 'Diagnosed'; update invalid;
+        invalid.Status__c = 'Resolved'; update invalid;
+
+        Set<Id> ids = new Set<Id>{unknown.Id, zero.Id, elapsed.Id, invalid.Id};
+        Map<Id, Error_Log__c> saved = new Map<Id, Error_Log__c>([
+            SELECT Diagnosis_Duration_Minutes__c, Resolution_Duration_Minutes__c
+            FROM Error_Log__c WHERE Id IN :ids
+        ]);
+        System.assertEquals(null, saved.get(unknown.Id).Diagnosis_Duration_Minutes__c,
+            'Missing history must remain unknown rather than become zero.');
+        System.assertEquals(null, saved.get(unknown.Id).Resolution_Duration_Minutes__c);
+        System.assertEquals(0, saved.get(zero.Id).Diagnosis_Duration_Minutes__c,
+            'An actual zero-minute transition must remain distinguishable from unknown.');
+        System.assertEquals(0, saved.get(zero.Id).Resolution_Duration_Minutes__c);
+        System.assertEquals(10, saved.get(elapsed.Id).Diagnosis_Duration_Minutes__c);
+        System.assertEquals(60, saved.get(elapsed.Id).Resolution_Duration_Minutes__c);
+        System.assertEquals(null, saved.get(invalid.Id).Diagnosis_Duration_Minutes__c,
+            'An invalid transition earlier than capture must not produce negative history.');
+        System.assertEquals(null, saved.get(invalid.Id).Resolution_Duration_Minutes__c);
+
+        elapsed.Status__c = 'New'; update elapsed;
+        Error_Log__c reopened = [SELECT Diagnosis_Duration_Minutes__c, Resolution_Duration_Minutes__c
+            FROM Error_Log__c WHERE Id = :elapsed.Id];
+        System.assertEquals(10, reopened.Diagnosis_Duration_Minutes__c);
+        System.assertEquals(null, reopened.Resolution_Duration_Minutes__c,
+            'Reopening removes the current resolution duration without changing first diagnosis.');
+    }
 }

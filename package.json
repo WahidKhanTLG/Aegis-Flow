@@ -14,7 +14,7 @@
     "test:unit:coverage": "npm run test:unit -- -- --coverage",
     "test:mcp": "node --disable-proto=throw --test integrations/mcp/test/*.test.mjs",
     "mcp": "node integrations/mcp/server.mjs",
-    "verify": "npm run audit:local && npm run test:apex:syntax && npm run test:lwc:syntax && npm run test:source:syntax && npm run check:release-prep && npm run check:packaging && npm run test:packaging && npm run lint && npm run test:deps && npm run test:unit -- -- --runInBand && npm run test:mcp",
+    "verify": "npm run audit:local && npm run test:apex:syntax && npm run test:lwc:syntax && npm run test:source:syntax && npm run check:release-prep && npm run test:parity && npm run check:packaging && npm run test:packaging && npm run lint && npm run test:deps && npm run test:unit -- -- --runInBand && npm run test:mcp",
     "validate:production": "sf project deploy validate --manifest manifest/package.xml --test-level RunLocalTests --wait 60",
     "validate:sandbox": "bash scripts/validate_sandbox.sh",
     "audit:deps": "npm audit --audit-level=high",
@@ -26,7 +26,8 @@
     "check:release-prep": "python3 scripts/validate_release_preparation.py",
     "lint:install": "npm ci --prefix tools/lint --ignore-scripts --no-audit --no-fund",
     "check:packaging": "python3 scripts/prepare_managed_source.py --check",
-    "test:packaging": "python3 -m unittest discover -s scripts/test -p test_managed_source.py"
+    "test:packaging": "python3 -m unittest discover -s scripts/test -p test_managed_source.py",
+    "test:parity": "python3 -m unittest discover -s scripts/test -p test_org_snapshot.py"
   },
   "devDependencies": {
     "@apexdevtools/apex-parser": "5.3.0",

@@ -1,5 +1,16 @@
 # Aegis Flow — Open Issues
 
+## November 10 verified development deployment
+
+E47 completes the separately authorized development deployment: 27 components and 311/311
+Aegis tests pass, followed by a test-only 9/9 lifecycle run. Final 717-file release parity
+passes with zero unexpected/missing files; two enabled flags and five event users are
+unchanged. Full local Node 22/24 checks include eight new parity regressions. The duration
+formula bodies are unchanged and their null/zero/elapsed/invalid/reopen behavior is proven.
+See [deployment verification](DEVELOPMENT_DEPLOYMENT_VERIFICATION.md). Hosted CI billing and
+the actual role/browser/customer/managed-package gates remain open. Earlier dated records
+below preserve their original scope and do not describe the latest org state.
+
 ## November 10 main publication and post-merge verification
 
 [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2) is merged. The full post-merge

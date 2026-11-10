@@ -1,0 +1,158 @@
+{
+  "schemaVersion": 1,
+  "evidenceId": "E47",
+  "verifiedAtUtc": "2026-11-10T13:18:59.673127+00:00",
+  "status": "Succeeded; scoped development source parity verified",
+  "authorization": "User explicitly authorized deployment of reviewed Aegis changes, preserving two enabled feature flags and five event-running users",
+  "target": "Freshly verified connected Developer Edition; unmanaged namespace; nonproduction",
+  "reviewedMainCommit": "4f3b4e0a294b569999e9b5aec3b1491791df017c",
+  "developmentDeployment": {
+    "case": "DEV-ALIGN-01",
+    "id": "0AfgL00000dOj8nSAC",
+    "checkOnly": false,
+    "rollbackOnError": true,
+    "componentsDeployed": 27,
+    "components": {
+      "ApexClass": [
+        "AEIR_CaptureFlowFaultAction",
+        "AEIR_CreateEscalationAction",
+        "AEIR_ExecuteRemediationAction",
+        "AEIR_ExecuteRetryHandlerAction",
+        "AEIR_FindRecentErrorsAction",
+        "AEIR_GetErrorContextAction",
+        "AEIR_GetRecordSnapshotAction",
+        "AEIR_InvokeDiagnosisAction",
+        "AEIR_NamespaceContractTest",
+        "AEIR_RetryHandler",
+        "AEIR_RetryOrchestrationService",
+        "AEIR_UpdateMissingFieldAction"
+      ],
+      "LightningComponentBundle": [
+        "adminErrorConsole",
+        "aegisDiagnosticPanel",
+        "aegisEscalationConfirmation",
+        "aegisGetHelpPanel",
+        "aegisHeadlessMonitor",
+        "aegisNotificationCard",
+        "aegisRemediationConfirmation",
+        "aegisUiSaveCapture",
+        "aegisWorkspace",
+        "developerEscalationViewer",
+        "helpMeAgentUtility"
+      ],
+      "CustomField": [
+        "Error_Log__c.Diagnosis_Duration_Minutes__c",
+        "Error_Log__c.Resolution_Duration_Minutes__c"
+      ],
+      "PermissionSet": [
+        "AEIR_End_User",
+        "AEIR_Support_Analyst"
+      ]
+    },
+    "testLevel": "RunSpecifiedTests",
+    "testClasses": 38,
+    "testsPassed": 311,
+    "testErrors": 0,
+    "componentErrors": 0,
+    "coverageWarnings": 0,
+    "returnedCoverage": {
+      "classes": 10,
+      "executableLines": 659,
+      "uncoveredLines": 46,
+      "weightedPercent": 93.02,
+      "under75": []
+    }
+  },
+  "testOnlyFollowup": {
+    "case": "DEV-ALIGN-FORMULA-01",
+    "id": "0AfgL00000dOWA0SAO",
+    "componentsDeployed": 1,
+    "component": "AEIR_DeliveryLifecycleTest",
+    "productionComponentsChanged": 0,
+    "testsPassed": 9,
+    "testErrors": 0,
+    "componentErrors": 0,
+    "coverageWarnings": 0,
+    "newRegression": "Unknown, real zero, elapsed, invalid negative and reopened duration values verified against deployed formulas"
+  },
+  "sourceAlignment": {
+    "formulaExpressionsChanged": false,
+    "twoDurationXmlFiles": "Removed only the explicit blank-policy node that both retrieve and direct Metadata API read omit; persisted calculations proved by the new Apex regression",
+    "snapshotComparator": "Inactive field flags and complete known object-permission rows with no grants normalize; enabled/unknown/attributed values and explicit formula policies remain significant",
+    "parityRegressionMethods": 8
+  },
+  "finalParity": {
+    "scopedLogicalFiles": 717,
+    "commonFilesCompared": 717,
+    "exactMatches": 537,
+    "normalizedMatches": 173,
+    "expectedConfigurationFiles": 7,
+    "unexpectedDifferences": 0,
+    "missingFiles": 0,
+    "comparisonFailures": 0,
+    "byCategory": {
+      "code": {
+        "exact": 33,
+        "normalized": 111
+      },
+      "metadata": {
+        "expected-configuration": 7,
+        "exact": 502,
+        "normalized": 62
+      },
+      "binary": {
+        "exact": 2
+      }
+    },
+    "scope": "Explicit 717 logical Aegis release files, not whole-org parity",
+    "preservedEnabledFeatureFlags": 2,
+    "preservedEventRunningUsers": 5,
+    "configurationByteHashesUnchanged": true
+  },
+  "liveConnector": {
+    "readOperationsPassed": [
+      "get_capabilities",
+      "find_recent_errors",
+      "list_incidents",
+      "list_notifications"
+    ],
+    "writesEnabled": false,
+    "disabledMutationRejectedBeforeDispatch": true,
+    "bothEnabledFlagsVerified": true,
+    "identityScope": "Connected administrator; ordinary-user browser acceptance remains separate"
+  },
+  "localVerification": {
+    "Node22": "Full verify passed",
+    "Node24": "Full verify passed",
+    "lwcTests": 124,
+    "mcpTests": 33,
+    "dependencySecurityTests": 12,
+    "managedSourceTests": 8,
+    "parityTests": 8,
+    "apexGrammarInputs": 105,
+    "lwcBundles": 14
+  },
+  "boundaries": {
+    "globalCliChanged": false,
+    "packageCreated": false,
+    "namespaceOrDevHubChanged": false,
+    "productionOperation": false,
+    "liveCustomerBusinessWriteOrProviderDelivery": false,
+    "historicalAcc0701Result": "Failed retained",
+    "otherPreparedCases": "16 Not run retained"
+  },
+  "rollback": "Fresh private scoped predeployment snapshot retained; automatic rollback-on-error enabled; no rollback was required",
+  "releaseTasks": {
+    "done": 9,
+    "prepared": 9,
+    "pending": 6,
+    "awaitingBillingResolution": 1,
+    "total": 25,
+    "open": 16
+  },
+  "hostedCi": "Previously blocked before execution by GitHub account billing; actual hosted/Linux acceptance remains open under REL-20",
+  "sources": [
+    "https://developer.salesforce.com/docs/platform/api-metadata/references/meta-types/metadata-customfield.html",
+    "https://developer.salesforce.com/docs/platform/object-reference/references/standard-objects/object-permissionset.html"
+  ]
+}

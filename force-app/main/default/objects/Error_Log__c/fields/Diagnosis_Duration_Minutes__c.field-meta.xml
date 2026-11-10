@@ -3,7 +3,6 @@
     <fullName>Diagnosis_Duration_Minutes__c</fullName>
     <description>Duration from capture to a server-stamped transition; unknown historic times remain empty.</description>
     <formula>IF(OR(ISBLANK(First_Diagnosed_At__c), First_Diagnosed_At__c &lt; CreatedDate), NULL, (First_Diagnosed_At__c - CreatedDate) * 1440)</formula>
-    <formulaTreatBlanksAs>BlankAsBlank</formulaTreatBlanksAs>
     <label>Minutes to First Diagnosis</label>
     <precision>18</precision>
     <scale>4</scale>

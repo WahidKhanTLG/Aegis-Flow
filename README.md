@@ -32,7 +32,11 @@ The [product plan and tracker](docs/PRODUCT_PLAN_AND_TRACKER.md) separates all 5
 features from release acceptance, optional integrations, commercial work and proposed ideas.
 The [source publication review](docs/SOURCE_PUBLICATION_REVIEW.md) records preservation checks,
 the successful 571-component / 311-test Salesforce check-only run, live read-only MCP proof,
-and the current source/org differences. Hosted CI and main publication are tracked separately.
+and the dated source/org comparison. The later separately authorized
+[development deployment](docs/DEVELOPMENT_DEPLOYMENT_VERIFICATION.md) passes 27 components /
+311 tests and a focused 9-test follow-up. Current 717-file scoped source parity passes with
+two enabled flags and five configured event users preserved. Hosted CI remains blocked by
+GitHub account billing; actual managed-package and customer acceptance remain separate.
 
 ## Included capabilities
 

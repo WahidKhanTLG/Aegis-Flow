@@ -6,6 +6,15 @@ The full post-merge local checks and live read-only connector proof pass. Hosted
 not start because of account billing; REL-20 remains open. See the [product tracker](PRODUCT_PLAN_AND_TRACKER.md)
 and [structured review](../release-preparation/publication-review.json) for current scope.
 
+## Subsequent development deployment (E47)
+
+The user subsequently authorized deployment. The actual development run passes 27 components
+and 311/311 Aegis tests; a test-only lifecycle follow-up passes 9/9. Final retrieved source
+parity passes all 717 logical files, with only seven deliberately retained environment values.
+Both enabled feature flags and five event users are unchanged. See the
+[current deployment verification](DEVELOPMENT_DEPLOYMENT_VERIFICATION.md). The earlier
+check-only/publication checkpoint below remains dated evidence.
+
 ## Feature preservation
 
 All baseline Salesforce metadata files remain. A parser comparison of 91 baseline Apex classes
@@ -60,18 +69,17 @@ changed or tested during this review.
 
 ## Source, org and publication state
 
-The fresh manifest-scoped org retrieval compares 717 logical files: 536 exact, 134 normalized,
-seven expected configuration differences, 38 differing files and two missing files (the new
-namespace test class and its metadata). Eleven Apex classes and 15 LWC files differ. Ten
-field files differ only in serializer defaults or explicit blank-formula handling; two role
-permission sets differ. The source and org therefore do not yet have full scoped parity.
+Before deployment, the scoped snapshot had 38 differing files and the new test class/metadata
+absent. The separately authorized E47 deployment and test-only follow-up now establish final
+717-file scoped parity: 537 exact, 173 normalized, seven expected environment values, zero
+unexpected or missing files. The two duration XML files use the returned server representation
+with unchanged formula bodies and a new live null/zero/elapsed/invalid/reopen regression.
 
-The seven intentional environment differences are two enabled development feature flags and
-five event subscriber running users. Portable defaults remain in Git. Any separately authorized
-development deployment must preserve those live values. Raw retrieved metadata, credentials,
-org snapshots and local probe scripts are not publication inputs. No actual deployment,
-package/version creation, global CLI update, external delivery or customer transaction was
-performed by this review checkpoint.
+The preserved environment values are two enabled feature flags and five event-running users;
+their full configuration file hashes are unchanged. Portable defaults remain in Git. The
+global CLI, namespace/Dev Hub, package creation, customer transactions and provider delivery
+were unchanged. Raw retrieved metadata, private rollback snapshots and running-user values
+are excluded from publication. Actual browser/customer and managed-package acceptance remain.
 
 The unused `intermediate-package-lock.json` is preserved locally and excluded from publication.
 The root lock and `tools/lint/package-lock.json` are the only installed dependency graphs.

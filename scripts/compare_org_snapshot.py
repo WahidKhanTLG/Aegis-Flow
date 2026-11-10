@@ -233,12 +233,30 @@ def normalize_xml(root, notes):
             if identity in identities or identity[1] is None:
                 raise ComparisonError('PermissionSet rows/scalars must have unique identities.')
             identities.add(identity)
+        # Salesforce deletes an object-permission record when every grant is false.
+        # Normalize only the complete known shape; any enabled/unknown/attributed value remains significant.
+        # https://developer.salesforce.com/docs/platform/object-reference/references/standard-objects/object-permissionset.html
+        required_flags = {'allowCreate', 'allowDelete', 'allowEdit', 'allowRead', 'modifyAllRecords', 'viewAllRecords'}
+        for row in list(root):
+            names = [node.tag.removeprefix(M) for node in row]
+            if (row.tag == M + 'objectPermissions' and not row.attrib
+                    and len(names) == len(set(names))
+                    and required_flags | {'object'} <= set(names)
+                    and set(names) <= required_flags | {'object', 'viewAllFields'}
+                    and all(plain_scalar(node) for node in row)
+                    and (row.findtext(M + 'object') or '').strip()
+                    and all(node.text in {'false', '0'} for node in row if node.tag != M + 'object')):
+                root.remove(row)
+                notes.add('permission-set-object-no-grants-row-omitted')
         before = list(root)
         root[:] = sorted(root, key=lambda child: (child.tag, child.findtext(M + PERMISSION_ROWS[child.tag.removeprefix(M)], '') if child.tag.removeprefix(M) in PERMISSION_ROWS else ''))
         if list(root) != before:
             notes.add('permission-set-root-set-order')
     elif root.tag == M + 'CustomField':
-        for name in ('externalId', 'required', 'unique'):
+        # Retrieved inactive flags may be explicit while portable source omits them.
+        # Only false/0 is equivalent: enabled values, attributes and duplicates stay significant.
+        # https://developer.salesforce.com/docs/platform/api-metadata/references/meta-types/metadata-customfield.html
+        for name in ('externalId', 'required', 'unique', 'caseSensitive', 'trackHistory', 'trackTrending'):
             remove_false_default(root, name, notes, 'custom-field-default-' + name + '-false')
     elif root.tag == M + 'CustomMetadata':
         rows = children_named(root, 'values')
@@ -418,7 +436,8 @@ def compare(local, snapshot, manifest):
         'limitations': ['No org commands or network requests were run by this comparator.',
                         'A matching snapshot does not establish current org state, runtime correctness or unrelated org metadata parity.',
                         'XML sibling order is preserved except PermissionSet root set rows and CustomMetadata value rows; layouts and Flows retain order.',
-                        'Only the two named feature booleans and five named subscriber running principals are expected configuration differences.'],
+                        'Only the two named feature booleans and five named subscriber running principals are expected configuration differences.',
+                        'Inactive caseSensitive/trackHistory/trackTrending flags normalize only within CustomField roots; enabled flags and formula blank policies remain significant.'],
     }
 
 

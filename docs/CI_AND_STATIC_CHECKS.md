@@ -31,6 +31,7 @@ is not invoked by this CI workflow.
 | `npm run test:lwc:syntax` | Every bundle's JavaScript, HTML, and CSS through the pinned LWC compiler, using its metadata API version and LWS transforms | Local compiler syntax/transforms; no rendered Salesforce or server-side contract validation |
 | `npm run test:source:syntax` | Project JSON, Python AST, shell syntax, and standalone Node syntax | Parses source without executing application/operational scripts |
 | `npm run check:release-prep` | Prepared acceptance-case contracts, finite fixture caps, source references and unexecuted evidence-template consistency | Local preparation only; it performs no org operation and does not count a prepared case as a passing acceptance test |
+| `npm run test:parity` | Eight snapshot-comparison regressions: inactive field/default permission representations plus preservation of true/unknown grants, duplicates, attributes, field settings and formula policies | Local comparator only; no org or authority inference |
 | `npm run lint` | JavaScript correctness, Salesforce LWC decorator/wire/import rules, dangerous dynamic code, unsafe DOM patterns, public API reassignment, and Apex invocation shape | Selected source-correctness rules; no blanket security certification |
 | `npm run test:deps` | Advisory-range guard, dependency API compatibility, actual LWC wire-rule enforcement, and deepmerge prototype-guard regressions | Twelve compatibility/security checks, including the owned merger patch without runtime prototype protection |
 | `npm run test:unit -- -- --runInBand` | Existing LWC Jest suites plus typed-reference interaction regressions | Browser/component mocks; real browser/mobile acceptance remains separate |
@@ -122,3 +123,8 @@ and Jest do not replace those environment tests.
 - [GitHub Actions secure use](https://docs.github.com/en/actions/reference/security/secure-use)
 - [Official actionlint release](https://github.com/rhysd/actionlint/releases/tag/v1.7.12)
 - [Minimatch advisory](https://github.com/advisories/GHSA-g3hv-75wg-m249)
+
+The E47 development deployment passes 311/311 Apex tests and a focused 9/9 lifecycle
+follow-up; the final 717-file scoped comparison passes. Both supported local Node versions
+pass the complete verify chain including eight new parity regressions. The hosted billing
+block remains separate. See [deployment verification](DEVELOPMENT_DEPLOYMENT_VERIFICATION.md).

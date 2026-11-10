@@ -14,15 +14,20 @@ refer to retained private engineering records; the current public verification s
 | Optional integrations | Seven awaiting approved setup and live acceptance |
 | Commercial work | COM-01 prepared for team environment binding; six other decision-dependent items |
 | Future ideas | 20 Proposed; excluded from the current release commitment |
-| Latest Apex proof | PUB-APEX-01 passed 311/311 tests; original shared-org ACC-07-01 remains Failed |
+| Latest Apex proof | E47 actual 27-component deployment passes 311/311 tests; focused lifecycle follow-up passes 9/9, including the new duration regression. Original ACC-07-01 Failed result remains historical. |
 | Live connector proof | Four read operations pass; writes disabled; no ordinary-user/browser acceptance inferred |
 | Git publication | [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2) merged at `0089f56e21d4efa25048ea9a7411d148b2e13eb5`; post-merge full Node 24 checks and live read-only MCP checks pass |
-| Development org | Unchanged by publication: 38 scoped file differences and the new test class/metadata absent; deployment remains separate |
+| Development org | E47 deployed and verified: 27 components / 311 tests, test-only follow-up 9/9, final 717-file scoped parity passes with seven preserved environment values |
 
 Implemented means code exists, Prepared means available local work is complete while actual
 environment acceptance is open, and Done means the task's recorded scope has passed. Do not
 combine these different inventories into one completion percentage. No new customer business
 operation, provider delivery, package creation or commercial clearance is implied.
+
+The [actual development deployment and verification](DEVELOPMENT_DEPLOYMENT_VERIFICATION.md)
+is complete (E47). Both enabled flags and all five event-running users are unchanged.
+The local verification also includes eight new snapshot-comparison regressions. These
+results strengthen current development proof without closing unrelated acceptance gates.
 
 ## Current implemented features
 
@@ -180,7 +185,7 @@ This backlog covers the existing product, not all optional or proposed features.
 | ID | Task | Status | Completion condition / evidence | Owner / dependency |
 | --- | --- | --- | --- | --- |
 | REL-06 | Rerun local validation for the current baseline | Done | Initial November 9 baseline: metadata/syntax, 105 LWC and 30 MCP tests, whitespace and unchanged-source checks pass; E06. REL-20 expands the gates and passes 109 LWC / 30 MCP tests; E18. REL-21 reruns the full actual-checkout suite on Node 22/24 with six dependency regressions; E20. The prototype safeguard raises dependency checks to ten and passes the full suite on both runtimes; E22. Latest E25 actual-checkout verification passes on maintained Node 22.23.4/24.22.2 with the 17-case preparation gate; no org acceptance is inferred. | Engineering |
-| REL-07 | Validate the current complete Aegis Apex release baseline in nonproduction | Done | PUB-APEX-01: check-only 571 components, 311/311 tests across all 38 executable product test classes, zero component/test errors or coverage warnings; 93.14% returned weighted Aegis coverage. Historical shared-org ACC-07-01 remains Failed; its unrelated product failures are not waived. | Engineering; unmanaged product scope |
+| REL-07 | Validate the current complete Aegis Apex release baseline in nonproduction | Done | E47 actual development deployment: 27 components and 311/311 tests; test-only follow-up passes 9/9. Final 717-file scoped source parity passes: 537 exact, 173 normalized, seven preserved environment values, zero unexpected/missing files. Original shared-org ACC-07-01 remains Failed. | Engineering; unmanaged product scope |
 | REL-08 | Recheck rendered admin, support, developer-viewer, and end-user journeys | Prepared | E40 completes the Aegis-only local role/journey review and confirmed fixes across 14 paths, including six component regressions. Node 22/24 full verify passes: 115 LWC / 30 MCP / 10 dependency tests; offline conversion 389 files. Read-only direct-role inventory finds no ordinary End User candidates; User B remains unverified. ACC-08-01–04 all Not run; actual actor/build/fixture authority and rendered/cross-user/recovery outcomes remain. | QA + engineering; REL-07 |
 | REL-09 | Accept supported mobile/responsive and accessibility behavior | Prepared | ACC-09-01/02 define keyboard/focus/announcement/zoom and selected mobile/responsive acceptance with platform exclusions. Surface/device/owner decisions and actual browser/assistive-technology execution remain; E25. | QA/product owner; REL-08 |
 | REL-10 | Prove real Email and Case delivery after the hardening | Prepared | ACC-10-01/02 define one intended Email/Case, destination-side proof, masking, audit and replay checks with finite side-effect caps. No delivery executed; approved recipient/sender/Case owner and actual delivery evidence remain; E25. | QA + tenant admin; explicit test destination/action scope |
