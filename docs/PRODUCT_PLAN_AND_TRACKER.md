@@ -9,15 +9,15 @@ refer to retained private engineering records; the current public verification s
 | Inventory | Current state |
 | --- | --- |
 | Current product features | 55 implemented entries across ten areas |
-| Release tasks | 25 total; eight Done, nine Prepared, one In progress, six Pending, one Awaiting billing resolution |
+| Release tasks | 25 total; nine Done, nine Prepared, six Pending, one Awaiting billing resolution (16 open) |
 | Local packaging-development tasks | All seven complete; actual namespace/build/install work remains |
 | Optional integrations | Seven awaiting approved setup and live acceptance |
 | Commercial work | COM-01 prepared for team environment binding; six other decision-dependent items |
 | Future ideas | 20 Proposed; excluded from the current release commitment |
 | Latest Apex proof | PUB-APEX-01 passed 311/311 tests; original shared-org ACC-07-01 remains Failed |
 | Live connector proof | Four read operations pass; writes disabled; no ordinary-user/browser acceptance inferred |
-| Git publication | Reviewed source pushed in PR #2; current local Node 22/24 full checks pass; main merge pending |
-| Development org | Current source differs in 38 files and lacks the new test class and metadata; deployment is separate |
+| Git publication | [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2) merged at `0089f56e21d4efa25048ea9a7411d148b2e13eb5`; post-merge full Node 24 checks and live read-only MCP checks pass |
+| Development org | Unchanged by publication: 38 scoped file differences and the new test class/metadata absent; deployment remains separate |
 
 Implemented means code exists, Prepared means available local work is complete while actual
 environment acceptance is open, and Done means the task's recorded scope has passed. Do not
@@ -172,8 +172,8 @@ This backlog covers the existing product, not all optional or proposed features.
 | REL-01 | Establish this master feature/release tracker | Done | Current, optional, commercial, and proposed scope separated; stable IDs, task counts, and evidence recorded | Engineering; this file |
 | REL-02 | Freeze and verify the local planning baseline | Done | 106 deployment fingerprints match; source census, HEAD, and dirty-tree inventory captured in E06 | Engineering |
 | REL-03 | Review the complete uncommitted diff and define the release file allowlist | Done | All 74 files reviewed/classified: 63 proposed Git inclusions, 11 local-only snapshots/QA exclusions. No new blocking regression identified; local manifest conversion includes ten new fields/trigger and excludes QA fixtures. HEAD/index/source hashes unchanged; E16/E17. Existing acceptance gates remain open. | Engineering; REL-02 |
-| REL-04 | Commit the exact reviewed source | Done | 214 reviewed paths committed and pushed on release/aegis-flow-reviewed-2026-11-10; 12 local-only exclusions preserved. Main merge and hosted acceptance remain separate. | Engineering |
-| REL-05 | Publish the reviewed commit through the chosen Git review path | In progress | Explicit push/merge instruction; remote commit verified; local and remote delivery state recorded | Engineering/release owner; REL-04 |
+| REL-04 | Commit the exact reviewed source | Done | 214 reviewed paths committed and pushed on release/aegis-flow-reviewed-2026-11-10; 12 local-only exclusions preserved. Main merged through REL-05; hosted acceptance remains blocked by billing. | Engineering |
+| REL-05 | Publish the reviewed commit through the chosen Git review path | Done | PR #2 merged at 0089f56e21d4efa25048ea9a7411d148b2e13eb5; local main fast-forwarded, same 747 metadata/test files as successful check-only validation, post-merge full verify and live MCP reads pass. Hosted CI remains blocked before execution by owner billing; no hosted pass claimed. | Engineering |
 
 ### Workstream 2 — Final regression and user acceptance
 

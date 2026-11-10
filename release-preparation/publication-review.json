@@ -69,7 +69,7 @@
     "retainedOrgConfiguration": "Two enabled development feature flags and five event running users must not be overwritten by portable defaults"
   },
   "publication": {
-    "state": "PR #2 published; main merge pending; full current local Node 22/24 verification passes",
+    "state": "PR #2 merged to main; post-merge local and live read-only connector checks pass; hosted CI externally blocked",
     "hostedNodeMatrix": [
       22,
       24
@@ -82,7 +82,24 @@
       "reason": "Account locked due to billing issue",
       "rel20Closed": false
     },
-    "verifiedCodeCommit": "4ae900565fa25fad3763089ab49ed370c7d28578"
+    "verifiedCodeCommit": "4ae900565fa25fad3763089ab49ed370c7d28578",
+    "mergeCommit": "0089f56e21d4efa25048ea9a7411d148b2e13eb5",
+    "postMergeVerification": {
+      "fullNode24VerifyExitCode": 0,
+      "liveMcpReadOperationsPassed": 4,
+      "liveMutationRejectedBeforeDispatch": true,
+      "rootAuditFindings": 0,
+      "lintAuditFindings": 0,
+      "metadataFilesIdenticalToValidatedSnapshot": 747
+    },
+    "hostedMainRun": {
+      "id": 42812085120,
+      "headSha": "0089f56e21d4efa25048ea9a7411d148b2e13eb5",
+      "conclusion": "failure",
+      "stepsExecuted": 0,
+      "reason": "The job was not started because your account is locked due to a billing issue.",
+      "rel20Closed": false
+    }
   },
   "boundaries": {
     "globalCliChanged": false,
@@ -91,5 +108,13 @@
     "historicalAcc0701": "Failed result retained; no rewrite or waiver",
     "otherPreparedAcceptanceCases": "16 Not run"
   },
-  "releaseExclusion": "Unused intermediate-package-lock.json retained locally; only root and tools/lint locks are install inputs"
+  "releaseExclusion": "Unused intermediate-package-lock.json retained locally; only root and tools/lint locks are install inputs",
+  "releaseTasks": {
+    "total": 25,
+    "done": 9,
+    "prepared": 9,
+    "pending": 6,
+    "awaitingBillingResolution": 1,
+    "open": 16
+  }
 }

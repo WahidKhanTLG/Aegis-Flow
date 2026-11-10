@@ -1,5 +1,16 @@
 # Aegis Flow — Open Issues
 
+## November 10 main publication and post-merge verification
+
+[PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2) is merged. The full post-merge
+Node 24 verification, four live read-only MCP operations and both refreshed all-severity
+dependency audits pass. The two pre-merge Node 22/24 full runs also pass. Hosted CI could
+not start any step because GitHub reports the account is locked due to billing; REL-20
+remains open. The development org is unchanged and still differs from the current source.
+No package, actual deployment, global CLI update or customer/provider operation occurred.
+The [product tracker](PRODUCT_PLAN_AND_TRACKER.md) records nine of 25 release tasks Done,
+with 16 open across prepared acceptance, pending decisions and the hosted billing block.
+
 ## November 10 source publication review
 
 Current unmanaged source passes the Aegis-only Salesforce check-only validation: 571

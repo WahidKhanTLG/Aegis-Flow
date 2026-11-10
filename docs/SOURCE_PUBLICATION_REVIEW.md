@@ -1,8 +1,9 @@
 # Aegis Flow source publication review
 
 Reviewed November 10, 2026 against published baseline `eda715f3c05aeda9acacd2e6bf97384cf4968801`.
-The user authorized review, connected-org testing and publication to main. The review branch is published in [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2).
-The hosted jobs could not start because of account billing; main merge remains pending at this checkpoint. See the [product tracker](PRODUCT_PLAN_AND_TRACKER.md)
+The user authorized review, connected-org testing and publication to main. [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2) is merged to main at `0089f56e21d4efa25048ea9a7411d148b2e13eb5`.
+The full post-merge local checks and live read-only connector proof pass. Hosted jobs could
+not start because of account billing; REL-20 remains open. See the [product tracker](PRODUCT_PLAN_AND_TRACKER.md)
 and [structured review](../release-preparation/publication-review.json) for current scope.
 
 ## Feature preservation
@@ -44,10 +45,12 @@ The intentional behavior changes are:
 | Current local Node 22.23.4 and 24.22.2 verification | 124 LWC, 33 MCP, 12 dependency/security and eight managed-source tests pass; XML, Apex/LWC/source syntax, manifest/preparation and lint pass | Component/protocol mocks do not replace rendered Salesforce acceptance |
 | Live current MCP implementation against deployed REST API | Capabilities, own recent errors, own incidents and notifications pass; disabled mutation rejected before API dispatch | Four read requests, connected administrator; no ordinary-user browser or live mutation acceptance |
 | Dependency review | Root and isolated lint all-severity audits clean; source-backed vendor changes retain license/provenance and compatibility checks | Owned fork maintenance remains required |
-| Hosted GitHub Actions run 42811497088 | Both Node 22/24 jobs failed before executing any step: account locked due to a billing issue | Hosted/Linux acceptance blocked; REL-20 remains open |
+| Hosted GitHub Actions, PR run 42811497088 and merge-main run 42812085120 | Both Node 22/24 jobs failed before executing any step: account locked due to a billing issue | Hosted/Linux acceptance blocked; REL-20 remains open |
 
-The complete local verification was rerun on both supported Node versions after publication
-of the reviewed source; both passed with the counts above. No application/CI checks were
+The complete local verification was rerun on both supported Node versions before merge;
+both passed with the counts above. After merge, the full Node 24 verification and all four
+live MCP reads passed again. Both refreshed dependency audits remain zero at every severity.
+All 747 product metadata/test files are identical to the successful check-only snapshot. No application/CI checks were
 removed or relaxed. GitHub billing must be resolved by the account owner and the hosted
 workflow rerun before REL-20 can close.
 

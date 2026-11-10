@@ -91,7 +91,7 @@ No Apex method, event contract, component metadata, template, or styling changed
 
 ## Current acceptance limits
 
-The reviewed source is published in [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2).
+The reviewed source is merged to main through [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2).
 [Actual hosted run 42811497088](https://github.com/WahidKhanTLG/Aegis-Flow/actions/runs/42811497088)
 failed before either Node 22/24 job executed any step: GitHub reports the account is locked
 because of billing. Full current-source local verification passes on Node 22.23.4 and
