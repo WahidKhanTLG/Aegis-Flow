@@ -91,9 +91,12 @@ No Apex method, event contract, component metadata, template, or styling changed
 
 ## Current acceptance limits
 
-The November 9 setup is local until published. No hosted GitHub Actions result or Linux
-runtime result is claimed by writing these files. The planned matrix must pass on GitHub
-before REL-20's hosted-execution acceptance is closed.
+The reviewed source is published in [PR #2](https://github.com/WahidKhanTLG/Aegis-Flow/pull/2).
+[Actual hosted run 42811497088](https://github.com/WahidKhanTLG/Aegis-Flow/actions/runs/42811497088)
+failed before either Node 22/24 job executed any step: GitHub reports the account is locked
+because of billing. Full current-source local verification passes on Node 22.23.4 and
+24.22.2. No check or workflow permission was relaxed. The account owner must resolve billing,
+then rerun the hosted matrix; REL-20 remains open and no hosted/Linux pass is claimed.
 
 The November 10 local packaging update closes the remaining project findings through the
 explicit owned deepmerge security fork and isolated maintained lint runtime. Both all-severity

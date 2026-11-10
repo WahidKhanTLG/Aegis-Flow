@@ -9,14 +9,14 @@ refer to retained private engineering records; the current public verification s
 | Inventory | Current state |
 | --- | --- |
 | Current product features | 55 implemented entries across ten areas |
-| Release tasks | 25 total; eight Done, nine Prepared, one In progress, six Pending, one Awaiting hosted run |
+| Release tasks | 25 total; eight Done, nine Prepared, one In progress, six Pending, one Awaiting billing resolution |
 | Local packaging-development tasks | All seven complete; actual namespace/build/install work remains |
 | Optional integrations | Seven awaiting approved setup and live acceptance |
 | Commercial work | COM-01 prepared for team environment binding; six other decision-dependent items |
 | Future ideas | 20 Proposed; excluded from the current release commitment |
 | Latest Apex proof | PUB-APEX-01 passed 311/311 tests; original shared-org ACC-07-01 remains Failed |
 | Live connector proof | Four read operations pass; writes disabled; no ordinary-user/browser acceptance inferred |
-| Git publication | Authorized review branch; hosted Node 22/24 checks and main merge pending |
+| Git publication | Reviewed source pushed in PR #2; current local Node 22/24 full checks pass; main merge pending |
 | Development org | Current source differs in 38 files and lacks the new test class and metadata; deployment is separate |
 
 Implemented means code exists, Prepared means available local work is complete while actual
@@ -208,7 +208,7 @@ This backlog covers the existing product, not all optional or proposed features.
 
 | ID | Task | Status | Completion condition / evidence | Owner / dependency |
 | --- | --- | --- | --- | --- |
-| REL-20 | Add repeatable CI and appropriate lint/static checks | Awaiting hosted run | Local setup applied and verified: SHA-pinned read-only GitHub Actions, Node 22/24 checks, ESLint and all-bundle LWC/source syntax gates, 109 LWC / 30 MCP tests, seven rejected invalid-input cases; E18. Prototype-guard verification environment and ten dependency tests pass locally; E22. First actual GitHub/Linux matrix run remains pending separately authorized publication. | Engineering; REL-04/REL-05 for hosted execution |
+| REL-20 | Add repeatable CI and appropriate lint/static checks | Awaiting billing resolution | Actual GitHub run 42811497088 failed before either Node 22/24 job executed any step: account locked due to billing. Current local full Node 22/24 checks pass. Workflow checks remain intact; no hosted pass or Linux acceptance is claimed. Resolve owner billing and rerun before closing. | Repository owner + engineering |
 | REL-21 | Review and resolve or disposition the remaining project dependency findings | Done | E43 closes the six moderate and 12 low entries plus ESLint lifecycle gap through the explicit owned deepmerge patch and isolated ESLint 10/Babel 8 with qualified Salesforce rule ports. Two clean strict-peer trees; both all-severity audits zero; 12 security/compatibility tests and full actual-checkout Node 22/24 gates pass. No audit ignore, threshold reduction, upstream-support claim or production exception. | Engineering; source-backed vendor maintenance is documented |
 | REL-22 | Review the separately installed Salesforce CLI used for release | Done | Global CLI 2.156.8 inventory/advisory review preserved (E23); it remains unchanged/unqualified. E26/E29/E31 preserve candidate preparation/remediation. E33 completes local release-use qualification of the exact hardened 2.157.8 nonproduction scope: zero findings, all vendor/API/limit decisions closed, guarded native command/plugin checks pass. Technical eligibility is scoped; production/current authority false. | Engineering; local CLI follow-up complete; target/profile/owner/action binding and actual acceptance remain separate |
 | REL-23 | Finalize operating roles, support handoff, and user guidance | Prepared | Operating/support handoff, actual access/role matrix, user quick start and training/acknowledgement guidance delivered; E25. Named owners, agreed operational response/retention, review and actual training/customer acceptance remain. | Product/support + engineering |
