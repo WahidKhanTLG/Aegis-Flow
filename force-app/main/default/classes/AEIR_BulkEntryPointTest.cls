@@ -116,7 +116,7 @@ private class AEIR_BulkEntryPointTest {
 
         Test.startTest();
         Integer q = Limits.getQueries(), d = Limits.getDmlStatements();
-        AEIR_DiagnosticSessionRequestHandler.handle(events);
+        AEIR_DiagnosticSessionRequestHandler.handle(AEIR_EventTestData.sessions(events, UserInfo.getUserId()));
         Integer queries = Limits.getQueries() - q, dml = Limits.getDmlStatements() - d;
         Test.stopTest();
 
@@ -133,7 +133,7 @@ private class AEIR_BulkEntryPointTest {
                 Session_Id__c = 'a00000000000000AAA')};
 
         Test.startTest();
-        AEIR_DiagnosticSessionRequestHandler.handle(events);
+        AEIR_DiagnosticSessionRequestHandler.handle(AEIR_EventTestData.sessions(events, UserInfo.getUserId()));
         Test.stopTest();
 
         System.assertEquals(0, [SELECT count() FROM Diagnostic_Session__c],

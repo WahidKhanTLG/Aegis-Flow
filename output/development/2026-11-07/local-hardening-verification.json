@@ -1,0 +1,381 @@
+{
+  "date": "2026-11-07",
+  "timezone": "Asia/Karachi",
+  "status": "Local P1/P2 implementation and local checks complete; Salesforce compilation/runtime validation pending",
+  "project": "/Users/mac/Projects/Development/Internal POC & R&D/Aegis Flow/Aegis Flow In Dev/Aegis-Flow",
+  "baselineCommit": "eda715f3c05aeda9acacd2e6bf97384cf4968801",
+  "currentHead": "eda715f3c05aeda9acacd2e6bf97384cf4968801",
+  "delivery": {
+    "localOnly": true,
+    "committed": false,
+    "pushed": false,
+    "deployed": false,
+    "salesforceOrgAccessed": false,
+    "sourceFilesChanged": 57,
+    "includesThisVerificationRecord": false
+  },
+  "implemented": [
+    "Publisher-bound session events and explicit End User Read/Create revocation",
+    "Per-capture failure telemetry, bounded transient event retries, honest publication acknowledgement and final-failure callback",
+    "Event-specific Batch failure correlations with replay deduplication",
+    "Persistent bounded monitor keyset cursors, with async completion-time selection",
+    "Unique escalation source/route key, source-row locking and durable delivery claims; replay preserves resolved status",
+    "Exact observed Flow correlation matches separated from capture history",
+    "Complete long incident keys hashed instead of truncated",
+    "Server-owned lifecycle timestamps and uncapped aggregate duration formulas; unknown legacy times return null"
+  ],
+  "validation": {
+    "command": "npm run verify",
+    "executedInActualProject": true,
+    "result": "PASS",
+    "xmlFilesChecked": 578,
+    "apexClassFiles": 98,
+    "triggerFiles": 6,
+    "platformEventSubscribers": 5,
+    "recordLifecycleTriggers": 1,
+    "apexSyntaxFilesParsed": 104,
+    "apexSyntaxErrors": 0,
+    "lwcSuitesPassed": 12,
+    "lwcTestsPassed": 105,
+    "mcpTestsPassed": 30,
+    "newApexRegressionMethods": 21,
+    "newApexRegressionClasses": [
+      "AEIR_CaptureHardeningTest",
+      "AEIR_MonitorProgressTest",
+      "AEIR_DeliveryLifecycleTest"
+    ],
+    "apexTestsExecuted": false,
+    "salesforceCompilationExecuted": false,
+    "gitDiffCheck": "PASS",
+    "appliedSourceHashMismatches": 0,
+    "cleanDependencyInstall": "PASS; package scripts disabled"
+  },
+  "dependencySecurity": {
+    "baseline": {
+      "critical": 2,
+      "high": 40,
+      "moderate": 85,
+      "low": 15,
+      "total": 142
+    },
+    "final": {
+      "info": 0,
+      "low": 12,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 12
+    },
+    "highCriticalGateExitCode": 0,
+    "bundledSalesforceCliRemoved": true,
+    "systemSalesforceCliChanged": false,
+    "systemSalesforceCliSecurityCertified": false,
+    "remainingAdvisory": "GHSA-gcqx-w48m-w2h4; deepmerge/Jest development dependency tree, 12 low-severity entries",
+    "remainingFindingsAcceptedForProduction": false,
+    "babelCoreOverride": "7.29.13",
+    "apexParserDevelopmentDependency": "5.3.0"
+  },
+  "metadataChanges": {
+    "newFields": 10,
+    "newCustomObjects": 0,
+    "newRecordTriggers": 1,
+    "manifestUpdated": true,
+    "permissionSetsUpdated": 6,
+    "existingFlagsAndSchedulesChanged": false,
+    "legacyDataBackfilled": false
+  },
+  "remainingActions": [
+    "When separately authorized, compile metadata and execute the new and affected Apex suites in an approved nonproduction org.",
+    "Validate platform-event identities, final publish failure/retry behavior, permission upgrades, real monitor backlog drainage, formula durations and concurrent escalation claims in that org.",
+    "Review the remaining low-severity development-tool advisory and separately managed Salesforce CLI distribution before release credentials or customer rollout.",
+    "Managed packaging and clean-org install/upgrade acceptance remain outside this local fix scope."
+  ],
+  "rollbackDirectory": "/private/tmp/aegis-hardening-20261107-jve0kifh/rollback",
+  "sourceChanges": [
+    {
+      "path": "README.md",
+      "sha256": "632249c59433ac6c62813536da2dea2da66b7687fc26b95399e9451404ba7d62",
+      "new": false
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "af596f570452d745a276c244af6d17889d9b9db8c4f825b68c35b3aa787bd29e",
+      "new": false
+    },
+    {
+      "path": "package.json",
+      "sha256": "e9e50276c3799c8a1fb60db3a2e0918fee6a23f15325120ddefc973828c76e67",
+      "new": false
+    },
+    {
+      "path": "manifest/package.xml",
+      "sha256": "a6dfda9d3b1effeb1e3231961d5d96113b70e4cdce301e0bf1f8a63a2ecb41e6",
+      "new": false
+    },
+    {
+      "path": "docs/OPEN_ISSUES.md",
+      "sha256": "94e3bd8e170acb8a483d1bea9b0b840f3ab2827d1a1bd590498bfc5173d6f6b8",
+      "new": false
+    },
+    {
+      "path": "docs/CONFIGURATION.md",
+      "sha256": "6328a12d278b96a9495c59b61f83ceaa5a4604351b009cefc761b300fbbbc2b8",
+      "new": false
+    },
+    {
+      "path": "scripts/local_audit.py",
+      "sha256": "d9dbf2491aba29f54443a6055612710b31e036b3287beb2896783f4c9b3d85d4",
+      "new": false
+    },
+    {
+      "path": "scripts/check_apex_syntax.cjs",
+      "sha256": "ea0da30f71ccde20ea9691e1db5b4cd8c2409c06e5d4934fa0fe4c66864eaf3b",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/permissionsets/AEIR_Product_Admin.permissionset-meta.xml",
+      "sha256": "326d26cde6518956819add54b1d1141f0a35d3b133185c610d196b191f86bb54",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/permissionsets/AEIR_Support_Analyst.permissionset-meta.xml",
+      "sha256": "c8ca3ef5e150de8baa85d7e425567fffb2d86bab79ed10db4abdde303162b2ec",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/permissionsets/AEIR_End_User.permissionset-meta.xml",
+      "sha256": "b44cddf897a7d014461394f6a7108a479c2b41214c86a1fc85353b4d9493ce8f",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/permissionsets/AEIR_Integration_User.permissionset-meta.xml",
+      "sha256": "10ae7c84cdf68770f568e3e4d0d8e7c5d9150b8a40dcc0522958bb02ade2e840",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/permissionsets/AEIR_Sample_Account_Remediation.permissionset-meta.xml",
+      "sha256": "ea835e05eaf0cd3da0cdf852f0f0f4165c8e6ea1d5e832babeb71e381224eb1d",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/permissionsets/AEIR_Developer_Viewer.permissionset-meta.xml",
+      "sha256": "967800c4a43f24d85d4f11cb9a4d3b1e2c0056e932e3203b1e584a27bd0e9818",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_ErrorCaptureService.cls",
+      "sha256": "e17e1f62e799ab598e4491002c66efa814dca5e0ab5c83ab94f187f411707666",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_ErrorLifecycleService.cls",
+      "sha256": "ad607c42dedfc96aed3ba9f80730f0bd31005757ec925c6d1237daadd2cdf365",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_Guard.cls",
+      "sha256": "45f5caf8ac0e6bc377f2d14755c59239ad6d1494526ed13bdf8debed39593094",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_AdminConsoleController.cls",
+      "sha256": "dab4d76892989481466be796115af165d2e3e99a9d20d69049e7159a0bf2ee7e",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_CapturePublishCallback.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_DiagnosticSessionRequestHandler.cls",
+      "sha256": "f1a33655fc4dd06e6143a15e80c30c46054d15dd26b22ad2ce4e92804d52ed73",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_FlowInterviewMonitor.cls",
+      "sha256": "b7f372a7a8a7a5dab59e043860c24a77b818c30779505335ce2c21ad767e213b",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls",
+      "sha256": "3bc9d6af6485038a7a6c34be9da6d6edff9bf64ab73d69f0ffec4131323d9dad",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_MonitorCursorService.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_MonitorCursorService.cls",
+      "sha256": "b4f0a2165161c2421ab8125e38a1f9c9ec2c5b11c974c05208897f865e570098",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_MonitorProgressTest.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_FlowCoverageService.cls",
+      "sha256": "d13caf73e141b6cebef1f1160e74c26f8855ba86348825b8a63dd310edefdfae",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_BulkEntryPointTest.cls",
+      "sha256": "712622f17d0d0a7131d513d4ce06f77c793415f9be93f865e5ed83f8b1ea96d4",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_ErrorCapturedEventHandler.cls",
+      "sha256": "2030fb0fa223a7c583793b015c3b902f21bff97092bea11e228d86ccc0303830",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_ErrorLifecycleService.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_BatchApexErrorEventHandler.cls",
+      "sha256": "3f4de99db274c2bdfb3f754443e0eafafa5f658ce70a251f1445703fd59aea98",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_EventTestData.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_ObservabilityCoverageTest.cls",
+      "sha256": "2fc21957f9165454f869ce57c6fe79e78da41e5c191a83fd6311b3860f88ec42",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_DeliveryLifecycleTest.cls-meta.xml",
+      "sha256": "a242f6e22b472afffbd726be71165de394e417355cdf1edd81b5601278ddea32",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_AsyncJobMonitorScheduler.cls",
+      "sha256": "f208d2644affeeba40fe2201390fb08d269a4423482677b3ea3a71fdc592c119",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_EventTestData.cls",
+      "sha256": "4c7fd6d5fa470a9379c7e99e21f3406e448f9b71e6de21938a66ca01c0e3b042",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_MonitorProgressTest.cls",
+      "sha256": "cc90dc7010ef671c12fbfc9d8257f9c351445b0be64591eadaa1a8387f467e4b",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_EscalationService.cls",
+      "sha256": "6fa2ea3651d24a9dc841aefd37a80420741fe03e874c5869952b1c49dcc269f2",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_CoverageAndGuardTest.cls",
+      "sha256": "921b444787ee18213adbbcc566cc08bd6f8dbbd702a60fdb22f6f3e0eeabecd5",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_CaptureHardeningTest.cls",
+      "sha256": "750cfc4eef3abdfbf0f8e7e96453e6bcdae0071c1d28b0bcbc9a8b10bc85e09c",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_CapturePublishCallback.cls",
+      "sha256": "2bdd153593792bddc0bb427768c613937680f4eef4f2b480823901ce5cfdb684",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_IncidentAggregationService.cls",
+      "sha256": "5359d1261b998d759c4cf467f59b9cbdebb578f51c5b1d357644f320dea434d8",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_SubscriberTelemetry.cls",
+      "sha256": "8d2be343ba2b0bbdc5060f545145b22575cdc2ea214c315f4b7bbbee9893c9ef",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_InputBoundaryTest.cls",
+      "sha256": "3dd05361cd6a4c243cf55df94ff007d5f22a9b3edfedcbc33ce3c368fb528c79",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/classes/AEIR_ConfigAndRoutingTest.cls",
+      "sha256": "e02c4ce1ad7fb393fc3bbfa7061cb983324c23d55c2fc37a9ed8fbc5924f798d",
+      "new": false
+    },
+    {
+      "path": "force-app/main/default/triggers/AEIR_ErrorLogLifecycleTrigger.trigger-meta.xml",
+      "sha256": "18a9f7cd9d86eb4e7a191f499acd3b8e2f9aadacf869085fe85472913c6d0748",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/triggers/AEIR_ErrorLogLifecycleTrigger.trigger",
+      "sha256": "44a73491a736176a75b7ae42a4773d3e17d29e8111389c9551739215a185bc72",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Error_Log__c/fields/First_Diagnosed_At__c.field-meta.xml",
+      "sha256": "487f75b616466fb6cb0f02e5e2cd8bda0628aa0e528e9a1af45cefe539d0d82b",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Error_Log__c/fields/Diagnosis_Duration_Minutes__c.field-meta.xml",
+      "sha256": "b39476adfc2b192ce515345452248b550ccd628b9be81aaaf6cb0aaa2679b841",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Error_Log__c/fields/Resolution_Duration_Minutes__c.field-meta.xml",
+      "sha256": "2a92e9403e65073e8a8e36ad9bdcafedd2baaa8f3cafe5b8953eeb4d2cd9b11a",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Error_Log__c/fields/Resolved_At__c.field-meta.xml",
+      "sha256": "315617a0b79f64a04865fcc243f71502b275c93dc1aff5514d1c3d0e970beb9c",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Developer_Escalation__c/fields/Delivery_Requested_At__c.field-meta.xml",
+      "sha256": "befcb193ac3a95b8619a42af075022b9102e87128e599d14e356bb8a14c0aa75",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Developer_Escalation__c/fields/Request_Key__c.field-meta.xml",
+      "sha256": "db7a942867f74fe24745f719efe5282400ac322d70d9cd0c8ca8bfa44e28e78b",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Async_Monitor_Id__c.field-meta.xml",
+      "sha256": "94dc3bbb66d7ba9d96e8105f3e7d2639d601ad89a7cb47bbdef1d6f1195ec473",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Flow_Monitor_At__c.field-meta.xml",
+      "sha256": "f7314b05d669aa77d78a1230dc80886bcf7c3674d349083600ca4892f9903794",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Flow_Monitor_Id__c.field-meta.xml",
+      "sha256": "b4c7016de48abf4df4bc4826f6fbb84ef257be9fbb753eda9ab59201c87b5801",
+      "new": true
+    },
+    {
+      "path": "force-app/main/default/objects/Aegis_Org_Setting__c/fields/Async_Monitor_At__c.field-meta.xml",
+      "sha256": "eed94b722ada22c5568a1413ba1d4961b7831cc98beb2f0c8dc86aff33632513",
+      "new": true
+    }
+  ]
+}

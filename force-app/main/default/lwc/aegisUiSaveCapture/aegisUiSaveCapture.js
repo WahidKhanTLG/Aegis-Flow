@@ -81,7 +81,6 @@ export default class AegisUiSaveCapture extends LightningElement {
             .catch(captureError => {
                 // Never hide the original validation message from the user.
                 // Aegis capture failure is operational noise; log it silently.
-                // eslint-disable-next-line no-console
                 console.warn('Aegis Flow: UI save capture failed', captureError);
             });
     }

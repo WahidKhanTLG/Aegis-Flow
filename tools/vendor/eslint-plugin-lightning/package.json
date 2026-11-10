@@ -1,0 +1,51 @@
+{
+  "name": "@salesforce/eslint-plugin-lightning",
+  "version": "2.0.0",
+  "description": "Collection of ESLint rules for Salesforce Lightning platform",
+  "main": "lib/index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salesforce/eslint-plugin-lightning"
+  },
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "salesforce",
+    "lightning"
+  ],
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": "^10.0.0"
+  },
+  "files": [
+    "lib/"
+  ],
+  "lint-staged": {
+    "**/*.js": "eslint --fix",
+    "**/*.{js,md}": "prettier --write"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 4,
+    "trailingComma": "all"
+  },
+  "mocha": {
+    "recursive": true,
+    "reporter": "dot"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "volta": {
+    "node": "20.18.1",
+    "yarn": "1.22.22"
+  },
+  "private": true,
+  "aegisQualification": {
+    "upstreamVersion": "2.0.0",
+    "change": "Local ESLint 10 / Babel 8 peer qualification; rule implementation unchanged",
+    "upstreamSupported": false
+  }
+}

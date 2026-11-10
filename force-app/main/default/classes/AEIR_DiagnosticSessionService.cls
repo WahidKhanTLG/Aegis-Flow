@@ -128,6 +128,9 @@ public with sharing class AEIR_DiagnosticSessionService {
     /** A bounded recent window prevents a noisy source from consuming all query rows. */
     private static Map<String, Id> findRecentErrors(List<SessionInput> inputs, List<Id> userIds) {
         Map<String, Id> out = new Map<String, Id>();
+        // Manual Help Me remains available without access to technical error logs.
+        // Do not query or associate evidence that the caller cannot read.
+        if (!Schema.sObjectType.Error_Log__c.isAccessible()) return out;
         Set<Id> allUsers = new Set<Id>(userIds);
         Set<Id> unscopedUsers = new Set<Id>();
         Set<String> recordIds = new Set<String>();

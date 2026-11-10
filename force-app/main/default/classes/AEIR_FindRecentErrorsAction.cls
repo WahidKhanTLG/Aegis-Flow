@@ -1,15 +1,17 @@
-public with sharing class AEIR_FindRecentErrorsAction {
+global with sharing class AEIR_FindRecentErrorsAction {
     private static final Integer RESULTS_PER_REQUEST = 10;
 
-    public class Request {
-        @InvocableVariable public String recordId;
-        @InvocableVariable public String objectApiName;
-        public Request() {}
+    global class Request {
+        global Request() {}
+        @InvocableVariable global String recordId;
+        @InvocableVariable global String objectApiName;
+
     }
-    public class Response {
-        @InvocableVariable public String resultsJson;
-        @InvocableVariable public String message;
-        public Response() {}
+    global class Response {
+        global Response() {}
+        @InvocableVariable global String resultsJson;
+        @InvocableVariable global String message;
+
     }
 
     /**
@@ -17,8 +19,8 @@ public with sharing class AEIR_FindRecentErrorsAction {
      * queries for the whole invocation rather than one per request. Results are
      * bucketed by record id and object api name, then mapped back to each request.
      */
-    @InvocableMethod(label='Aegis Flow: Find Recent Errors' description='Finds recent visible errors for the current user and supplied record context.')
-    public static List<Response> run(List<Request> requests) {
+    @InvocableMethod(category='Aegis Flow' label='Aegis Flow: Find Recent Errors' description='Finds recent visible errors for the current user and supplied record context.')
+    global static List<Response> run(List<Request> requests) {
         List<Response> output = new List<Response>();
         if (requests == null || requests.isEmpty()) return output;
 

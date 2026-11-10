@@ -19,6 +19,7 @@ export default class HelpMeAgentUtility extends LightningElement {
     issueType = 'Unknown';
     requestVersion = 0;
     reportSubmitted = false;
+    confirmed = false;
 
     get issueTypeOptions() {
         return [
@@ -34,11 +35,13 @@ export default class HelpMeAgentUtility extends LightningElement {
     get diagnosisStepClass() { return this.agentSummary ? 'progress-item complete' : 'progress-item active'; }
     get resolutionStepClass() { return this.agentSummary ? 'progress-item active' : 'progress-item'; }
     get diagnoseButtonLabel() { return this.agentSummary ? 'Refresh diagnosis' : 'Analyze captured context'; }
-    get isReportDisabled() { return this.isLoading || this.reportSubmitted; }
+    get isReportDisabled() { return this.isLoading || !this.sessionId || !this.confirmed || this.reportSubmitted; }
+    get confirmationDisabled() { return this.isLoading || this.reportSubmitted; }
     disconnectedCallback() { this.requestVersion++; }
 
     handleIssueType(event) { this.issueType = event.detail.value; }
-    handleDescription(event) { this.description = event.detail.value; }
+    handleDescription(event) { if (this.isLoading) return; this.description = event.detail.value || ''; this.confirmed = false; }
+    handleConfirmation(event) { if (!this.confirmationDisabled) this.confirmed = event.target.checked === true; }
 
     buildContext() {
         const state = this.currentPageReference && this.currentPageReference.state ? this.currentPageReference.state : {};
@@ -72,9 +75,17 @@ export default class HelpMeAgentUtility extends LightningElement {
     }
     sendReport() {
         if (this.isReportDisabled || !this.sessionId) return;
+        this.confirmed = false;
         this.runAsync(
             escalateSession({ sessionId: this.sessionId, userDescription: this.description }),
-            res => { this.reportSubmitted = Boolean(res.escalationId); this.message = `Governed report created: ${res.subject}. Delivery status: ${res.status || 'New'}.`; }
+            res => {
+                if (!res || !res.escalationId) {
+                    this.error = 'The governed report was not created. Review the outcome before trying again.';
+                    return;
+                }
+                this.reportSubmitted = true;
+                this.message = `Governed report created: ${res.subject}. Delivery status: ${res.status || 'New'}.`;
+            }
         );
     }
     runAsync(promise, successHandler) {
@@ -89,6 +100,7 @@ export default class HelpMeAgentUtility extends LightningElement {
         if (this.isLoading) return;
         this.requestVersion++;
         this.reportSubmitted = false;
+        this.confirmed = false;
         this.sessionId = null; this.correlationId = null; this.message = null; this.agentSummary = null;
         this.recommendedAction = null; this.error = null; this.description = ''; this.issueType = 'Unknown';
     }

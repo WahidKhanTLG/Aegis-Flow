@@ -1,3 +1,6 @@
+import ERROR_LOG_OBJECT from '@salesforce/schema/Error_Log__c';
+import ROOT_CAUSE_FIELD from '@salesforce/schema/AI_Diagnosis__c.Root_Cause__c';
+import RECOMMENDED_ACTION_FIELD from '@salesforce/schema/AI_Diagnosis__c.Recommended_Action__c';
 import { LightningElement, wire } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import USER_ID from '@salesforce/user/Id';
@@ -17,7 +20,6 @@ import getSurfaceSettings from '@salesforce/apex/AEIR_AegisHeadlessMonitorContro
 import captureFlowError from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.captureFlowError';
 import reportScreenIssue from '@salesforce/apex/AEIR_UiSaveErrorController.reportScreenIssue';
 
-const DEFAULT_ALERT_CHANNEL = '/event/Aegis_User_Alert__e';
 // Optional live Flow source; availability depends on the org and current user.
 const DEFAULT_FLOW_ERROR_CHANNEL = '/event/FlowExecutionErrorEvent';
 const UTILITY_IDLE_LABEL = 'Aegis Flow Alerts';
@@ -46,7 +48,7 @@ export default class AegisHeadlessMonitor extends LightningElement {
     dismissedCorrelations = new Set();
     ineligibleCorrelations = new Set();
     monitoringState = 'loading';
-    alertChannel = DEFAULT_ALERT_CHANNEL;
+    alertChannel;
     flowErrorChannel = DEFAULT_FLOW_ERROR_CHANNEL;
     alertConnectionState = 'connecting';
     alertStreamWarning = false;
@@ -150,8 +152,8 @@ export default class AegisHeadlessMonitor extends LightningElement {
     get errorReference() { return this.errorLog ? this.errorLog.correlationId : ''; }
     get errorMessage() { return this.errorLog ? this.errorLog.normalizedMessage : ''; }
 
-    get diagnosisRootCause() { return this.hasDiagnosis ? this.detail.diagnosis.Root_Cause__c : ''; }
-    get diagnosisRecommendedAction() { return this.hasDiagnosis ? this.detail.diagnosis.Recommended_Action__c : ''; }
+    get diagnosisRootCause() { return this.hasDiagnosis ? this.detail.diagnosis[ROOT_CAUSE_FIELD.fieldApiName] : ''; }
+    get diagnosisRecommendedAction() { return this.hasDiagnosis ? this.detail.diagnosis[RECOMMENDED_ACTION_FIELD.fieldApiName] : ''; }
 
     /** Falls back to the alert itself when the Error Log is gone. */
     get alertSeverity() {
@@ -220,9 +222,12 @@ export default class AegisHeadlessMonitor extends LightningElement {
     }
     subscribeToAlerts() {
         getAlertChannel()
-            .catch(() => DEFAULT_ALERT_CHANNEL)
             .then(channel => {
-                this.alertChannel = channel || DEFAULT_ALERT_CHANNEL;
+                const namespace = ERROR_LOG_OBJECT.objectApiName.slice(0, -'Error_Log__c'.length);
+                if (channel !== '/event/' + namespace + 'Aegis_User_Alert__e') {
+                    throw new Error('The alert channel could not be resolved.');
+                }
+                this.alertChannel = channel;
                 return subscribe(this.alertChannel, -1, message => this.handleStreamingMessage(message));
             })
             .then(response => {
@@ -306,12 +311,14 @@ export default class AegisHeadlessMonitor extends LightningElement {
     handleStreamingMessage(message) {
         if (!this.isConnectedToAlerts || !this.monitoringEnabled) return;
         const payload = message && message.data ? message.data.payload : null;
-        if (!payload || payload.Target_User_Id__c !== USER_ID || !payload.Correlation_Id__c) return;
+        const namespace = ERROR_LOG_OBJECT.objectApiName.slice(0, -'Error_Log__c'.length);
+        const correlationId = payload && payload[namespace + 'Correlation_Id__c'];
+        if (!payload || payload[namespace + 'Target_User_Id__c'] !== USER_ID || !correlationId) return;
         // This callback belongs to the actual Aegis subscription. A later valid
         // wake-up demonstrates that channel recovered, not that every stream did.
         // Keep unknown transport, optional Flow and action failures independent.
         this.alertStreamWarning = false;
-        this.resolveStreamingAlert(payload.Correlation_Id__c);
+        this.resolveStreamingAlert(correlationId);
     }
     resolveStreamingAlert(correlationId) {
         if (!this.isConnectedToAlerts || !this.monitoringEnabled || !correlationId || this.dismissedCorrelations.has(correlationId)) return Promise.resolve();

@@ -118,3 +118,13 @@ confirmation regressions remain included. These checks do not contact a live org
 
 Protocol references: [MCP resources](https://modelcontextprotocol.io/specification/2025-11-25/server/resources)
 and [MCP lifecycle](https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle).
+
+
+## Managed installation namespace
+
+Set `AEGIS_PACKAGE_NAMESPACE` to the actual registered namespace for a managed installation.
+Leave it unset/empty for unmanaged development. It is a namespace only, not a URL or an org
+alias. Invalid namespace values fail before credential/network access. HTTP failures do not
+fall back to the unmanaged route or replay mutations. For a selected namespace the bridge
+uses `/services/apexrest/{namespace}/aegis-flow/v1/operations/` on the already trusted Salesforce
+origin. No namespace is selected or registered automatically.

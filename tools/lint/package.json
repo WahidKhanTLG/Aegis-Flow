@@ -1,0 +1,21 @@
+{
+  "name": "@aegis-flow/lint-toolchain",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Isolated maintained ESLint 10/Babel 8 toolchain; runtime compiler/Jest retain Babel 7",
+  "dependencies": {
+    "eslint": "10.14.0",
+    "@eslint/js": "10.0.1",
+    "@babel/eslint-parser": "8.0.7",
+    "@lwc/eslint-plugin-lwc": "file:../vendor/eslint-plugin-lwc.tgz",
+    "@salesforce/eslint-plugin-lightning": "file:../vendor/eslint-plugin-lightning.tgz",
+    "globals-lwc": "npm:globals@15.14.0",
+    "@babel/core": "8.1.0"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
+  },
+  "overrides": {
+    "minimatch@>=7.0.0 <11.0.1": "11.0.5"
+  }
+}

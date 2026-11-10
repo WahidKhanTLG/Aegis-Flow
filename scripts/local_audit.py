@@ -1,5 +1,6 @@
 from pathlib import Path
 import json
+import re
 import sys
 import xml.etree.ElementTree as ET
 
@@ -78,6 +79,10 @@ else:
             errors.append(f'QA fixture must be excluded from source deployments: {name}')
 
     for trigger in (default / 'triggers').glob('*.trigger'):
+        # Record lifecycle triggers are not platform-event subscribers.
+        target = re.search(r'\bon\s+(\w+)\s*\(', trigger.read_text(), re.IGNORECASE)
+        if target and not (target.group(1).endswith('__e') or target.group(1) == 'BatchApexErrorEvent'):
+            continue
         config = default/'PlatformEventSubscriberConfigs'/f'{trigger.stem}.platformEventSubscriberConfig-meta.xml'
         if not config.exists():
             errors.append(f'Missing bounded event subscriber configuration: {trigger.stem}')
@@ -98,6 +103,34 @@ else:
         for permission in permissions.findall('m:objectPermissions', ns):
             if permission.findtext('m:object', namespaces=ns) == 'Aegis_User_Alert__e' and permission.findtext('m:allowCreate', namespaces=ns) == 'true':
                 errors.append(f'{name} must not publish trusted user alerts.')
+
+    end_user = ET.parse(default/'permissionsets/AEIR_End_User.permissionset-meta.xml')
+    for permission in end_user.findall('m:objectPermissions', ns):
+        if permission.findtext('m:object', namespaces=ns) == 'Diagnostic_Session_Requested__e':
+            if any(permission.findtext('m:' + flag, namespaces=ns) == 'true' for flag in ('allowRead', 'allowCreate')):
+                errors.append('End users must not read or publish the internal diagnostic-session request stream.')
+    request_key = ET.parse(default/'objects/Developer_Escalation__c/fields/Request_Key__c.field-meta.xml')
+    if request_key.findtext('m:unique', namespaces=ns) != 'true':
+        errors.append('Escalation request keys must be unique across transactions.')
+    server_fields = {'Error_Log__c.First_Diagnosed_At__c', 'Error_Log__c.Resolved_At__c',
+                     'Developer_Escalation__c.Request_Key__c', 'Developer_Escalation__c.Delivery_Requested_At__c'}
+    for path in (default/'permissionsets').glob('*.xml'):
+        definition = ET.parse(path)
+        # Metadata API requires each repeated element to stay in one contiguous
+        # section. XML parsing alone accepts a second fieldPermissions section
+        # after hasActivationRequired, but Salesforce rejects that file.
+        sections = set()
+        previous = None
+        for child in definition.getroot():
+            tag = child.tag.rsplit('}', 1)[-1]
+            if tag != previous:
+                if tag in sections:
+                    errors.append(f'{path.stem} has a repeated metadata section: {tag}')
+                sections.add(tag)
+                previous = tag
+        for permission in definition.findall('m:fieldPermissions', ns):
+            if permission.findtext('m:field', namespaces=ns) in server_fields and permission.findtext('m:editable', namespaces=ns) == 'true':
+                errors.append(f'{path.stem} must not grant edits to server-owned lifecycle/delivery fields.')
 
 sfdx = root / 'sfdx-project.json'
 try:

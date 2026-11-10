@@ -1,5 +1,70 @@
 # Aegis Flow — Open Issues
 
+## November 10 source publication review
+
+Current unmanaged source passes the Aegis-only Salesforce check-only validation: 571
+components, 311/311 tests from all 38 executable product test classes, zero errors or coverage
+warnings and 93.14% returned weighted Aegis coverage. Four live MCP reads pass with writes
+disabled. Baseline metadata and public Apex/LWC contracts remain present. Source/org parity,
+hosted CI, main publication and later environment gates are tracked separately in the
+[product tracker](PRODUCT_PLAN_AND_TRACKER.md) and [review](SOURCE_PUBLICATION_REVIEW.md).
+The original full shared-org ACC-07-01 Failed result is retained. No actual deployment or
+package creation is established by this check-only review. Dated checkpoints below are historical.
+
+## November 10 local packaging-development checkpoint
+
+Namespace-aware MCP/LWC behavior, fail-closed custom streaming, global subscriber actions /
+retry contracts and exact managed-source staging are implemented and locally verified.
+Both root/lint all-severity audits are clean through the explicit owned security fork and
+qualified ESLint 10 port. Full Node 22/24 validation passes: 124 LWC, 33 MCP, 12 dependency /
+security and eight packaging tests. See [current handoff](PACKAGING_DEVELOPMENT_HANDOFF.md).
+
+Actual namespace/Dev Hub selection, namespaced Apex compilation, clean install, hosted CI
+and live release/customer acceptance remain open. Historical dated sections below retain
+prior results and do not establish current readiness. The later ACC-07-01 full shared-org
+attempt Failed; its 307 Aegis tests passed. Sixteen other cases remain Not run. No org operation,
+package creation, global CLI update, commit, push or deployment was performed by this checkpoint.
+
+## November 9 local release preparation
+
+The prototype safeguard is integrated and the six moderate product dependency entries
+are cleared; 12 low deepmerge-chain entries and the ESLint support gap remain open.
+The [operating handoff](OPERATIONS_HANDOFF.md), [user quick start](USER_QUICK_START.md),
+[acceptance plan](RELEASE_ACCEPTANCE_PLAN.md), bounded case/evidence package and
+[rollback runbook](ROLLBACK_RUNBOOK.md) are prepared locally. Every acceptance case remains
+Not run. Named owners, the selected target/process and final nonproduction/browser/delivery/
+load/recovery acceptance remain required. CLI-01 local technical qualification is complete
+for the exact restricted nonproduction scope; [the toolchain review](RELEASE_TOOLCHAIN_REVIEW.md)
+and [decision record](../release-preparation/cli-release-use-review.json) retain artifact/runtime
+limits and exclusions. Target/action authority and actual acceptance remain unbound.
+No commit, push, deployment, customer data change or org acceptance is established here.
+
+## November 7 development P1/P2 hardening
+
+The current working tree addresses session-event attribution/access, capture failure reporting
+and final publish callbacks, Batch-scope identities, monitor backlog progress, escalation replay,
+Flow coverage matching, long incident keys and lifecycle-based durations. Added Apex regression
+classes are `AEIR_CaptureHardeningTest`, `AEIR_MonitorProgressTest` and
+`AEIR_DeliveryLifecycleTest`, with updated existing fixtures and a repeatable local Apex parser.
+
+The authorized November 7 development deployment saved 61 focused components and passed
+all 211 specified Apex tests. Six additional acceptance methods verified the committed role
+grants, including End User event denial and protected field access. Controlled runtime checks
+passed native rollback-resilient capture/deduplication, publisher spoof rejection, sanitized
+failure telemetry, deterministic diagnosis and saved alerts, persistent dismissal, cross-
+transaction draft replay, long incident keys, lifecycle protection and null/known durations.
+The probe created no business records or outbound messages and cleaned up its diagnostics.
+Setup health passed all ten checks; existing flags, routes, subscribers and schedules were
+preserved. No production deployment, commit, push or publication occurred. See the
+[deployment record](../output/development/2026-11-07/hardening-deployment/verification.json).
+
+Remaining acceptance is live backlog volume, true concurrent-delivery load, rendered browser/
+mobile flows and customer-specific automation/provider operations. The monitor queries
+succeeded on empty pages, so live backlog drainage was not established. Historical closure
+statements below describe earlier reviews. External CLI security remains a separate
+prerequisite. The then-recorded 12 low tool findings were resolved in the November 10 local checkpoint above.
+
+
 **Audit date:** July 27, 2026
 **Org audited:** `Aegis Flow_WA_Dev` (`00DgL00000YDvsvUAD`)
 **Source baseline:** `force-app` @ `sourceApiVersion 67.0`
@@ -177,15 +242,19 @@ The deterministic fallback is genuinely useful and is the correct behaviour when
 
 ## P3 — Packaging and go-to-market
 
-### AF-20 · No namespace reserved and no 2GP packaging configured
+### AF-20 · Namespace and 2GP environment setup
 
-> **Status: deferred by decision (July 27, 2026).** Development continues unmanaged to keep velocity; a separate packaging org is reserved. All new code must follow **`NAMESPACE_READINESS.md`** so the migration is a no-op. Revisit after the testing phase.
+**Current status:** local packaging development/preparation complete; team environment binding
+and actual namespaced build/install acceptance pending. The development namespace remains
+empty. No namespace is reserved and no Dev Hub/package identity has been selected or verified.
+The old claim that an unspecified packaging org was reserved is not accepted setup evidence.
 
-**Spec:** §16, §16.2, EPIC-17
-
-`sfdx-project.json` has `"namespace": ""` and no `packageDirectories` package definitions. The spec targets a Second-Generation Managed Package split across four packages (Core / Agentforce Extension / Connector Extensions / Industry Rules).
-
-§16.2 warns that the namespace must be reserved **before** customer-facing beta, and that packaged CMDT keys and public action keys cannot be renamed after release without a migration strategy. This should be settled early — it is the hardest item to reverse.
+The initial managed-source boundary is one core with dormant optional adapters. The historical
+four-package split is a future design option. Exact membership, staging checks and subscriber
+API/configuration contracts are in [packaging handoff](PACKAGING_DEVELOPMENT_HANDOFF.md) and
+[namespace standard](NAMESPACE_READINESS.md). Preserve the existing development org; select
+separate company-owned namespace/Dev Hub roles and freeze the permanent/public API choices
+before the first managed release.
 
 ---
 
@@ -206,7 +275,7 @@ Security Review evidence, privacy policy, data-handling and subprocessor documen
 5. **AF-05, AF-12** — make shipped configuration real; needed for edition gating.
 6. **AF-11** — required by the §24 acceptance statement.
 7. **AF-14 through AF-19** — correctness and hygiene; cheap, do alongside the above.
-8. **AF-20** — deferred by decision; enforce `NAMESPACE_READINESS.md` in the meantime so the later migration is a no-op.
+8. **AF-20** — local preparation is complete; actual namespace/Dev Hub and namespaced build/install gates remain. Follow the current packaging handoff.
 
 ### AF-26 resolution — non-admin users can now use the product
 

@@ -78,23 +78,15 @@ public with sharing class AEIR_AdminConsoleController {
         return m;
     }
 
-    /**
-     * Mean minutes from capture to the given lifecycle status. Uses LastModifiedDate as
-     * the transition proxy, which is accurate while the status is only set once.
-     */
+    /** Aggregate every visible record in the window, excluding unknown legacy times. */
     private static Decimal meanMinutesBetween(String targetStatus) {
-        List<Error_Log__c> rows = [
-            SELECT CreatedDate, LastModifiedDate
-            FROM Error_Log__c
-            WHERE Status__c = :targetStatus AND CreatedDate = LAST_N_DAYS:30
-            LIMIT 2000
-        ];
-        if (rows.isEmpty()) return 0;
-        Decimal total = 0;
-        for (Error_Log__c row : rows) {
-            total += (row.LastModifiedDate.getTime() - row.CreatedDate.getTime()) / 60000.0;
-        }
-        return (total / rows.size()).setScale(1);
+        AggregateResult summary = targetStatus == 'Diagnosed'
+            ? [SELECT AVG(Diagnosis_Duration_Minutes__c) duration FROM Error_Log__c
+                WHERE CreatedDate = LAST_N_DAYS:30]
+            : [SELECT AVG(Resolution_Duration_Minutes__c) duration FROM Error_Log__c
+                WHERE Status__c = 'Resolved' AND CreatedDate = LAST_N_DAYS:30];
+        Decimal duration = (Decimal)summary.get('duration');
+        return duration == null ? null : duration.setScale(1);
     }
 
     /** Ranked failing sources, so triage knows where to look first (spec 13.2). */

@@ -17,7 +17,9 @@
         <members>AEIR_BulkEntryPointTest</members>
         <members>AEIR_BulkSafetyTest</members>
         <members>AEIR_CaptureFlowFaultAction</members>
+        <members>AEIR_CaptureHardeningTest</members>
         <members>AEIR_CaptureOptionsTest</members>
+        <members>AEIR_CapturePublishCallback</members>
         <members>AEIR_CaptureRetryBulkTest</members>
         <members>AEIR_ClientErrorController</members>
         <members>AEIR_ConfigAndRoutingTest</members>
@@ -29,17 +31,20 @@
         <members>AEIR_CoverageAndGuardTest</members>
         <members>AEIR_CreateEscalationAction</members>
         <members>AEIR_CrossBusinessScenarioTest</members>
+        <members>AEIR_DeliveryLifecycleTest</members>
         <members>AEIR_DiagnosisPayloadTest</members>
         <members>AEIR_DiagnosticSessionRequestHandler</members>
         <members>AEIR_DiagnosticSessionService</members>
         <members>AEIR_EndUserJourneyTest</members>
         <members>AEIR_ErrorCaptureService</members>
         <members>AEIR_ErrorCapturedEventHandler</members>
+        <members>AEIR_ErrorLifecycleService</members>
         <members>AEIR_ErrorNormalizationService</members>
         <members>AEIR_EscalationBulkTest</members>
         <members>AEIR_EscalationRequestedEventHandler</members>
         <members>AEIR_EscalationService</members>
         <members>AEIR_EventBoundaryCoverageTest</members>
+        <members>AEIR_EventTestData</members>
         <members>AEIR_ExecuteRemediationAction</members>
         <members>AEIR_ExecuteRetryHandlerAction</members>
         <members>AEIR_FailingBatchTestHelper</members>
@@ -63,6 +68,9 @@
         <members>AEIR_LogCollectorService</members>
         <members>AEIR_LogCollectorTest</members>
         <members>AEIR_MonitorAndTelemetryTest</members>
+        <members>AEIR_MonitorCursorService</members>
+        <members>AEIR_MonitorProgressTest</members>
+        <members>AEIR_NamespaceContractTest</members>
         <members>AEIR_NotificationBoundaryTest</members>
         <members>AEIR_NotificationPolicyService</members>
         <members>AEIR_NotificationPolicyTest</members>
@@ -99,6 +107,7 @@
         <members>AEIR_BatchApexErrorEventTrigger</members>
         <members>AEIR_DiagnosticSessionRequestTrigger</members>
         <members>AEIR_ErrorCapturedEventTrigger</members>
+        <members>AEIR_ErrorLogLifecycleTrigger</members>
         <members>AEIR_EscalationRequestedEventTrigger</members>
         <name>ApexTrigger</name>
     </types>

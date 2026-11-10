@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Readable, Writable } from 'node:stream';
-import { createHandler, createSalesforceClient, serve, validateInstance } from '../server.mjs';
+import { createHandler, createSalesforceClient, serve, validateInstance, validatePackageNamespace } from '../server.mjs';
 
 const initialize = async handler => {
     const result = await handler({ jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25' } });
@@ -238,5 +238,47 @@ test('response-stream and unexpected adapter errors cannot leak private failure 
         const result = await handler(call('get_capabilities'));
         assert.equal(result.result.isError, true);
         assert(!JSON.stringify(result).includes('SYNTHETIC_PRIVATE'));
+    }
+});
+
+
+test('managed and unmanaged API routes preserve origin, query values and mutation semantics', async () => {
+    for (const namespace of ['', 'aegisflow', 'my_np']) {
+        const calls = [];
+        const client = createSalesforceClient({
+            env: { AEGIS_INSTANCE_URL: 'https://example.my.salesforce.com', AEGIS_ACCESS_TOKEN: 'SYNTHETIC_TOKEN', AEGIS_PACKAGE_NAMESPACE: namespace },
+            fetchImpl: async (url, options) => { calls.push({ url, options }); return { ok: true, text: async () => '{}' }; }
+        });
+        await client('GET', 'errors', { limit: 3, objectApiName: 'Account' });
+        await client('POST', 'help', { description: 'Confirmed help', confirmed: true });
+        const prefix = `/services/apexrest/${namespace ? namespace + '/' : ''}aegis-flow/v1/operations/`;
+        assert.equal(calls[0].url.pathname, prefix + 'errors');
+        assert.equal(calls[0].url.searchParams.get('limit'), '3');
+        assert.equal(calls[0].url.origin, 'https://example.my.salesforce.com');
+        assert.equal(calls[1].url.pathname, prefix + 'help');
+        assert.deepEqual(JSON.parse(calls[1].options.body), { description: 'Confirmed help' });
+        assert(calls.every(call => call.options.redirect === 'error'));
+    }
+});
+
+test('invalid namespace configuration fails before credentials or network access', () => {
+    for (const namespace of ['a/b', '../x', ' x', 'x ', 'x__y', '1start', 'abcdefghijklmnop', null, {}, 'x%2fy']) {
+        assert.throws(() => createSalesforceClient({ env: { AEGIS_PACKAGE_NAMESPACE: namespace },
+            execImpl: () => assert.fail('No credential lookup'), fetchImpl: () => assert.fail('No network call') }), /namespace/i);
+    }
+    assert.equal(validatePackageNamespace(), '');
+    assert.equal(validatePackageNamespace('a'), 'a');
+    assert.equal(validatePackageNamespace('abcdefghijklmno'), 'abcdefghijklmno');
+});
+
+test('a managed-route error never falls back to an unmanaged URL or replays a mutation', async () => {
+    for (const status of [401, 404, 503]) {
+        const paths = [];
+        const client = createSalesforceClient({
+            env: { AEGIS_INSTANCE_URL: 'https://example.my.salesforce.com', AEGIS_ACCESS_TOKEN: 'SYNTHETIC_TOKEN', AEGIS_PACKAGE_NAMESPACE: 'aegisflow' },
+            fetchImpl: async url => { paths.push(url.pathname); return { ok: false, status }; }
+        });
+        await assert.rejects(client('POST', 'escalate', { correlationId: 'confirmed-request', confirmed: true }), new RegExp(`HTTP ${status}`));
+        assert.deepEqual(paths, ['/services/apexrest/aegisflow/aegis-flow/v1/operations/escalate']);
     }
 });

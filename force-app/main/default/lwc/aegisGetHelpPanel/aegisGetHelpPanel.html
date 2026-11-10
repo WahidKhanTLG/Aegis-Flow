@@ -12,7 +12,7 @@
             <p class="slds-var-m-top_small">Session reference: {sessionReference}</p>
             <template if:true={summary}><h3 class="slds-text-heading_small slds-var-m-top_medium">Diagnosis</h3><p>{summary}</p><p class="slds-var-m-top_small">Recommended action: {recommendation}</p></template>
             <lightning-button label="Analyze captured context" onclick={diagnose} disabled={sessionActionsDisabled} class="slds-var-m-top_medium"></lightning-button>
-            <lightning-input type="checkbox" label="I confirm sending this diagnostic evidence to the configured technical team." checked={confirmed} onchange={handleConfirmation} disabled={isLoading} class="slds-var-m-top_medium"></lightning-input>
+            <lightning-input type="checkbox" label="I confirm sending this diagnostic evidence to the configured technical team." checked={confirmed} onchange={handleConfirmation} disabled={confirmationDisabled} class="slds-var-m-top_medium"></lightning-input>
             <lightning-button label="Send governed report" variant="brand" onclick={send} disabled={sendDisabled} class="slds-var-m-top_small"></lightning-button>
             <lightning-button label="Start a new session" onclick={resetSession} disabled={isLoading} class="slds-var-m-left_x-small"></lightning-button>
         </template>

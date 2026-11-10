@@ -1,0 +1,73 @@
+{
+  "name": "@lwc/eslint-plugin-lwc",
+  "version": "3.5.0",
+  "license": "MIT",
+  "description": "Official ESLint rules for LWC",
+  "keywords": [
+    "eslint",
+    "eslint-plugin",
+    "lwc",
+    "salesforce"
+  ],
+  "main": "lib/index.js",
+  "scripts": {},
+  "dependencies": {
+    "fast-xml-parser": "^5.3.6",
+    "globals": "~15.14.0",
+    "minimatch": "~9.0.4"
+  },
+  "peerDependencies": {
+    "@babel/eslint-parser": "^8.0.0",
+    "eslint": "^10.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/salesforce/eslint-plugin-lwc.git"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "volta": {
+    "node": "24.11.0",
+    "yarn": "1.22.22"
+  },
+  "files": [
+    "lib"
+  ],
+  "lint-staged": {
+    "*.js": [
+      "eslint"
+    ],
+    "*.{js,md}": [
+      "prettier --write"
+    ]
+  },
+  "mocha": {
+    "recursive": true,
+    "reporter": "dot",
+    "slow": 150
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 93,
+    "statements": 93,
+    "functions": 88,
+    "reporter": [
+      "html",
+      "text"
+    ]
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "private": true,
+  "aegisQualification": {
+    "upstreamVersion": "3.5.0",
+    "change": "Local ESLint 10 / Babel 8 peer qualification; rule implementation unchanged",
+    "upstreamSupported": false
+  }
+}

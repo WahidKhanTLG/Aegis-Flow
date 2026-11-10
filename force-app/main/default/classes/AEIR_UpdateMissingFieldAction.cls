@@ -6,35 +6,37 @@
  * writes an individually approved audit row. The batch is capped so a large call is refused
  * outright instead of dying half-applied on a governor limit.
  */
-public with sharing class AEIR_UpdateMissingFieldAction {
+global with sharing class AEIR_UpdateMissingFieldAction {
 
     /** See AEIR_ExecuteRemediationAction.MAX_BATCH; kept in step with it deliberately. */
     @TestVisible
     private static final Integer MAX_BATCH = 20;
 
-    public class Request {
-        @InvocableVariable public String correlationId;
-        @InvocableVariable(required=true) public String actionKey;
-        @InvocableVariable(required=true) public String objectApiName;
-        @InvocableVariable(required=true) public String recordId;
-        @InvocableVariable(required=true) public String fieldApiName;
-        @InvocableVariable public String newValue;
-        @InvocableVariable public Boolean confirmed;
-        @InvocableVariable public Id errorLogId;
-        @InvocableVariable public Id diagnosticSessionId;
+    global class Request {
+        global Request() {}
+        @InvocableVariable global String correlationId;
+        @InvocableVariable(required=true) global String actionKey;
+        @InvocableVariable(required=true) global String objectApiName;
+        @InvocableVariable(required=true) global String recordId;
+        @InvocableVariable(required=true) global String fieldApiName;
+        @InvocableVariable global String newValue;
+        @InvocableVariable global Boolean confirmed;
+        @InvocableVariable global Id errorLogId;
+        @InvocableVariable global Id diagnosticSessionId;
     }
-    public class Response {
-        @InvocableVariable public Boolean success;
-        @InvocableVariable public String correlationId;
-        @InvocableVariable public Id remediationActionId;
-        @InvocableVariable public String status;
-        @InvocableVariable public String userMessage;
-        @InvocableVariable public String technicalMessage;
-        @InvocableVariable public Boolean retryRecommended;
-        @InvocableVariable public Boolean escalationRecommended;
+    global class Response {
+        global Response() {}
+        @InvocableVariable global Boolean success;
+        @InvocableVariable global String correlationId;
+        @InvocableVariable global Id remediationActionId;
+        @InvocableVariable global String status;
+        @InvocableVariable global String userMessage;
+        @InvocableVariable global String technicalMessage;
+        @InvocableVariable global Boolean retryRecommended;
+        @InvocableVariable global Boolean escalationRecommended;
     }
-    @InvocableMethod(label='Aegis Flow: Update Missing Field' description='Executes a configured field remediation after whitelist, confirmation, CRUD/FLS, and sharing checks.')
-    public static List<Response> run(List<Request> requests) {
+    @InvocableMethod(category='Aegis Flow' label='Aegis Flow: Update Missing Field' description='Executes a configured field remediation after whitelist, confirmation, CRUD/FLS, and sharing checks.')
+    global static List<Response> run(List<Request> requests) {
         List<Response> output = new List<Response>();
         if (requests == null || requests.isEmpty()) return output;
 

@@ -20,15 +20,27 @@ public with sharing class AEIR_AsyncJobMonitorScheduler implements Schedulable {
         monitorFailedJobs();
     }
 
-    /** @return how many newly failed jobs were captured */
+    public virtual class EvidenceSource {
+        public virtual List<AsyncApexJob> page(Datetime cursorAt, Id cursorId, Integer pageSize) {
+            String query = 'SELECT Id, Status, JobType, ApexClassId, ExtendedStatus, NumberOfErrors, CreatedById, CreatedDate, CompletedDate FROM AsyncApexJob '
+                + 'WHERE Status = \'Failed\' AND CompletedDate = LAST_N_DAYS:1';
+            if (cursorAt != null) query += ' AND (CompletedDate > :cursorAt OR (CompletedDate = :cursorAt AND Id > :cursorId))';
+            return Database.queryWithBinds(query + ' ORDER BY CompletedDate ASC, Id ASC LIMIT :pageSize',
+                new Map<String, Object>{'cursorAt' => cursorAt, 'cursorId' => cursorId, 'pageSize' => pageSize}, AccessLevel.USER_MODE);
+        }
+    }
+    @TestVisible private static EvidenceSource evidenceSource = new EvidenceSource();
+
+    /** New failures on this page; the persisted cursor drains later pages on later calls. */
     public static Integer monitorFailedJobs() {
-        return reconcile([
-            SELECT Id, Status, JobType, ApexClassId, ExtendedStatus, NumberOfErrors, CreatedDate, CompletedDate
-            FROM AsyncApexJob
-            WHERE Status = 'Failed' AND CreatedDate = LAST_N_DAYS:1
-            ORDER BY CreatedDate DESC
-            LIMIT 100
-        ]);
+        AEIR_MonitorCursorService.State cursor = AEIR_MonitorCursorService.read(false);
+        List<AsyncApexJob> jobs = evidenceSource.page(cursor.at, cursor.lastId, 100);
+        Integer captured = reconcile(jobs);
+        AsyncApexJob last = jobs.isEmpty() ? null : jobs[jobs.size() - 1];
+        AEIR_MonitorCursorService.save(cursor, false,
+            jobs.size() < 100 ? null : last.CompletedDate,
+            jobs.size() < 100 ? null : last.Id);
+        return captured;
     }
 
     /**
@@ -67,6 +79,7 @@ public with sharing class AEIR_AsyncJobMonitorScheduler implements Schedulable {
             AsyncApexJob job = byCorrelation.get(correlationId);
             AEIR_ErrorCaptureService.ErrorInput input = new AEIR_ErrorCaptureService.ErrorInput();
             input.correlationId = correlationId;
+            input.userId = job.CreatedById == null ? null : String.valueOf(job.CreatedById);
             input.sourceType = job.JobType == 'BatchApex' ? 'Batch' : 'Queueable';
             input.sourceName = String.isBlank(job.JobType) ? 'Asynchronous Apex' : job.JobType;
             input.originalMessage = String.isBlank(job.ExtendedStatus)
@@ -90,7 +103,11 @@ public with sharing class AEIR_AsyncJobMonitorScheduler implements Schedulable {
         // One bulk call: captureFromEvents handles classification, incident grouping,
         // notification policy and diagnosis dispatch for the whole set together.
         List<AEIR_ErrorCaptureService.CaptureResult> results =
-            AEIR_ErrorCaptureService.captureFromEvents(inputs);
+            AEIR_ErrorCapturedEventHandler.captureInputs(inputs, 'AsyncJobMonitor');
+        for (AEIR_ErrorCaptureService.CaptureResult result : results) {
+            if (result != null && result.retryable == true) throw new MonitorException(
+                'Temporary async capture failure; the monitoring cursor was not advanced.');
+        }
 
         // Stamp the job id in a single DML so the legacy dedupe signal stays populated.
         List<Error_Log__c> stamps = new List<Error_Log__c>();
@@ -101,7 +118,15 @@ public with sharing class AEIR_AsyncJobMonitorScheduler implements Schedulable {
             if (job == null) continue;
             stamps.add(new Error_Log__c(Id = result.errorLogId, Async_Job_Id__c = String.valueOf(job.Id)));
         }
-        if (!stamps.isEmpty()) Database.update(stamps, false);
+        if (!stamps.isEmpty()) {
+            AEIR_SubscriberTelemetry telemetry = new AEIR_SubscriberTelemetry('AsyncJobMonitor');
+            List<Database.SaveResult> saved = Database.update(stamps, false, AccessLevel.SYSTEM_MODE);
+            for (Integer i = 0; i < saved.size(); i++) if (!saved[i].isSuccess()) {
+                telemetry.record(null, new MonitorException('An async job reference could not be stamped; correlation deduplication remains active.'));
+            }
+            telemetry.flush();
+        }
         return stamps.size();
     }
+    private class MonitorException extends Exception {}
 }

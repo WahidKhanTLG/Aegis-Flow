@@ -1,11 +1,16 @@
+import ERROR_LOG_OBJECT from '@salesforce/schema/Error_Log__c';
+import ESCALATION_OBJECT from '@salesforce/schema/Developer_Escalation__c';
 import { LightningElement, api, wire } from 'lwc';
 import { CurrentPageReference } from 'lightning/navigation';
 import getAvailableActions from '@salesforce/apex/AEIR_RemediationController.getAvailableActions';
 import prepareProposal from '@salesforce/apex/AEIR_RemediationController.prepareProposal';
 import collectForError from '@salesforce/apex/AEIR_LogCollectorService.collectForError';
+import hasRemediationPermission from '@salesforce/customPermission/AEIR_Execute_Remediation';
 
 /** Hosts the reusable surfaces; all record reads and writes remain server-authorized. */
 export default class AegisWorkspace extends LightningElement {
+    errorLogObject = ERROR_LOG_OBJECT.objectApiName;
+    escalationObject = ESCALATION_OBJECT.objectApiName;
     @api recordId;
     @api objectApiName;
     correlationId = '';
@@ -46,16 +51,18 @@ export default class AegisWorkspace extends LightningElement {
         }
     }
     connectedCallback() {
+        if (!this.canPrepareCorrections) return;
         getAvailableActions().then(actions => { if (this.isConnected) this.actions = Array.isArray(actions) ? actions : []; })
             .catch(error => { if (this.isConnected) this.actionError = this.readError(error, 'Registered corrections are unavailable for your access.'); });
     }
     disconnectedCallback() { this.requestVersion += 1; this.clearLogBody(); }
+    get canPrepareCorrections() { return hasRemediationPermission === true; }
     get actionOptions() { return this.actions.map(action => ({ label: action.label, value: action.actionKey })); }
     get hasActions() { return this.actions.length > 0; }
     get hasContext() { return !!(this.activeRecordId && this.activeObjectApiName); }
     get workspaceContexts() { return [{ key: this.workspaceVersion }]; }
     get contextLabel() { return this.hasContext ? this.activeObjectApiName + ' · ' + this.activeRecordId : 'No record context selected'; }
-    get prepareDisabled() { return this.isExecuting || this.isPreparing || !this.selectedAction || !this.correctionRecordId || (!this.clearValue && !this.proposedValue); }
+    get prepareDisabled() { return !this.canPrepareCorrections || this.isExecuting || this.isPreparing || !this.selectedAction || !this.correctionRecordId || (!this.clearValue && !this.proposedValue); }
     get correctionInputsDisabled() { return this.isExecuting || this.isPreparing; }
     get proposedValueDisabled() { return this.isExecuting || this.clearValue; }
     get collectDisabled() { return !this.selectedErrorId || this.isCollecting; }

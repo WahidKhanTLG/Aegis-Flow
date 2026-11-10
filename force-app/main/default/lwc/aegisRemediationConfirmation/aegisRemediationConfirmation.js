@@ -5,7 +5,7 @@ export default class AegisRemediationConfirmation extends LightningElement {
     @api recordId;
     @api correlationId;
     @api pending = false;
-    @api result;
+    _result;
     @api externallyManaged = false;
     _proposal;
     showReview = false;
@@ -13,6 +13,10 @@ export default class AegisRemediationConfirmation extends LightningElement {
     isExecuting = false;
     error;
     requestVersion = 0;
+
+    @api
+    get result() { return this._result; }
+    set result(value) { this._result = value; }
 
     /**
      * Standalone execution uses the existing server-governed orchestrator. Hosts can
@@ -27,7 +31,7 @@ export default class AegisRemediationConfirmation extends LightningElement {
         this.confirmationSent = false;
         this.isExecuting = false;
         this.error = null;
-        this.result = null;
+        this._result = null;
     }
     disconnectedCallback() { this.requestVersion += 1; }
     get hasProposal() {
@@ -76,7 +80,7 @@ export default class AegisRemediationConfirmation extends LightningElement {
                 .then(result => {
                     if (version !== this.requestVersion) return;
                     if (!result || typeof result.success !== 'boolean') throw new Error('The server did not return an execution result. Refresh the diagnostic before requesting another correction.');
-                    this.result = result;
+                    this._result = result;
                     this.dispatchEvent(new CustomEvent('completed', { detail: { correlationId: result.correlationId, remediationActionId: result.remediationActionId, success: result.success, status: result.status } }));
                 })
                 .catch(error => {

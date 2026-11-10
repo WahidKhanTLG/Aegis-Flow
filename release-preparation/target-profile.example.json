@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "state": "Example only; local CLI gate qualified for restricted scope; target/run/owners unbound and no execution authorized",
+  "runId": null,
+  "proposedHistoricalAlias": "SyncBridge-Product",
+  "target": {
+    "alias": null,
+    "orgId": null,
+    "environmentType": null,
+    "verifiedAtUtc": null
+  },
+  "releaseArtifactSha256": null,
+  "cli": {
+    "qualificationState": "qualified",
+    "qualificationEvidence": "release-preparation/cli-release-use-review.json",
+    "candidateCanonicalInventorySha256": "3f8998228b699c3ac48bdf9e279c0fdd0c380611ae8bfea1b0e1a06e59a2fdf5",
+    "qualifiedScope": "Pinned nonproduction validation and Apex-test workflow",
+    "executionAuthorized": false
+  },
+  "owners": {
+    "release": null,
+    "salesforceAdmin": null,
+    "support": null,
+    "qa": null,
+    "security": null,
+    "customerProcess": null
+  },
+  "scope": {
+    "customer": null,
+    "businessProcess": null,
+    "recoveryMode": "unselected",
+    "mcpClient": null,
+    "customerCorpusScope": [],
+    "mobileSurfaces": [],
+    "optionalProviders": [],
+    "concurrencyChannel": null
+  },
+  "authority": {
+    "approvalReference": null,
+    "approvedCaseIds": [],
+    "syntheticRecordWrites": false,
+    "metadataWrites": false,
+    "externalDelivery": false
+  },
+  "destinations": {
+    "emailRecipientApprovalReference": null,
+    "caseOwnerOrQueueApprovalReference": null
+  },
+  "fixtureMarkerPrefix": "AEGIS-QA-",
+  "evidenceDirectory": null
+}

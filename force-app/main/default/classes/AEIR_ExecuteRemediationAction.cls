@@ -12,35 +12,37 @@
  * capped and anything above the cap is refused up front with an explicit message rather than
  * being half-applied.
  */
-public with sharing class AEIR_ExecuteRemediationAction {
+global with sharing class AEIR_ExecuteRemediationAction {
 
     /** Successful work uses four statements; audit-failure rollback can use six.
      * Twenty inputs leave headroom for the caller, and the service rechecks capacity. */
     @TestVisible
     private static final Integer MAX_BATCH = 20;
 
-    public class Request {
-        @InvocableVariable public String correlationId;
-        @InvocableVariable public String actionKey;
-        @InvocableVariable public String objectApiName;
-        @InvocableVariable public String recordId;
-        @InvocableVariable public String fieldApiName;
-        @InvocableVariable public String newValue;
-        @InvocableVariable public Boolean confirmed;
-        @InvocableVariable public Id errorLogId;
-        @InvocableVariable public Id diagnosticSessionId;
+    global class Request {
+        global Request() {}
+        @InvocableVariable global String correlationId;
+        @InvocableVariable global String actionKey;
+        @InvocableVariable global String objectApiName;
+        @InvocableVariable global String recordId;
+        @InvocableVariable global String fieldApiName;
+        @InvocableVariable global String newValue;
+        @InvocableVariable global Boolean confirmed;
+        @InvocableVariable global Id errorLogId;
+        @InvocableVariable global Id diagnosticSessionId;
     }
 
-    public class Response {
-        @InvocableVariable public Boolean success;
-        @InvocableVariable public Id remediationActionId;
-        @InvocableVariable public String userMessage;
-        @InvocableVariable public String technicalMessage;
+    global class Response {
+        global Response() {}
+        @InvocableVariable global Boolean success;
+        @InvocableVariable global Id remediationActionId;
+        @InvocableVariable global String userMessage;
+        @InvocableVariable global String technicalMessage;
     }
 
-    @InvocableMethod(label='AEIR Execute Remediation'
+    @InvocableMethod(category='Aegis Flow' label='AEIR Execute Remediation'
         description='Executes a whitelisted remediation action after confirmation.')
-    public static List<Response> executeRemediation(List<Request> requests) {
+    global static List<Response> executeRemediation(List<Request> requests) {
         List<Response> out = new List<Response>();
         if (requests == null || requests.isEmpty()) return out;
 

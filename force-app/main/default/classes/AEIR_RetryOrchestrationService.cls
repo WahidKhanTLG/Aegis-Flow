@@ -1,23 +1,23 @@
-public with sharing class AEIR_RetryOrchestrationService {
+global with sharing class AEIR_RetryOrchestrationService {
     /** Legacy handlers execute arbitrary business code; larger batches must be chunked. */
     public static final Integer MAX_SYNCHRONOUS_REQUESTS = 20;
 
-    public class RetryRequest {
-        @AuraEnabled @InvocableVariable public String correlationId;
-        @AuraEnabled @InvocableVariable public Id targetRecordId;
-        @AuraEnabled @InvocableVariable public String payloadJson;
-        @AuraEnabled @InvocableVariable public Integer attemptNumber;
-        @AuraEnabled @InvocableVariable public String handlerKey;
-        public RetryRequest() {}
+    global class RetryRequest {
+        @AuraEnabled @InvocableVariable global String correlationId;
+        @AuraEnabled @InvocableVariable global Id targetRecordId;
+        @AuraEnabled @InvocableVariable global String payloadJson;
+        @AuraEnabled @InvocableVariable global Integer attemptNumber;
+        @AuraEnabled @InvocableVariable global String handlerKey;
+        global RetryRequest() {}
     }
-    public class RetryResult {
-        @AuraEnabled @InvocableVariable public Boolean success;
-        @AuraEnabled @InvocableVariable public String message;
-        @AuraEnabled @InvocableVariable public String externalReference;
-        @AuraEnabled @InvocableVariable public String status;
-        @AuraEnabled @InvocableVariable public String idempotencyKey;
-        @AuraEnabled @InvocableVariable public Id retryAttemptId;
-        public RetryResult() {}
+    global class RetryResult {
+        @AuraEnabled @InvocableVariable global Boolean success;
+        @AuraEnabled @InvocableVariable global String message;
+        @AuraEnabled @InvocableVariable global String externalReference;
+        @AuraEnabled @InvocableVariable global String status;
+        @AuraEnabled @InvocableVariable global String idempotencyKey;
+        @AuraEnabled @InvocableVariable global Id retryAttemptId;
+        global RetryResult() {}
     }
 
     /** Tests provide actual handlers without enabling a sample business action in production. */
@@ -29,6 +29,26 @@ public with sharing class AEIR_RetryOrchestrationService {
         String key;
         Retry_Attempt__c audit;
         List<Integer> positions = new List<Integer>();
+    }
+
+    /** Package-owned builtins use type tokens; all other classes are explicit subscriber registrations. */
+    @TestVisible
+    private static Type resolveHandlerType(String configuredName) {
+        if (configuredName == 'AEIR_ApprovedFlowRetryHandler') return AEIR_ApprovedFlowRetryHandler.class;
+        if (configuredName == 'AEIR_SampleTaxRetryHandler') return AEIR_SampleTaxRetryHandler.class;
+        if (String.isBlank(configuredName)
+            || !Pattern.matches('^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z][A-Za-z0-9_]*){0,2}$', configuredName)) return null;
+        // Preserve registered package-local handlers, including inner test fixtures,
+        // without letting a same-named subscriber class replace a package builtin.
+        String packageNamespace = Error_Log__c.SObjectType.getDescribe().getName()
+            .removeEnd('Error_Log__c').removeEnd('__');
+        Type packageType = Type.forName(packageNamespace, configuredName);
+        if (packageType != null) return packageType;
+        Type localType = Type.forName('', configuredName);
+        if (localType != null) return localType;
+        List<String> segments = configuredName.split('\\.');
+        if (segments.size() < 2) return null;
+        return Type.forName(segments[0], String.join(segments, '.').substringAfter('.'));
     }
 
     public static RetryResult requestRetry(RetryRequest request) {
@@ -207,7 +227,7 @@ public with sharing class AEIR_RetryOrchestrationService {
             // when an implementation mutates a record and then reports/throws failure.
             Savepoint handlerSavepoint = Database.setSavepoint();
             try {
-                Type handlerType = Type.forName(item.configuration.Apex_Class__c);
+                Type handlerType = resolveHandlerType(item.configuration.Apex_Class__c);
                 if (handlerType == null) throw new RetryException('Registered retry handler class was not found.');
                 Object instance = handlerType.newInstance();
                 if (!(instance instanceof AEIR_RetryHandler)) throw new RetryException('Registered handler must implement AEIR_RetryHandler.');

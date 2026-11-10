@@ -1,33 +1,35 @@
-public with sharing class AEIR_CaptureFlowFaultAction {
-    public class Request {
-        @InvocableVariable public String varCorrelationId;
-        @InvocableVariable public String varFlowApiName;
-        @InvocableVariable public String varFlowVersion;
-        @InvocableVariable public String varFailedElement;
-        @InvocableVariable public String varErrorMessage;
-        @InvocableVariable public String varObjectApiName;
-        @InvocableVariable public String varRecordId;
-        @InvocableVariable public String varUserAction;
-        @InvocableVariable public String varPageUrl;
-        @InvocableVariable public String varContextJson;
+global with sharing class AEIR_CaptureFlowFaultAction {
+    global class Request {
+        global Request() {}
+        @InvocableVariable global String varCorrelationId;
+        @InvocableVariable global String varFlowApiName;
+        @InvocableVariable global String varFlowVersion;
+        @InvocableVariable global String varFailedElement;
+        @InvocableVariable global String varErrorMessage;
+        @InvocableVariable global String varObjectApiName;
+        @InvocableVariable global String varRecordId;
+        @InvocableVariable global String varUserAction;
+        @InvocableVariable global String varPageUrl;
+        @InvocableVariable global String varContextJson;
         @InvocableVariable(label='Rollback-safe asynchronous capture' description='Publishes capture immediately so it survives transaction rollback. The diagnostic record Id is available asynchronously by correlation id.')
-        public Boolean varRollbackSafe;
+        global Boolean varRollbackSafe;
     }
-    public class Response {
-        @InvocableVariable public Id errorLogId;
-        @InvocableVariable public String correlationId;
-        @InvocableVariable public String userMessage;
-        @InvocableVariable public String severity;
-        @InvocableVariable public Boolean success;
-        @InvocableVariable public String status;
+    global class Response {
+        global Response() {}
+        @InvocableVariable global Id errorLogId;
+        @InvocableVariable global String correlationId;
+        @InvocableVariable global String userMessage;
+        @InvocableVariable global String severity;
+        @InvocableVariable global Boolean success;
+        @InvocableVariable global String status;
     }
     /**
      * Preserves the original synchronous diagnostic-Id contract. Rollback-prone fault
      * paths must set varRollbackSafe or use Aegis_Error_Capture_Fault_Subflow instead.
      * Both paths batch their work and preserve one response per request in input order.
      */
-    @InvocableMethod(label='AEIR Capture Flow Fault' description='Captures a Flow fault synchronously, or publishes rollback-safe capture when explicitly requested.')
-    public static List<Response> captureFlowFault(List<Request> requests) {
+    @InvocableMethod(category='Aegis Flow' label='AEIR Capture Flow Fault' description='Captures a Flow fault synchronously, or publishes rollback-safe capture when explicitly requested.')
+    global static List<Response> captureFlowFault(List<Request> requests) {
         List<Response> out = new List<Response>();
         if (requests == null || requests.isEmpty()) return out;
 

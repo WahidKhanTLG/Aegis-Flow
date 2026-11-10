@@ -33,28 +33,36 @@ public with sharing class AEIR_FlowInterviewMonitor implements Schedulable {
         reconcile();
     }
 
-    /**
-     * Turns errored Flow interviews into Aegis error logs.
-     * @return how many new failures were captured
-     */
+    /** Injectable evidence source because FlowInterview cannot be inserted by tests. */
+    public virtual class EvidenceSource {
+        public virtual List<FlowInterview> page(Datetime cursorAt, Id cursorId, Integer pageSize) {
+            String query = 'SELECT Id, Guid, InterviewLabel, CurrentElement, Error, CreatedById, CreatedDate FROM FlowInterview '
+                + 'WHERE InterviewStatus = \'Error\' AND CreatedDate = LAST_N_DAYS:1';
+            if (cursorAt != null) query += ' AND (CreatedDate > :cursorAt OR (CreatedDate = :cursorAt AND Id > :cursorId))';
+            return Database.queryWithBinds(query + ' ORDER BY CreatedDate ASC, Id ASC LIMIT :pageSize',
+                new Map<String, Object>{'cursorAt' => cursorAt, 'cursorId' => cursorId, 'pageSize' => pageSize}, AccessLevel.USER_MODE);
+        }
+    }
+    @TestVisible private static EvidenceSource evidenceSource = new EvidenceSource();
+
+    /** Processes one page per call; later calls continue beyond already captured rows. */
     public static Integer reconcile() {
+        AEIR_MonitorCursorService.State cursor = AEIR_MonitorCursorService.read(true);
         List<FlowInterview> errored;
-        try {
-            errored = [
-                SELECT Id, Guid, InterviewLabel, CurrentElement, Error, CreatedById, CreatedDate
-                FROM FlowInterview
-                WHERE InterviewStatus = 'Error' AND CreatedDate = LAST_N_DAYS:1
-                ORDER BY CreatedDate DESC
-                LIMIT :BATCH_LIMIT
-            ];
-        } catch (Exception noAccess) {
-            // FlowInterview requires "Manage Flow" style access. Degrade rather than fail
-            // the scheduled job, and leave a trace for the admin.
-            System.debug(LoggingLevel.WARN,
-                'Aegis Flow: cannot read FlowInterview, skipping Flow reconciliation: ' + noAccess.getMessage());
+        try { errored = evidenceSource.page(cursor.at, cursor.lastId, BATCH_LIMIT); }
+        catch (Exception unavailable) {
+            AEIR_SubscriberTelemetry telemetry = new AEIR_SubscriberTelemetry('FlowInterviewMonitor');
+            telemetry.record(null, new MonitorException('Failed Flow interviews could not be read. Review monitor access.'));
+            telemetry.flush();
             return 0;
         }
-        return reconcile(errored);
+        Integer captured = reconcile(errored);
+        FlowInterview last = errored.isEmpty() ? null : errored[errored.size() - 1];
+        // Reset only after the entire sweep, so late status changes are rescanned.
+        AEIR_MonitorCursorService.save(cursor, true,
+            errored.size() < BATCH_LIMIT ? null : last.CreatedDate,
+            errored.size() < BATCH_LIMIT ? null : last.Id);
+        return captured;
     }
 
     /**
@@ -105,18 +113,17 @@ public with sharing class AEIR_FlowInterviewMonitor implements Schedulable {
         }
         if (inputs.isEmpty()) return 0;
 
-        try {
-            Integer captured = 0;
-            for (AEIR_ErrorCaptureService.CaptureResult result : AEIR_ErrorCaptureService.captureFromEvents(inputs)) {
-                if (result != null && result.success == true) captured++;
+        Integer captured = 0;
+        for (AEIR_ErrorCaptureService.CaptureResult result :
+            AEIR_ErrorCapturedEventHandler.captureInputs(inputs, 'FlowInterviewMonitor')) {
+            if (result != null && result.retryable == true) {
+                throw new MonitorException('Temporary Flow capture failure; the monitoring cursor was not advanced.');
             }
-            return captured;
-        } catch (Exception captureFailure) {
-            System.debug(LoggingLevel.WARN,
-                'Aegis Flow: Flow interview reconciliation failed: ' + captureFailure.getMessage());
-            return 0;
+            if (result != null && result.success == true) captured++;
         }
+        return captured;
     }
+    private class MonitorException extends Exception {}
 
     /**
      * InterviewLabel is "<Flow Label> <timestamp>", so the timestamp is stripped to keep

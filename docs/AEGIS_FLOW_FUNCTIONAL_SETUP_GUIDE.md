@@ -1,5 +1,12 @@
 # Aegis Flow Functional Setup Guide
 
+**November 9 preparation note:** Use the current [operating handoff](OPERATIONS_HANDOFF.md)
+and [user quick start](USER_QUICK_START.md) for the role/access and support walkthrough.
+The dated screenshots and configuration values below are historical reference material;
+verify the chosen target's actual settings. The [acceptance package](RELEASE_ACCEPTANCE_PLAN.md)
+records the remaining owner, role, browser and live-delivery checks; none was executed by
+preparing these documents.
+
 **Audience:** Salesforce admins, implementation leads, support managers, and customer success teams
 **Last updated:** 2026-08-01
 

@@ -27,7 +27,14 @@ public with sharing class AEIR_DiagnosticSessionRequestHandler {
                 AEIR_DiagnosticSessionService.SessionInput input =
                     new AEIR_DiagnosticSessionService.SessionInput();
                 input.correlationId = evt.Correlation_Id__c;
-                input.userId = evt.User_Id__c;
+                // CreatedById is authenticated event-envelope identity, not a supplied
+                // command field. On-behalf-of capture belongs in a privileged server
+                // adapter; this request stream may only create the publisher's session.
+                if (evt.CreatedById == null || (!String.isBlank(evt.User_Id__c)
+                    && (Id)evt.User_Id__c != evt.CreatedById)) {
+                    throw new SessionCaptureException('A session request must identify its authenticated publisher.');
+                }
+                input.userId = String.valueOf(evt.CreatedById);
                 input.pageReferenceJson = evt.Page_Reference_JSON__c;
                 input.userDescription = evt.User_Description__c;
                 input.detectedIssueType = 'Report Issue';

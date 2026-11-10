@@ -10,17 +10,39 @@
     "open": "bash scripts/org_command.sh open",
     "smoke": "bash scripts/org_command.sh smoke",
     "test": "bash scripts/org_command.sh test",
-    "test:unit": "sfdx-lwc-jest",
-    "test:unit:coverage": "sfdx-lwc-jest -- --coverage",
-    "test:mcp": "node --test integrations/mcp/test/*.test.mjs",
+    "test:unit": "node --disable-proto=throw ./node_modules/@salesforce/sfdx-lwc-jest/bin/sfdx-lwc-jest",
+    "test:unit:coverage": "npm run test:unit -- -- --coverage",
+    "test:mcp": "node --disable-proto=throw --test integrations/mcp/test/*.test.mjs",
     "mcp": "node integrations/mcp/server.mjs",
-    "verify": "npm run audit:local && npm run test:unit -- -- --runInBand && npm run test:mcp",
+    "verify": "npm run audit:local && npm run test:apex:syntax && npm run test:lwc:syntax && npm run test:source:syntax && npm run check:release-prep && npm run check:packaging && npm run test:packaging && npm run lint && npm run test:deps && npm run test:unit -- -- --runInBand && npm run test:mcp",
     "validate:production": "sf project deploy validate --manifest manifest/package.xml --test-level RunLocalTests --wait 60",
-    "validate:sandbox": "bash scripts/validate_sandbox.sh"
+    "validate:sandbox": "bash scripts/validate_sandbox.sh",
+    "audit:deps": "npm audit --audit-level=high",
+    "test:apex:syntax": "node scripts/check_apex_syntax.cjs",
+    "lint": "node tools/lint/run.cjs force-app integrations scripts tools/lint jest.config.js eslint.config.cjs --max-warnings=0",
+    "test:lwc:syntax": "node scripts/check_lwc_syntax.cjs",
+    "test:source:syntax": "python3 scripts/check_source_syntax.py",
+    "test:deps": "node --disable-proto=throw --test scripts/test/*.test.cjs",
+    "check:release-prep": "python3 scripts/validate_release_preparation.py",
+    "lint:install": "npm ci --prefix tools/lint --ignore-scripts --no-audit --no-fund",
+    "check:packaging": "python3 scripts/prepare_managed_source.py --check",
+    "test:packaging": "python3 -m unittest discover -s scripts/test -p test_managed_source.py"
   },
   "devDependencies": {
-    "@salesforce/cli": "latest",
-    "@salesforce/sfdx-lwc-jest": "^7.9.0",
-    "@types/jest": "^29.5.14"
+    "@apexdevtools/apex-parser": "5.3.0",
+    "@lwc/compiler": "8.28.2",
+    "@salesforce/sfdx-lwc-jest": "7.9.0",
+    "@types/jest": "29.5.14",
+    "globals": "17.14.0",
+    "@babel/core": "7.29.13",
+    "deepmerge": "file:tools/vendor/safe-deepmerge.tgz"
+  },
+  "overrides": {
+    "minimatch@>=7.0.0 <11.0.1": "11.0.5",
+    "@babel/core@>=7 <8": "7.29.13",
+    "deepmerge": "$deepmerge"
+  },
+  "engines": {
+    "node": "^22.18.0 || >=24.11.0"
   }
 }

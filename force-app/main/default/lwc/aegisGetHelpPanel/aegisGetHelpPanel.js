@@ -17,6 +17,7 @@ export default class AegisGetHelpPanel extends LightningElement {
     message;
     error;
     confirmed = false;
+    reportSubmitted = false;
     isLoading = false;
     requestVersion = 0;
 
@@ -28,18 +29,20 @@ export default class AegisGetHelpPanel extends LightningElement {
     }
     @api
     get correlationId() { return this._correlationId; }
-    set correlationId(value) {
+    set correlationId(value) { this.updateReference(value); }
+    updateReference(value) {
         const reference = value ? String(value).trim() : '';
         if (reference !== this._correlationId) this.resetSession();
         this._correlationId = reference;
     }
     disconnectedCallback() { this.requestVersion += 1; }
     get startDisabled() { return this.isLoading || !this.description.trim(); }
-    get sendDisabled() { return this.isLoading || !this.sessionId || !this.confirmed; }
+    get sendDisabled() { return this.isLoading || !this.sessionId || !this.confirmed || this.reportSubmitted; }
+    get confirmationDisabled() { return this.isLoading || this.reportSubmitted; }
     get sessionActionsDisabled() { return this.isLoading || !this.sessionId; }
     handleDescription(event) { this.description = event.detail.value || ''; this.confirmed = false; }
-    handleReference(event) { this.correlationId = event.detail.value; }
-    handleConfirmation(event) { this.confirmed = event.target.checked; }
+    handleReference(event) { this.updateReference(event.detail.value); }
+    handleConfirmation(event) { if (!this.confirmationDisabled) this.confirmed = event.target.checked === true; }
 
     buildContext() {
         const page = this.pageReference || {};
@@ -76,8 +79,10 @@ export default class AegisGetHelpPanel extends LightningElement {
     }
     send() {
         if (this.sendDisabled) return;
+        this.confirmed = false;
         this.runRequest(() => escalateSession({ sessionId: this.sessionId, userDescription: this.description.trim() }), response => {
             if (!response || !response.escalationId) throw new Error('The escalation could not be created. Try again.');
+            this.reportSubmitted = true;
             this.message = 'Governed report created: ' + (response.subject || response.escalationId) + '. Delivery status: ' + (response.status || 'Pending') + '.';
             this.confirmed = false;
             this.dispatchEvent(new CustomEvent('escalated', { detail: { sessionId: this.sessionId, correlationId: this.sessionReference } }));
@@ -104,5 +109,6 @@ export default class AegisGetHelpPanel extends LightningElement {
         this.error = null;
         this.confirmed = false;
         this.isLoading = false;
+        this.reportSubmitted = false;
     }
 }

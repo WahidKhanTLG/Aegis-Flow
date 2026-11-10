@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "status": "Qualified locally",
+  "packages": [
+    {
+      "name": "@lwc/eslint-plugin-lwc",
+      "path": "tools/vendor/eslint-plugin-lwc",
+      "upstreamVersion": "3.5.0",
+      "upstreamPackageSha256": "dd7cd815f9c9e40c608c6d2375fa81615aa9450e089355094d320f8f7025aea0",
+      "changedFiles": [
+        "package.json"
+      ],
+      "purpose": "Explicit local compatibility port; not an upstream supported release"
+    },
+    {
+      "name": "@salesforce/eslint-plugin-lightning",
+      "path": "tools/vendor/eslint-plugin-lightning",
+      "upstreamVersion": "2.0.0",
+      "upstreamPackageSha256": "58aa2fe03e43f3092e3ba2698db87e36424b1f767c45dd0f07de706df8a0378f",
+      "changedFiles": [
+        "package.json"
+      ],
+      "purpose": "Explicit local compatibility port; not an upstream supported release"
+    },
+    {
+      "name": "@salesforce/eslint-config-lwc/base",
+      "path": "tools/lint",
+      "upstreamVersion": "4.1.2",
+      "upstreamBaseSha256": "6a1fc91962e199e29fd02d65fa99dd084ae319dc9796be310845393da48bd562",
+      "upstreamDefaultsSha256": "eee4ad414ba186ee46b802a75b7c5214f084d427e39681520a6242a35063f48d",
+      "change": "Preserved base rule/adapter configuration; rebased local defaults path and pinned equivalent browser globals alias"
+    },
+    {
+      "name": "@aegis-flow/safe-deepmerge",
+      "path": "tools/vendor/safe-deepmerge",
+      "upstreamVersion": "deepmerge@4.3.1",
+      "upstreamEntrySha256": "2e5160f84a1141bd927264afe4d15766f1e6cf07daef182b37ff53fea121de7d",
+      "changedFiles": [
+        "index.cjs",
+        "package.json"
+      ],
+      "purpose": "Maintained local security replacement; upstream advisory remains valid for unpatched upstream packages"
+    }
+  ],
+  "upstreamSupportClaimed": false,
+  "auditSuppression": false,
+  "runtimes": [
+    "22.23.4",
+    "24.22.2"
+  ],
+  "eslintVersion": "10.14.0",
+  "ruleImplementationComparisons": [
+    {
+      "name": "@lwc/eslint-plugin-lwc",
+      "ruleImplementationFilesVerifiedUnchanged": 45,
+      "upstreamManifestSha256": "dd7cd815f9c9e40c608c6d2375fa81615aa9450e089355094d320f8f7025aea0"
+    },
+    {
+      "name": "@salesforce/eslint-plugin-lightning",
+      "ruleImplementationFilesVerifiedUnchanged": 9,
+      "upstreamManifestSha256": "58aa2fe03e43f3092e3ba2698db87e36424b1f767c45dd0f07de706df8a0378f"
+    }
+  ],
+  "deepmergeBenignDifferentialCases": 400,
+  "previousRuleCount": 77,
+  "currentRuleCount": 80,
+  "previousRulesDropped": 0,
+  "previousGlobalsChanged": 0,
+  "rootAuditFindings": 0,
+  "lintAuditFindings": 0,
+  "fileHashes": {
+    "tools/lint/.npmrc": "0933dd2f753124c01191cec38ea4bd556967b1da25d0e3a0bebadeaa6407246e",
+    "tools/lint/LICENSE.salesforce-config-lwc": "bfea3222cd6b2a303d8fb2843cafaa04bfd279fbeeb397920fecf26d5be267a2",
+    "tools/lint/defaults.cjs": "abaf4c182994f1439cc5149827fe5f0913393ad87bc48d65dab1837b9e2a2ebf",
+    "tools/lint/lwc-base.cjs": "643a70a573fd8a451c4af9097287fd8ace699787e9d01c72fead7576d2a71b13",
+    "tools/lint/package-lock.json": "2c76ae3915d6a9d4c289e1fffbd8e903ed92742327304329d13e242506980769",
+    "tools/lint/package.json": "1165f39ae909e18f9c084067031fccbef13e5beb38bcff65a915ea37be52c38d",
+    "tools/lint/run.cjs": "403bbc951a02ba4276e14d1f22ed85928087b9ab4d45137fe1e97094fe7e96b5",
+    "tools/vendor/eslint-plugin-lightning/LICENSE": "d9d01e877963904b9c62f38bacb7237191a8ce069d3a0be4f2418a5f6153a577",
+    "tools/vendor/eslint-plugin-lightning/README.md": "a0dc1b8de5ed8e70ba6c27ccc525584ad8ff77658b662a5b01fdc7d58feffaea",
+    "tools/vendor/eslint-plugin-lightning/lib/index.js": "1c5e51c3be57b147a72c188cc856718665739cb4c368e9544996fb3c8ded5b66",
+    "tools/vendor/eslint-plugin-lightning/lib/rules/no-aura-localization-service.js": "170592c92c83776efaecb2d5e8578e5f019698e6ec42c4c0c7a38c2034e1ff27",
+    "tools/vendor/eslint-plugin-lightning/lib/rules/no-moment.js": "919b16df59e2bf72810c01c9924fea73b6dd144b41d0328900ef0d24f8f1aa75",
+    "tools/vendor/eslint-plugin-lightning/lib/rules/prefer-i18n-service.js": "c56a96950c93af43adbaaabea225408fc29feb52b8ae604ade7820225fba1135",
+    "tools/vendor/eslint-plugin-lightning/lib/rules/valid-apex-method-invocation.js": "dad9a7c93e9f48bfb7fa39eaa04495f62c8a7f70c34674f023772bbddeed875c",
+    "tools/vendor/eslint-plugin-lightning/lib/utils/context.js": "8a9e4a566be6b519474c22a561a9a9ce09a5eab3dbe6c753c448ba45bf488012",
+    "tools/vendor/eslint-plugin-lightning/lib/utils/doc-url.js": "496a14c4a350d5bb95c36997be78046b3917bb2d0e31bea3a9e7077e55b9e884",
+    "tools/vendor/eslint-plugin-lightning/package.json": "fc5a5cf78d96ea50d559e21a822e6ab5d8ad349601a7820b58c6eae6787a9757",
+    "tools/vendor/eslint-plugin-lightning.tgz": "ecadb0228339c03e82a148a91abcf21f595218d14e1718273eb8c2a65f333177",
+    "tools/vendor/eslint-plugin-lwc/LICENSE": "bfea3222cd6b2a303d8fb2843cafaa04bfd279fbeeb397920fecf26d5be267a2",
+    "tools/vendor/eslint-plugin-lwc/README.md": "5376ee5e6433ecf9dd72d91613e3a839838581a64148cb8ca4ae3c4b2a53a21c",
+    "tools/vendor/eslint-plugin-lwc/lib/analyze-component.js": "000871b1433e25939837782a10d6db536cb9c2c394cb300db899adcf80f60751",
+    "tools/vendor/eslint-plugin-lwc/lib/index.js": "7209d3b210585520993983967536adf816f7661734e596426fb8feeb71d18022",
+    "tools/vendor/eslint-plugin-lwc/lib/processors/ssr.js": "3bcc67b09e3e8809246c9471612db1018f62b6e5b1236689641a2232d740e869",
+    "tools/vendor/eslint-plugin-lwc/lib/rule-helpers.js": "224b6cff35a239de3e251955b2e676780fb3bb5fdbe957b35e03c79cc639829d",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/consistent-component-name.js": "0c8356663627c65e4b7ab5a4973af8d1c3fe41657b65b49bd55fb3e246aab751",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/newer-version-available.js": "74662f4346d2f0648160fde5d0b76940b33a9aaeace177122738fa7eafc7285b",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-api-reassignments.js": "0aa6fe8d01776c4b9a5634109090c7a90069b9f0c7aee8d42577356f3f4320d5",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-async-await.js": "30267e38cd25a8c8b24d4cbe3614c465176a3ba66bd375e1c68ed28601f6e64a",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-async-operation.js": "b7aca2daf5e620729d621c597545d1019f7e06aabd77306c227726a218321a08",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-attributes-during-construction.js": "3b9b4c42cbcefc4c5326fe16a13f3ac9596b1b8bf66ee684dce6e30bd6e76b74",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-deprecated.js": "30d4eeab03309eaac50dcdfb7c7ca0e47a228bcc1175654a4dbd09e144fbb6b9",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-disallowed-lwc-imports.js": "96721fba06e02f01bd3285f329d93c5b85036a3f4bd0c9148ef18a4622165445",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-document-query.js": "7aa6f389f9c020227b3763ca3125b3d332f551345b755a895832929df64f6cdc",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-dupe-class-members.js": "de1249e0712afc58ee128f3a995dd40d16244df49d67b0c4ba20e1c6181f4c1f",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-for-of.js": "d6d847c69285ee247fbfed2ebf566c680fb9bfa383a75481c7ce70a3c12cee8a",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-inner-html.js": "5de8cdd57f92b9b5be19e0b671e5808b4277fe63b278f473aa93e25a28f74578",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-leading-uppercase-api-name.js": "f3f52875d09fb409098180e446a6fddde2e13c2e66ec327689e1e35dce555237",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-leaky-event-listeners.js": "2e7e398bacb5160d8412c4ab92d00e199dd64f778f0a1ad2ce950b09beb367c3",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-rest-parameter.js": "b17f28f426cf2dde1598e80758fabc267cb6bb424fb52d59347fe07c53d2d3f3",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-template-children.js": "ba797550f151821018ad69e5c375fdca181e526d01c716f64824af0272cd21a8",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-unexpected-wire-adapter-usages.js": "cef245e3c254aa657627d0a1b79d664c1692c6832741118b24a2eecbbe563f70",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/no-unknown-wire-adapters.js": "47908d72ed33e02048185dcf8973538d3bf6b25cb3c12da5c0b7044fb33ee9cd",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/prefer-custom-event.js": "2bc14d9a32e7be296f4cf03cc96ef4990acf5be963a009d587ef701793279cff",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-disallowed-lwc-imports.js": "98deaafaecc8bcc8cba96d269727d107b1048a6eee38d3c8cd7ca5ab34ba8090",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-form-factor.js": "b694d52054f71387c6b8a43a0e5e0a41b9b15412b5ce557e65faa89bf3e938d3",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-host-mutation-in-connected-callback.js": "10413ad0cc5297c5c7c99ba738491f82b88b65a3d3bf2f020858e90c005b62be",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-node-env.js": "a6ce88e770e8237e08e75238a0ad12e43eabac14a35a20328f04fee5c799cc79",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-restricted-browser-globals.js": "2e307a0633d9d65b19238065a29479ecee186d4a84c85d099be452c09b8b76e6",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-static-imports-of-user-specific-scoped-modules.js": "5469f800a3008f8f854789f8992f39cdccd76388835d522c30ccfeff1383ab68",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-unsupported-node-api.js": "847fe040357a65652e01a405168970813ff19872f347bd2f1c4a9d5f1c14334b",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/ssr/ssr-no-unsupported-properties.js": "12072e05d600cd95501cecee47fe23208cb7e33b3801e86cdf27834817f2f05c",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/valid-api.js": "a4a468838b59df66f470151479b7031eef241c4d1a7c6fc924e6a98f6a31e79f",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/valid-graphql-wire-adapter-callback-parameters.js": "df6c3906c9b2274ba797052b6152d9bca25b03053c669e8c8640c3c40d81427f",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/valid-track.js": "d24dd55e44f1c4667283fe51bb10cb9508a979ae1d1b126336ca0efcf99c1151",
+    "tools/vendor/eslint-plugin-lwc/lib/rules/valid-wire.js": "8b3de0100ca13b95e067d119cb8674b8c3a4e4f359aa2350e83e0ec5fb7e3f16",
+    "tools/vendor/eslint-plugin-lwc/lib/util/component.js": "59b84f5276aadab0837ae96c6ff5dad65d2c9fc19b74c0571b6b10f30556b987",
+    "tools/vendor/eslint-plugin-lwc/lib/util/context.js": "8a9e4a566be6b519474c22a561a9a9ce09a5eab3dbe6c753c448ba45bf488012",
+    "tools/vendor/eslint-plugin-lwc/lib/util/decorator.js": "4df37723955668076ca3cdce27e435de0453cbe3d37a3a1db9c11d0d8bdf147b",
+    "tools/vendor/eslint-plugin-lwc/lib/util/doc-url.js": "0203155f0d7b67a6760398ca2161612766e3cdd5a15e3038ed82e7839c5b365a",
+    "tools/vendor/eslint-plugin-lwc/lib/util/isClassField.js": "d1fa8e2b4c310d07e7a5c9927cbfc7ef19af4ae3322672c0a43d340308e36802",
+    "tools/vendor/eslint-plugin-lwc/lib/util/scope.js": "b76c958f9473a1b4de534a57114a6ab8ae9a3791152d953f7c3fa1e82d23cc9b",
+    "tools/vendor/eslint-plugin-lwc/lib/util/ssr.js": "5182f0986fa4160e26d961cd92f39142a350b88d2ae82d1c97fcf39b661c2076",
+    "tools/vendor/eslint-plugin-lwc/lib/walk.js": "94dac5d77be9e496b62206010ee319d11d12ba1c26907d39dcfd0838cc4b7fcd",
+    "tools/vendor/eslint-plugin-lwc/package.json": "a3546f4d931c4f8adc783ca3d38d697dda780433105eb9e2428be9e7ad7a5338",
+    "tools/vendor/eslint-plugin-lwc.tgz": "94b4d9b5c8bdfeb0f4b76279f1cf7a57db7eef3c21d9cde3538fc442ece8159b",
+    "tools/vendor/safe-deepmerge/index.cjs": "b7b45c8de1fbb88fbb44102cbdba09e97c183e3bb4cb2bd0e75a89d066ac8589",
+    "tools/vendor/safe-deepmerge/index.d.ts": "146ba4b99c5feb82663e17a671bf9f53bb39c704cd76345d6c5a801c26372f44",
+    "tools/vendor/safe-deepmerge/license.txt": "6cfc4687cb2f2d86f4a77e6b526290d3878e5e512f3fec2f4cb36a9cb36f798b",
+    "tools/vendor/safe-deepmerge/package.json": "8cee1ac2e9a33f29ed78c54a2f60fa79139a025943209f693b6b765be0346c2e",
+    "tools/vendor/safe-deepmerge.tgz": "8123ffec0bf70ede75ba977edd2a613260858d1632b4c028512d9ad82f1300c9"
+  }
+}

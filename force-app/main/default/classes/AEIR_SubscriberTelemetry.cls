@@ -26,11 +26,11 @@ public with sharing class AEIR_SubscriberTelemetry {
         System.debug(LoggingLevel.WARN, AEIR_SecuritySanitizerService.mask(
             'Aegis Flow: ' + subscriber + ' failed for ' + correlationId + ': ' + reason));
         failures.add(new Delivery_Attempt__c(
-            Correlation_Id__c = String.isBlank(correlationId) ? subscriber : correlationId,
+            Correlation_Id__c = AEIR_SecuritySanitizerService.safeTruncate(String.isBlank(correlationId) ? subscriber : correlationId, 80),
             Channel__c = 'Platform Event',
             Status__c = 'Failed',
             Attempt_Count__c = 1,
-            Idempotency_Key__c = subscriber + ':' + (String.isBlank(correlationId) ? String.valueOf(failures.size()) : correlationId),
+            Idempotency_Key__c = AEIR_SecuritySanitizerService.safeTruncate(subscriber + ':' + (String.isBlank(correlationId) ? String.valueOf(failures.size()) : correlationId), 255),
             Response_Body__c = AEIR_SecuritySanitizerService.safeTruncate(
                 AEIR_SecuritySanitizerService.mask(subscriber + ' :: ' + reason
                 + (ex == null ? '' : '\n' + ex.getStackTraceString())), 32000)
@@ -45,7 +45,10 @@ public with sharing class AEIR_SubscriberTelemetry {
     public void flush() {
         if (failures.isEmpty()) return;
         try {
-            Database.insert(failures, false);
+            for (Database.SaveResult result : Database.insert(failures, false, AccessLevel.SYSTEM_MODE)) {
+                if (!result.isSuccess()) System.debug(LoggingLevel.WARN,
+                    'Aegis Flow: subscriber telemetry could not be persisted.');
+            }
         } catch (Exception telemetryFailure) {
             System.debug(LoggingLevel.WARN,
                 'Aegis Flow: could not record subscriber telemetry; inspect subscriber permissions and limits.');

@@ -8,7 +8,7 @@ Aegis Flow is a Salesforce-native diagnostic, guided-remediation, retry, and dev
 
 This source tree is the consolidated release candidate built from the newest coherent REVIEWED package and selected compatible capabilities from the parallel Complete DX implementation.
 
-**Version:** 1.2.0-reconciled  
+**Version:** 1.2.0-reconciled
 **Metadata API pin:** 67.0. Compilation and regression results must be recorded against the actual target org.
 
 ## Current development scope
@@ -22,7 +22,17 @@ The current development adds JSON-safe masking, atomic remediation audits, bound
 processing, canonical notification resolution, functional diagnostic surfaces, scoped REST
 operations, a local MCP bridge and optional Named Credential adapters for Agentforce and
 external escalation. External connections remain disabled until an administrator configures
-and authorizes the actual service. Managed packaging is outside this development scope.
+and authorizes the actual service. Local managed-source preparation is implemented. Actual namespace/Dev Hub setup, package
+builds and namespaced installation remain team-owned environment work. See
+[packaging handoff](docs/PACKAGING_DEVELOPMENT_HANDOFF.md).
+
+## Current review and product tracking
+
+The [product plan and tracker](docs/PRODUCT_PLAN_AND_TRACKER.md) separates all 55 implemented
+features from release acceptance, optional integrations, commercial work and proposed ideas.
+The [source publication review](docs/SOURCE_PUBLICATION_REVIEW.md) records preservation checks,
+the successful 571-component / 311-test Salesforce check-only run, live read-only MCP proof,
+and the current source/org differences. Hosted CI and main publication are tracked separately.
 
 ## Included capabilities
 
@@ -68,9 +78,9 @@ See the [November 3 verification record](output/development/2026-11-03/verificat
 for final counts, source comparison, configuration, live acceptance and explicit limits.
 The [November 2 report](output/development/2026-11-02/verification.json) remains historical.
 
-A fresh isolated org retrieval on November 7 confirmed all 689 product release files
-match this source, allowing only formatting and seven documented org configuration
-differences. No unexpected differences or missing release files were found. See the
+Before the local hardening changes, an isolated org retrieval on November 7 confirmed all
+689 product release files matched the published baseline, allowing only formatting and
+seven documented org configuration differences. No unexpected differences or missing release files were found. See the
 [November 7 source verification](output/development/2026-11-07/verification.json).
 
 ```bash
@@ -80,6 +90,113 @@ npm run test:mcp
 ```
 
 The local audit checks XML parsing, Apex/class metadata pairing, trigger metadata pairing, LWC bundle completeness, object metadata structure, and the explicit package manifest.
+
+## Development hardening deployed and verified
+
+The November 7 P1/P2 hardening was deployed to the verified development org
+(`SyncBridge-Product`, org `00DgL00000YDvsvUAD`): 61 focused components, 211 passing Apex
+tests across 27 new and affected classes, no compilation errors or coverage warnings.
+Six additional post-deployment tests checked the real committed role permissions; their
+temporary test class/users were not persisted. Native event capture, publisher attribution,
+durable rejection telemetry, diagnosis/alert reads and dismissal, draft escalation replay,
+long keys and lifecycle/formula behavior passed controlled runtime checks. All synthetic
+diagnostics were cleaned up. Flags, routes, five subscriber identities and six schedules
+were preserved. Nothing was deployed to production, committed, pushed or published.
+See the [deployment and runtime record](output/development/2026-11-07/hardening-deployment/verification.json)
+for source comparison, permission evidence, rollback snapshot and limits. The earlier
+[check-only record](output/development/2026-11-07/org-hardening-validation.json) is historical.
+
+- Internal diagnostic-session events are no longer readable/publishable through the End User
+  permission set. A request must identify its authenticated publisher. Ordinary Help Me uses
+  the current-user-bound controller; trusted on-behalf-of adapters use the server service.
+- Capture subscribers inspect every result, record rejected inputs, and retry temporary lock/service
+  failures within the platform retry budget. Final event publication failures produce separate
+  telemetry through a callback. An accepted publication is not a persistence guarantee.
+- Batch failures have event-specific correlations, preserving separate failed scopes and replay deduplication.
+- The Flow and async monitors persist keyset progress in the existing org setting. Each run
+  advances one bounded page (200 interviews or 100 jobs), including pages already captured.
+  End-of-sweep reset catches late status changes; async selection uses completion time.
+- Escalations use a unique source/route key and a durable delivery claim under the source row lock.
+  A draft may be sent once. Sent, failed, pending, or historically attempted deliveries are
+  returned without implicit resend. Reconcile uncertain outcomes before an explicitly governed retry.
+- Flow coverage counts exact observed-interview correlations separately from historical captures.
+  Long incident keys hash their complete inputs, retaining source, object, category and time bucket.
+- Timing uses server-owned first-diagnosis/resolution transitions and aggregate formula durations,
+  not last edit times or a capped row sample. Unknown legacy timings return null. No historical
+  timestamps or incident keys are fabricated or migrated by this change.
+
+Development requires Node 22.13+ LTS or Node 24+, with pinned test/parser packages and a
+lockfile. The Salesforce CLI is an **external prerequisite** for explicitly authorized org
+operations and CLI-backed MCP authentication; it is no longer redundantly bundled into this
+project's npm installation. The installed system CLI is not changed or security-certified here.
+Review its vendor advisories separately before providing deployment credentials. The MCP
+server and Salesforce runtime metadata do not import the removed CLI package.
+
+The November 9 external CLI review inventories npm-installed CLI 2.156.8 and records 16
+separate dependency-advisory matches (seven high, nine moderate). No shared CLI update was
+performed. [Release toolchain review](docs/RELEASE_TOOLCHAIN_REVIEW.md) documents the stable
+candidate and completed local CLI-01 qualification for its restricted nonproduction
+validation/Apex-test scope. The [decision record](release-preparation/cli-release-use-review.json)
+binds the exact artifact/runtime/plugins and exclusions. No target/action authority is
+granted; the shared global CLI, bare wrappers and CLI-backed MCP launch are not qualified.
+
+## Local handoff and acceptance preparation
+
+The prepared local package includes the [operating handoff](docs/OPERATIONS_HANDOFF.md),
+[user quick start](docs/USER_QUICK_START.md), [final acceptance plan](docs/RELEASE_ACCEPTANCE_PLAN.md)
+and [rollback runbook](docs/ROLLBACK_RUNBOOK.md). The
+[preparation index](release-preparation/README.md) contains 17 bounded acceptance cases,
+an unbound target profile and an evidence template with every case marked Not run.
+`npm run check:release-prep` validates their contracts and source references without
+contacting Salesforce; it also runs inside `npm run verify`. Explicit readiness validation
+rejects the unbound profile. Document preparation does not establish owner sign-off,
+current target identity, actual delivery, org rollback or customer acceptance.
+
+```bash
+npm ci --ignore-scripts
+npm run verify
+npm run audit:deps
+```
+
+`verify` runs metadata checks, Apex grammar/inline-query syntax checks, all-bundle LWC compilation,
+standalone source syntax checks, JavaScript lint, dependency-compatibility regressions, LWC
+tests and MCP tests.
+The syntax checker does not type-check Salesforce APIs or execute Apex tests. The focused
+development validation separately compiled the hardening metadata and ran the new and affected
+Apex tests, including event failure handling, replay, backlog fixtures and formula durations.
+Committed permission upgrades and controlled runtime scenarios were verified after the
+development deployment. Live backlog volume, true concurrent contention and rendered
+customer/browser acceptance remain separate from these checks.
+The dependency audit reports all severities and fails at high/critical; lower-severity vendor
+findings remain visible and require review rather than forced incompatible upgrades.
+
+## CI and static checks
+
+The GitHub Actions workflow validates pull requests and pushes to `main` on Node 22 and 24.
+It uses the same `npm run verify` command as local development, a clean locked installation
+with lifecycle scripts disabled, workflow syntax validation, and the existing high/critical
+dependency-audit gate. It requires no Salesforce credentials and performs no deployment.
+
+The setup remains local until an explicitly authorized commit/push; no hosted run is claimed.
+See [CI and static checks](docs/CI_AND_STATIC_CHECKS.md) for scope, pinned tooling, lint policy,
+dependency qualification, and the first-hosted-run acceptance boundary.
+
+The November 10 packaging-development update resolves the project dependency findings with
+an explicit owned deepmerge security replacement and an isolated ESLint 10 lint toolchain.
+Both all-severity locked audits are clean. Salesforce rule ports are locally qualified;
+upstream ESLint 10 support is not claimed. Install both dependency trees before verification:
+
+```bash
+npm ci --ignore-scripts --no-audit --no-fund
+npm ci --prefix tools/lint --ignore-scripts --no-audit --no-fund
+npm run verify
+```
+
+The full local suite passes on Node 22.23.4/24.22.2: 124 LWC, 33 MCP, 12 dependency/security
+and eight source-staging tests. All 105 Apex grammar inputs and 14 LWC bundles / 39 compiler
+inputs pass locally. See [dependency security review](docs/DEPENDENCY_SECURITY_REVIEW.md)
+and [packaging development handoff](docs/PACKAGING_DEVELOPMENT_HANDOFF.md). No actual
+namespaced compilation, package version, clean installation or hosted CI result is claimed.
 
 ## Salesforce validation
 

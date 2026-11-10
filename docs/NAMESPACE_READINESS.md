@@ -1,142 +1,70 @@
-# Namespace Readiness Standard
+# Namespace and managed-source contract
 
-**Status:** Active standard for all new development
-**Decision (AF-20):** Namespace application is **deferred**. Development continues in the unmanaged org `Aegis Flow_WA_Dev`; a separate packaging org is reserved for when the managed package is generated.
-**Therefore:** all code written from today must be namespace-safe, so the migration is a no-op rather than a rewrite.
+Updated November 10, 2026. This replaces the July 27 namespace assumptions.
+Local packaging development is implemented. Actual namespace registration, Dev Hub readiness,
+namespaced compilation and subscriber installation still need environment evidence.
 
----
+## Environment and source
 
-## Why this matters
+Keep the existing development org out of namespace registration and commercial packaging.
+The team selects a separate company-controlled namespace org and durable Dev Hub, preferably
+its Partner Business Org. Verify actual IDs, ownership, capabilities, permissions, capacity
+and Namespace Registry linkage. Old aliases and the historical reserved-org note are not evidence.
 
-When the package acquires a namespace (say `aegisflow`), every custom object, field, and platform event gains a prefix:
+Managed 2GP is source driven; the Dev Hub owns packages and is not the source deployment target.
+The development project deliberately retains an empty namespace. No namespace was reserved.
+[Salesforce org responsibilities](https://developer.salesforce.com/docs/platform/pkg2-dev/guide/sfdx-dev-dev2gp-before-know-orgs.html).
 
-| Today | After namespace |
-|---|---|
-| `Error_Log__c` | `aegisflow__Error_Log__c` |
-| `Error_Log__c.Correlation_Id__c` | `aegisflow__Error_Log__c.aegisflow__Correlation_Id__c` |
-| `/event/Aegis_User_Alert__e` | `/event/aegisflow__Aegis_User_Alert__e` |
+## Implemented behavior
 
-Anything that names these as a **raw string** breaks silently at runtime. Anything that resolves them through **schema** keeps working untouched.
+- MCP uses explicit validated `AEGIS_PACKAGE_NAMESPACE`. Empty/unset preserves unmanaged
+  development. A selected namespace inserts its segment before the REST mapping. Invalid
+  values fail before credential/network access. HTTP errors never select an alternative route.
+- Record forms, pickers, dashboard columns and diagnosis reads use schema-derived API names.
+  Same-named subscriber fields cannot replace the intended packaged display fields.
+- Custom alert channels come from Apex describe. Empty/rejected/mismatched lookup marks live
+  streaming unavailable and retains saved-notice refresh. No bare custom-event fallback remains.
+  Event payload fields use the package prefix; the standard Flow error event stays unprefixed.
+- Nine subscriber action classes, invocable methods, wrapper types, variables and wrapper
+  constructors are global. Existing permission, confirmation, bulk and data checks are preserved.
+  Internal service methods remain public. This does not enable Agentforce or a business operation.
+- The retry interface and existing request/result DTOs are global for registered subscriber
+  implementations. Builtins resolve through type tokens; other registered classes resolve
+  package-local, local subscriber, then explicitly qualified namespace/class. All existing
+  registration, permission, attempt, savepoint and business idempotency requirements remain.
 
----
+Subscriber actions require these global contracts. Freeze their names and field signatures
+before a first managed release; do not make all services global.
+[Salesforce managed agent requirements](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-manpkgs-agent.html),
+[invocable visibility](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-annotation-invocablemethod.html).
 
-## Baseline: current violations
+## Metadata-as-data ownership
 
-Scanned July 27, 2026. Small and very fixable — worth clearing before the codebase grows.
+| Value | Contract |
+| --- | --- |
+| Package object/field references in code | Typed schema/static references or describe-derived full names |
+| Dynamic business object/field configuration | Exact fully qualified describe names and allowlists; standard Account/Description remain standard |
+| Subscriber/third-party fields, classes and credentials | Explicit administrator-reviewed identity and owner; no inferred Aegis prefix |
+| Retention objects | Stable logical keys Error_Log__c and Diagnostic_Session__c select typed queries |
+| Action, handler and CMDT developer keys | Stable logical identifiers; never rename to prepend a namespace |
+| Retry classes | Builtin type tokens; explicit registered implementations; qualify third-party classes as namespace.ClassName |
+| Customer Flow and required permission | Exact reviewed subscriber configuration; no default customer recovery is enabled |
 
-| Location | Count | Risk |
-|---|---|---|
-| `lwc/aegisHeadlessMonitor/aegisHeadlessMonitor.js:12` | 1 | **High** — `const CHANNEL = '/event/Aegis_User_Alert__e'` |
-| `lwc/developerEscalationViewer/developerEscalationViewer.html` | 7 | **High** — raw `field-name` attributes |
-| `lwc/adminErrorConsole/adminErrorConsole.js:15-18` | 4 | Medium — datatable `fieldName` strings |
-| `classes/AEIR_RetentionScheduler.cls:5` | 1 | Medium — `Object_Name__c = 'Error_Log__c'` in SOQL |
-| `classes/AEIR_AdminConsoleController.cls:13-14` | 2 | Low — dynamic SOQL `WHERE` fragments |
-| **`@salesforce/schema` imports across all LWC** | **0** | No component currently uses the safe pattern |
+Apex resolves same-package names within its namespace. Literal dynamic SOQL is not automatically
+broken; metadata text is not automatically rewritten. Do not blanket-prefix raw strings.
+The namespaced Apex tests must still run in the actual managed environment.
+[Salesforce namespace resolution](https://developer.salesforce.com/docs/platform/apex-dev/references/apex-dev/apex-classes-namespace-prefix.html).
 
-The empApi channel is the one to fix first: if it breaks, the entire real-time notification flow goes silent with no error.
+## Package inputs and checks
 
----
+The initial boundary is one managed core with dormant optional adapters. The historical
+four-package split is not part of this baseline. `packaging/managed-source-files.json`
+classifies every metadata/test/editor path. Managed source excludes development failure flows,
+standard-app overrides/utility pages, the customer Contact layout, sample tax schema/access
+and sample retry registration. Staging removes the corresponding sample field permission
+from Product Admin only in its generated copy. Development source stays intact.
 
-## Apex
-
-### Do
-
-```apex
-// Schema-derived names — namespace applied automatically
-String objectName = Error_Log__c.SObjectType.getDescribe().getName();
-String fieldName  = Error_Log__c.Correlation_Id__c.getDescribe().getName();
-
-// Typed SOQL needs no strings at all — strongly preferred
-List<Error_Log__c> logs = [SELECT Id, Correlation_Id__c FROM Error_Log__c WHERE Status__c = 'New'];
-
-// Platform event channel for empApi, derived not typed
-String channel = '/event/' + Aegis_User_Alert__e.SObjectType.getDescribe().getName();
-```
-
-### Don't
-
-```apex
-// Breaks under a namespace
-SObject o = Schema.getGlobalDescribe().get('Error_Log__c').newSObject();
-String soql = 'SELECT Id FROM Error_Log__c WHERE Correlation_Id__c = :cid';
-```
-
-### Notes specific to this codebase
-
-- **`Schema.getGlobalDescribe()` keys are namespaced.** `AEIR_RemediationOrchestrator` line 35 looks up `gd.containsKey(req.objectApiName)`. That is *correct* today because `objectApiName` comes from `Remediation_Action_Setting__mdt`, which will itself be namespaced after packaging — the two stay consistent. Leave it, but do not copy the pattern with a literal.
-- **Custom metadata that stores API names must be reviewed at packaging time.** `Remediation_Action_Setting__mdt.Object__c`, `Retention_Policy__mdt.Object_Name__c`, and `Context_Field_Setting__mdt` all hold API names as data. Spec §16.2 warns that packaged CMDT keys cannot be renamed after release — decide before the first managed release whether these store bare or namespaced names.
-- **`with sharing` and FLS checks are unaffected** by namespacing; no action needed.
-
----
-
-## LWC
-
-### Do
-
-```javascript
-import CORRELATION_ID from '@salesforce/schema/Error_Log__c.Correlation_Id__c';
-import ERROR_LOG_OBJECT from '@salesforce/schema/Error_Log__c';
-
-// Use .fieldApiName / .objectApiName wherever a string is required
-const column = { label: 'Correlation ID', fieldName: CORRELATION_ID.fieldApiName };
-```
-
-```html
-<lightning-record-view-form object-api-name={errorLogObject}>
-    <lightning-output-field field-name={correlationIdField}></lightning-output-field>
-</lightning-record-view-form>
-```
-
-Expose the imported references as getters so the template never contains a literal.
-
-### Don't
-
-```javascript
-const CHANNEL = '/event/Aegis_User_Alert__e';        // breaks
-const cols = [{ fieldName: 'Severity__c' }];          // breaks
-```
-
-```html
-<lightning-output-field field-name="Subject__c"></lightning-output-field>
-```
-
-### Platform event channels
-
-There is no `@salesforce/schema` import for an event channel. Return it from Apex instead, derived from the describe:
-
-```apex
-@AuraEnabled(cacheable=true)
-public static String getUserAlertChannel() {
-    return '/event/' + Aegis_User_Alert__e.SObjectType.getDescribe().getName();
-}
-```
-
-The LWC then awaits that value before calling `subscribe()`. This is the recommended fix for `aegisHeadlessMonitor.js:12`.
-
-### Apex method imports are already safe
-
-`import getOpenAlerts from '@salesforce/apex/AEIR_AegisHeadlessMonitorController.getOpenAlerts'` needs no change — the platform resolves the namespace for Apex imports automatically. Class names take a namespace prefix but the import syntax handles it.
-
----
-
-## Agentforce and AI payloads
-
-- **Never hand raw API names to the LLM as literals.** `AEIR_AgentforceGatewayService.buildPayload()` currently builds its map with stable *logical* keys (`correlationId`, `objectApiName`, `recordId`) rather than API names — that is the right pattern. Keep it.
-- Where a field API name genuinely must appear in a prompt, derive it via `getDescribe().getName()` at build time.
-- **Action keys are a public contract.** `safeRemediationActionKey` values such as `UPDATE_ACCOUNT_TAX_CODE` are matched server-side against `Remediation_Action_Setting__mdt`. Per §16.2 these must not be renamed after release. They are namespace-independent by design — keep them logical, never derive them from an API name.
-- The server must keep rejecting unknown action keys (§10.3). Namespacing does not change this, but it does mean the rejection path must not compare against hardcoded strings.
-
----
-
-## Pre-migration checklist
-
-Run before generating the first namespaced package:
-
-1. `grep -rnE "['\"][A-Za-z_]+__(c|e)" force-app/main/default/lwc/` returns nothing.
-2. `grep -rn "/event/" force-app/main/default/lwc/` returns nothing.
-3. No `Schema.getGlobalDescribe().get('<literal>')` in Apex.
-4. No dynamic SOQL built from literal `__c` names.
-5. Decide bare-vs-namespaced storage for API names held in custom metadata (see Apex notes).
-6. Deploy to the packaging org and run the full Apex + Jest suite there, not just in the unmanaged org.
-
-Items 1–4 are cheap to enforce and worth adding to CI once AF-06 brings in Jest tooling.
+`npm run check:packaging` rejects missing/unclassified/symlinked metadata, action visibility
+regressions, raw LDS object/field bindings, guessed alert fallback and subscriber-user bindings.
+`npm run test:packaging` checks staging isolation and refusal behavior. See
+[packaging handoff](PACKAGING_DEVELOPMENT_HANDOFF.md).

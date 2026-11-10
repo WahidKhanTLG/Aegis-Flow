@@ -14,7 +14,8 @@ export default class AegisNotificationCard extends LightningElement {
 
     @api
     get correlationId() { return this._correlationId; }
-    set correlationId(value) {
+    set correlationId(value) { this.updateReference(value); }
+    updateReference(value) {
         this._correlationId = value ? String(value).trim() : '';
         this.showDetails = false;
         if (this.isConnected) this.refresh();
@@ -25,7 +26,7 @@ export default class AegisNotificationCard extends LightningElement {
     get summary() { return this.alert ? this.alert.shortMessage : ''; }
     get severity() { return this.alert ? this.alert.severity : ''; }
     get isEmpty() { return !this.alert && !this.isLoading && !this.error; }
-    handleReference(event) { this.correlationId = event.detail.value; }
+    handleReference(event) { this.updateReference(event.detail.value); }
     openDetails() { this.showDetails = true; }
 
     @api
